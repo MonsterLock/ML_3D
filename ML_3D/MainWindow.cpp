@@ -10,17 +10,20 @@ PCWSTR MainWindow::WindowText() const
 	return m_lpWindowText;
 }
 
-LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( uMsg )
 	{
 		case WM_CLOSE:
 			{
-				if ( MessageBox( m_hwnd, L"Really Quit?", WindowText(), MB_OKCANCEL ) == IDOK )
-				{
-					DestroyWindow( m_hwnd );
-					PostQuitMessage( 0 );
-				}
+
+				//if ( MessageBox( m_hwnd, L"Really Quit?", WindowText(), MB_OKCANCEL ) == IDOK )
+				//{
+				//	DestroyWindow( m_hwnd );
+				//	PostQuitMessage( 0 );
+				//}
+				DestroyWindow( m_hwnd );
+				PostQuitMessage( 0 );
 				// Else: User canceled. Do nothing.
 			}
 			return 0;
