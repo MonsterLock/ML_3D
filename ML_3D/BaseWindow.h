@@ -35,7 +35,12 @@ public:
 		}
 	}
 
-	BaseWindow() : m_hwnd( NULL ) {}
+	BaseWindow()
+		:
+		m_hwnd( nullptr ),
+		m_lpClassName( nullptr ),
+		m_lpWindowText( nullptr )
+	{}
 
 	virtual ~BaseWindow()
 	{
@@ -46,6 +51,7 @@ public:
 	}
 
 	BOOL Create(
+		PCWSTR lpClassName,
 		PCWSTR lpWindowName,
 		DWORD dwStyle,
 		DWORD dwExStyle = 0,
@@ -56,6 +62,9 @@ public:
 		HWND hWndParent = 0,
 		HMENU  hMenu = 0 )
 	{
+		m_lpClassName = lpClassName;
+		m_lpWindowText = lpWindowName;
+
 		// Register the window class.
 		WNDCLASS wc = { 0 };
 
@@ -69,7 +78,7 @@ public:
 		m_hwnd = CreateWindowEx(
 			dwExStyle,							// Optional window styles.
 			ClassName(),						// Window class
-			lpWindowName,						// Window text
+			WindowText(),						// Window text
 			dwStyle,							// Window style
 			x, y, nWidth, nHeight,				// Size and position
 			hWndParent,							// Parent window
@@ -84,6 +93,9 @@ public:
 
 protected:
 	virtual PCWSTR ClassName() const = 0;
-	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
+	virtual PCWSTR WindowText() const = 0;
+	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 	HWND m_hwnd;
+	PCWSTR m_lpClassName;
+	PCWSTR m_lpWindowText;
 };

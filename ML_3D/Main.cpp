@@ -1,12 +1,19 @@
 #include "MainWindow.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow )
 {
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	//	_CrtSetBreakAlloc();
+
 	MainWindow win;
 
-	if ( !win.Create( L"ML_3D", WS_OVERLAPPEDWINDOW, 0,
-					  CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-					  0, 0) )
+	if ( !win.Create(
+		L"ML_3D",
+		L"ML 3D Engine",
+		WS_OVERLAPPEDWINDOW ) )
 	{
 		return 0;
 	}
