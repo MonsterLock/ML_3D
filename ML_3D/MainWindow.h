@@ -3,6 +3,8 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
+protected:
+	void OnQuit();
 public:
 	PCWSTR ClassName() const;
 	PCWSTR WindowText() const;

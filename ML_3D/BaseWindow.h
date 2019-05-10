@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "resource.h"
 
 template <class DERIVED_TYPE>
 class BaseWindow
@@ -50,9 +51,10 @@ public:
 		}
 	}
 
-	BOOL Create(
+	virtual BOOL Create(
 		PCWSTR lpClassName,
 		PCWSTR lpWindowName,
+		LPWSTR lpMenuName,
 		DWORD dwStyle,
 		DWORD dwExStyle = 0,
 		int x = CW_USEDEFAULT,
@@ -67,10 +69,13 @@ public:
 
 		// Register the window class.
 		WNDCLASS wc = { 0 };
-
 		wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
 		wc.hInstance = GetModuleHandle( nullptr );
 		wc.lpszClassName = ClassName();
+		if ( lpMenuName )
+		{
+			wc.lpszMenuName = lpMenuName;
+		}
 
 		RegisterClass( &wc );
 
@@ -86,6 +91,9 @@ public:
 			GetModuleHandle( nullptr ),			// Instance handle
 			this );								// Additional application data
 
+		// Save the menu
+		m_hmenu = GetMenu( m_hwnd );
+
 		return ( m_hwnd ? TRUE : FALSE );
 	}
 
@@ -96,6 +104,7 @@ protected:
 	virtual PCWSTR WindowText() const = 0;
 	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 	HWND m_hwnd;
+	HMENU m_hmenu;
 	PCWSTR m_lpClassName;
 	PCWSTR m_lpWindowText;
 };
