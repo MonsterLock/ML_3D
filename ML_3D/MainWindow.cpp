@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "resource.h"
+#include <Commctrl.h>
 #include <string>
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -17,7 +18,7 @@ void MainWindow::OnQuit()
 		static_cast< std::wstring >( szFileName ) +
 		L"\"\nhas not saved [# of unsaved files] / [total number of project files].\n\nAre you sure you want to discard changes to:\n" +
 		_L( __FILE__ ) + // TODO: iterate through elements and check saved state
-		L"\n\nClick \"No\" to save file(s)\n";
+		L"\n\nClick \"No\" to save all file(s)\n";
 
 	switch ( MessageBox( m_hwnd, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
 	{
@@ -43,7 +44,7 @@ void MainWindow::OnAbout()
 {
 	DialogBox(
 		GetModuleHandle( NULL ),
-		MAKEINTRESOURCE( IDD_DIALOGABOUT ),
+		MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ),
 		m_hwnd,
 		AboutDlgProc );
 }
@@ -87,6 +88,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					{
 						OnQuit();
 					}
+					break;
 				case ID_HELP_ABOUT:
 					{
 						OnAbout();
@@ -114,6 +116,11 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT msg, WPARAM wParam, LPAR
 					}
 					break;
 				default: break;
+			}
+
+		case WM_NOTIFY:
+			{
+				// TODO
 			}
 		default:
 			return false;

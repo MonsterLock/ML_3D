@@ -12,7 +12,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	if ( !win.Create(
 		L"ML_3D",
-		L"ML 3D Engine", MAKEINTRESOURCE( IDR_MENU1 ),
+		L"ML 3D Engine", MAKEINTRESOURCE( IDR_MAIN_MENU ),
 		WS_OVERLAPPEDWINDOW ) )
 	{
 		return 0;

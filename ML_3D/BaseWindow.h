@@ -74,11 +74,11 @@ public:
 		wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
 		wc.hInstance = GetModuleHandle( nullptr );
 		wc.hIcon = static_cast< HICON >(
-			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ICON1 ), IMAGE_ICON, 32, 32, 0 ) );
+			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
 		if ( lpMenuName )  wc.lpszMenuName = lpMenuName;
 		wc.lpszClassName = ClassName();
 		wc.hIconSm = static_cast< HICON >(
-			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ICON1 ), IMAGE_ICON, 16, 16, 0 ) );
+			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
 
 		RegisterClassEx( &wc );
 

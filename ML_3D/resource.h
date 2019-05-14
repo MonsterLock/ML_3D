@@ -2,12 +2,31 @@
 // Microsoft Visual C++ generated include file.
 // Used by ML_3D.rc
 //
-#define IDR_MENU1                       101
-#define IDD_DIALOGABOUT                 103
-#define IDI_ICON1                       106
+#define IDR_MAIN_MENU                   101
+#define IDD_HELP_ABOUT_PAGE             103
+#define IDD_FILE_NEW_PAGE               107
+#define IDD_DIALOGBAR                   108
+#define IDD_FILE_OPEN                   108
+#define IDD_FILE_OPEN_PAGE              108
+#define IDB_PNG1                        120
+#define IDI_ML_LOGO                     122
 #define IDC_BUTTON1                     1008
+#define IDC_NEW_CANCEL                  1008
 #define IDC_SYSLINK1                    1010
 #define IDC_SYSLINK2                    1011
+#define IDC_SYSLINK                     1011
+#define IDC_NEW_OK                      1025
+#define IDC_NEW_LIST                    1030
+#define IDC_NEW_NAME                    1032
+#define IDC_NEW_BROWSE                  1033
+#define IDC_NEW_INFO                    1034
+#define IDC_MFCSHELLTREE1               1038
+#define IDC_MFCEDITBROWSE1              1039
+#define IDC_MFCSHELLLIST2               1043
+#define IDC_COMBO1                      1047
+#define IDC_RICHEDIT21                  1048
+#define IDC_RICHEDIT22                  1050
+#define IDC_BUTTON2                     1052
 #define ID_FILE_NEW                     40001
 #define ID_FILE_OPEN                    40002
 #define ID_FILE_SAVE                    40003
@@ -65,14 +84,61 @@
 #define ID_HELP_ABOUT                   40055
 #define ID_EDIT_FIND40056               40056
 #define ID_TOOLS                        40057
+#define ID_TOOLS_CREATEELEMENT          40060
+#define ID_TOOLS_CREATESUB              40061
+#define ID_TOOLS_3DELEMENT              40062
+#define ID_TOOLS_2DELEMENT              40063
+#define ID_TOOLS_EFFECTS                40064
+#define ID_TOOLS_LIGHT                  40065
+#define ID_TOOLS_AUDIO                  40066
+#define ID_TOOLS_VIDEO                  40067
+#define ID_TOOLS_UI                     40068
+#define ID_TOOLS_CAMERA                 40069
+#define ID_TOOLS_MAKE                   40070
+#define ID_TOOLS_CLEARSET               40071
+#define ID_TOOLS_SETASFIRSTELEMENT      40072
+#define ID_TOOLS_SETASSECONDELEMENT     40073
+#define ID_TOOLS_MOVETOELEMENT          40074
+#define ID_TOOLS_SETGAMEVIEW            40075
+#define ID_TOOLS_MOVETOORIGIN           40076
+#define ID_TOOLS_TOGGLEACTIVE           40077
+#define ID_3DELEMENT_CUBE               40078
+#define ID_3DELEMENT_SPHERE             40079
+#define ID_3DELEMENT_CAPSULE            40080
+#define ID_3DELEMENT_CYLINDER           40081
+#define ID_3DELEMENT_PLANE              40082
+#define ID_3DELEMENT_QUAD               40083
+#define ID_3DELEMENT_TERRAIN            40084
+#define ID_2DELEMENT_SPRITE             40085
+#define ID_2DELEMENT_SPRITEMASK         40086
+#define ID_2DELEMENT_TILEMAP            40087
+#define ID_EFFECTS_PARTICLESYSTEM       40088
+#define ID_EFFECTS_TRAIL                40089
+#define ID_EFFECTS_LINE                 40090
+#define ID_LIGHT_DIRECTIONAL            40091
+#define ID_LIGHT_POINT                  40092
+#define ID_LIGHT_SPOT                   40093
+#define ID_LIGHT_AREA                   40094
+#define ID_LIGHT_REFLECTIONPROBE        40095
+#define ID_VIEW_WIREFRAME               40096
+#define ID_VIEW_ORTHOGRAPHIC            40097
+#define ID_EDIT_SELECTIONGROUP          40098
+#define ID_FILE_BUILDPROPERTIES         40099
+#define ID_FILE_BUILDANDRUN             40100
+#define ID_TOOLS_SCRIPT                 40101
+#define ID_TOOLS_SHADER                 40102
+#define ID_TOOLS_SCENE                  40103
+#define ID_HELP_REPORTABUG              40104
+#define ID_VIEW_PERSPECTIVE             40105
+#define ID_WINDOW_LAYOUTS               40106
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        115
-#define _APS_NEXT_COMMAND_VALUE         40060
-#define _APS_NEXT_CONTROL_VALUE         1012
+#define _APS_NEXT_RESOURCE_VALUE        124
+#define _APS_NEXT_COMMAND_VALUE         40107
+#define _APS_NEXT_CONTROL_VALUE         1053
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

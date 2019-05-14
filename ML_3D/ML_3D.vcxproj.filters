@@ -51,7 +51,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ml_3d.ico">
+    <Image Include="Images\ml_3d.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\ML_3D.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
