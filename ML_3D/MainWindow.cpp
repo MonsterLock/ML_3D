@@ -1,7 +1,8 @@
 #include "MainWindow.h"
 #include "resource.h"
 #include <string>
-
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
+"version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #define _L(x)  __L(x)
 #define __L(x)  L##x
 
@@ -12,13 +13,13 @@ void MainWindow::OnQuit()
 	GetModuleFileName( hInstance, szFileName, MAX_PATH );
 
 	std::wstring message =
-		L"Project:\n" +
+		L"The project:\n\"" +
 		static_cast< std::wstring >( szFileName ) +
-		L"\n\nHas not saved the following file(s):\n" +
+		L"\"\nhas not saved [# of unsaved files] / [total number of project files].\n\nAre you sure you want to discard changes to:\n" +
 		_L( __FILE__ ) + // TODO: iterate through elements and check saved state
-		L"\n\n\nEXIT WITHOUT SAVING?\n";
+		L"\n\nClick \"No\" to save file(s)\n";
 
-	switch ( MessageBox( m_hwnd, message.c_str(), L"EXIT", MB_YESNOCANCEL | MB_DEFBUTTON2 ) )
+	switch ( MessageBox( m_hwnd, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
 	{
 		case IDYES:
 			{
@@ -36,6 +37,15 @@ void MainWindow::OnQuit()
 		default:
 			return;
 	}
+}
+
+void MainWindow::OnAbout()
+{
+	DialogBox(
+		GetModuleHandle( NULL ),
+		MAKEINTRESOURCE( IDD_DIALOGABOUT ),
+		m_hwnd,
+		AboutDlgProc );
 }
 
 PCWSTR MainWindow::ClassName() const
@@ -77,10 +87,36 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					{
 						OnQuit();
 					}
+				case ID_HELP_ABOUT:
+					{
+						OnAbout();
+					}
 					break;
 			}
 		default:
 			return DefWindowProc( m_hwnd, uMsg, wParam, lParam );
 	}
 	return TRUE;
+}
+
+BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+	switch ( msg )
+	{
+		case WM_INITDIALOG:
+			return true;
+		case WM_COMMAND:
+			switch ( LOWORD( wParam ) )
+			{
+				case IDOK:
+					{
+						EndDialog( hwnd, IDOK );
+					}
+					break;
+				default: break;
+			}
+		default:
+			return false;
+	}
+	return true;
 }

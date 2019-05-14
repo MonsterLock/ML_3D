@@ -68,16 +68,19 @@ public:
 		m_lpWindowText = lpWindowName;
 
 		// Register the window class.
-		WNDCLASS wc = { 0 };
+		WNDCLASSEX wc = { 0 };
+		wc.cbSize = sizeof( wc );
+		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
 		wc.hInstance = GetModuleHandle( nullptr );
+		wc.hIcon = static_cast< HICON >(
+			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ICON1 ), IMAGE_ICON, 32, 32, 0 ) );
+		if ( lpMenuName )  wc.lpszMenuName = lpMenuName;
 		wc.lpszClassName = ClassName();
-		if ( lpMenuName )
-		{
-			wc.lpszMenuName = lpMenuName;
-		}
+		wc.hIconSm = static_cast< HICON >(
+			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ICON1 ), IMAGE_ICON, 16, 16, 0 ) );
 
-		RegisterClass( &wc );
+		RegisterClassEx( &wc );
 
 		// Create the window.
 		m_hwnd = CreateWindowEx(

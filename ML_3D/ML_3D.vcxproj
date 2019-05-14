@@ -145,18 +145,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="ML_Sytem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="FileIO.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="ML_Sytem.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ml_3d.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

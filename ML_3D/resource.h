@@ -3,6 +3,11 @@
 // Used by ML_3D.rc
 //
 #define IDR_MENU1                       101
+#define IDD_DIALOGABOUT                 103
+#define IDI_ICON1                       106
+#define IDC_BUTTON1                     1008
+#define IDC_SYSLINK1                    1010
+#define IDC_SYSLINK2                    1011
 #define ID_FILE_NEW                     40001
 #define ID_FILE_OPEN                    40002
 #define ID_FILE_SAVE                    40003
@@ -65,9 +70,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        104
-#define _APS_NEXT_COMMAND_VALUE         40058
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_RESOURCE_VALUE        115
+#define _APS_NEXT_COMMAND_VALUE         40060
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
