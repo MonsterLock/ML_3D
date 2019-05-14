@@ -2,8 +2,10 @@
 #include "resource.h"
 #include <Commctrl.h>
 #include <string>
+
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 #define _L(x)  __L(x)
 #define __L(x)  L##x
 
@@ -96,7 +98,21 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					break;
 			}
 		default:
-			return DefWindowProc( m_hwnd, uMsg, wParam, lParam );
+			{
+				if ( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
+				{
+					DefFrameProc( hwnd, g_hMDIClient, msg, wParam, lParam );
+				}
+				else
+				{
+					HWND hChild = ( HWND ) SendMessage( g_hMDIClient, WM_MDIGETACTIVE, 0, 0 );
+					if ( hChild )
+					{
+						SendMessgage( hChld, WM_COMMAND, wParam, lParam );
+					}
+				}
+				//return DefWindowProc( m_hwnd, uMsg, wParam, lParam );
+			}
 	}
 	return TRUE;
 }
@@ -126,4 +142,31 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT msg, WPARAM wParam, LPAR
 			return false;
 	}
 	return true;
+}
+
+BOOL MainWindow::SetUpMDIChildWindowClass( HINSTANCE hInstance )
+{
+	WNDCLASSEX wc;
+
+	wc.cbSize = sizeof( WNDCLASSEX );
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = MDIChildWndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon = LoadIcon( NULL, IDI_APPLICATION );
+	wc.hCursor = LoadCursor( NULL, IDC_ARROW );
+	wc.hbrBackground = ( HBRUSH ) ( COLOR_3DFACE + 1 );
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = g_szChildClassName;
+	wc.hIconSm = LoadIcon( NULL, IDI_APPLICATION );
+
+	if ( !RegisterClassEx( &wc ) )
+	{
+		MessageBox( 0, "Could Not Register Child Window", "Oh Oh...",
+					MB_ICONEXCLAMATION | MB_OK );
+		return FALSE;
+	}
+	else
+		return TRUE;
 }

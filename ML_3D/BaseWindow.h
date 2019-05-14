@@ -16,6 +16,28 @@ public:
 
 		if ( uMsg == WM_NCCREATE )
 		{
+			// MDI Client Window
+			CLIENTRESOURCESTRUCT ccs;
+
+			ccs.hWindowMenu = GetSubMenu( GetMenu( hwnd ), 2 );
+			ccs.idFirstChild = ID_MDI_FIRSTCHILD;
+
+			g_hMDIClient = CreateWindowEx( WS_EX_CLIENTEDGE,
+										   WindowText(),
+										   nullptr,
+										   WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
+										   CW_USERDEFAULT, CW_USERDEFAULT, CW_USERDEFAULT, CW_USERDEFAULT
+										   hwnd,
+										   ( HMENU ) IDC_MAIN_MDI,
+										   GetModuleHandle( nullptr ),
+										   ( LPVOID ) &ccs );
+
+			if ( !g_hDMIClient )
+			{
+				MessageBox( m_hwnd, L"Could not create MDI client.", L"Error", MB_OK | MB_ICONERROR );
+			}
+
+			// TODO figure out what this went to
 			CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* >( lParam );
 			pThis = reinterpret_cast< DERIVED_TYPE* >( pCreate->lpCreateParams );
 			SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
@@ -32,7 +54,8 @@ public:
 		}
 		else
 		{
-			return DefWindowProc( hwnd, uMsg, wParam, lParam );
+			return DefFrameProc( hwnd, uMsg, wParam, lParam );
+			//return DefWindowProc( hwnd, uMsg, wParam, lParam );
 		}
 	}
 
@@ -101,12 +124,14 @@ public:
 	}
 
 	HWND Window() const { return m_hwnd; }
+	HWND MDIWindow() const { return m_hMDIwnd; }
 
 protected:
 	virtual PCWSTR ClassName() const = 0;
 	virtual PCWSTR WindowText() const = 0;
 	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 	HWND m_hwnd;
+	HWND m_hMDIwnd;
 	HMENU m_hmenu;
 	PCWSTR m_lpClassName;
 	PCWSTR m_lpWindowText;
