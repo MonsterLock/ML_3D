@@ -15,10 +15,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 		L"ML 3D Engine", MAKEINTRESOURCE( IDR_MAIN_MENU ),
 		WS_OVERLAPPEDWINDOW ) )
 	{
+		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 		return 0;
 	}
 
 	ShowWindow( win.Window(), nCmdShow );
+	UpdateWindow( win.Window() );
 
 	// Run the message loop.
 	MSG msg = {};
