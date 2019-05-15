@@ -23,18 +23,18 @@ void MainWindow::OnQuit()
 		_L( __FILE__ ) + // TODO: iterate through elements and check saved state
 		L"\n\nClick \"No\" to save all file(s)\n";
 
-	switch ( MessageBox( m_hwnd, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
+	switch ( MessageBox( mMDIFrame, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
 	{
 		case IDYES:
 			{
-				DestroyWindow( m_hwnd );
+				DestroyWindow( mMDIFrame );
 				PostQuitMessage( 0 );
 			}
 			break;
 		case IDNO:
 			{
 				// TODO save files
-				DestroyWindow( m_hwnd );
+				DestroyWindow( mMDIFrame );
 				PostQuitMessage( 0 );
 			}
 			break;
@@ -48,7 +48,7 @@ void MainWindow::OnAbout()
 	DialogBox(
 		GetModuleHandle( NULL ),
 		MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ),
-		m_hwnd,
+		mMDIFrame,
 		AboutDlgProc );
 }
 
@@ -66,21 +66,24 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( uMsg )
 	{
-		case WM_NCCREATE:
+		case WM_CREATE:
 			{
 				// Register the MDI.
 				WNDCLASSEX wc = { 0 };
+				wc.cbSize = sizeof( wc );
 				wc.style = CS_HREDRAW | CS_VREDRAW;
+				wc.lpfnWndProc = MDIWndProc;
+				wc.cbClsExtra = 0;
+				wc.cbWndExtra = 0;
+				wc.hInstance = GetModuleHandle( nullptr );
+				wc.hbrBackground = CreateSolidBrush( RGB( 0, 0, 0 ) );// ( HBRUSH ) ( LTGRAY_BRUSH );
 				wc.lpszMenuName = nullptr;
 				wc.lpszClassName = L"MDICLIENT";
-				wc.lpfnWndProc = MainWindow::MDIWndProc;
-				wc.cbSize = sizeof( WNDCLASSEX );
-				wc.hInstance = GetModuleHandle( nullptr );
 				wc.hIcon = static_cast< HICON >(
 					LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
 				wc.hIconSm = static_cast< HICON >(
 					LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
-				wc.cbWndExtra = 0;
+				wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
 
 				if ( !RegisterClassEx( &wc ) )
 				{
@@ -92,34 +95,43 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				CLIENTCREATESTRUCT ccs;
 
 				// Retrieve the handle to the window menu and assign the first sub-window identifier.
-				ccs.hWindowMenu = GetSubMenu( m_hmenu, 5 );
+				ccs.hWindowMenu = GetSubMenu( m_hmenu, 2 );
 				ccs.idFirstChild = ID_MDI_FIRSTCHILD;
 
-				m_hMDIwnd = CreateWindowEx(
+				RECT rc;
+				GetClientRect( mMDIFrame, &rc );
+
+				mMDIClient = CreateWindowEx(
 					WS_EX_CLIENTEDGE,
-					L"MDICLIENT",
+					L"mdiclient",
 					nullptr,
 					WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
-					CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-					m_hwnd,
-					nullptr,
+					rc.left, rc.top, rc.right, rc.bottom,
+					mMDIFrame,
+					m_hmenu,
 					GetModuleHandle( nullptr ),
-					reinterpret_cast< LPSTR >( &ccs ) );
+					&ccs );
+
+				if ( !mMDIClient )
+				{
+					MessageBox( nullptr, L"Creating MDI Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+					return FALSE;
+				}
 			}
 			break;
 		case WM_CLOSE:
 			{
 				OnQuit();
+				return 0;
 			}
-			return 0;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
-				HDC hdc = BeginPaint( m_hwnd, &ps );
+				HDC hdc = BeginPaint( mMDIFrame, &ps );
 				FillRect( hdc, &ps.rcPaint, reinterpret_cast< HBRUSH > ( COLOR_WINDOW ) );
-				EndPaint( m_hwnd, &ps );
+				EndPaint( mMDIFrame, &ps );
 			}
-			return 0;
+			break;
 		case WM_COMMAND:
 			switch ( LOWORD( wParam ) )
 			{
@@ -139,12 +151,13 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					}
 					break;
 			}
+			break;
 		default:
 			{
-				return DefFrameProc( m_hwnd, m_hMDIwnd, uMsg, wParam, lParam );
+				return DefFrameProc( mMDIFrame, 0, uMsg, wParam, lParam );//mMDIClient, uMsg, wParam, lParam );
 			}
 	}
-	return TRUE;
+	return 0;
 }
 
 BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -176,50 +189,9 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPA
 
 LRESULT CALLBACK MainWindow::MDIWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	switch ( uMsg )
+	if ( uMsg )
 	{
-		case WM_SIZE:
-			{
-				RECT rcClient;
-
-				// Calculate the remaining height and size edit.
-
-				GetClientRect( hwnd, &rcClient );
-				SetWindowPos( nullptr, nullptr, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER );
-			}
-			return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
-		default: return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
+		return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
 	}
-
-	return TRUE;
+	return 0;
 }
-//		// Register the MDI.
-//		wc.style = CS_HREDRAW | CS_VREDRAW;
-//		wc.lpfnWndProc = DERIVED_TYPE::MDIWndProc;
-//		wc.lpszMenuName = reinterpret_cast< LPCTSTR > ( nullptr );
-//		wc.cbWndExtra = 0;
-//		wc.lpszClassName = L"MDICLIENT";
-//
-//		if ( !RegisterClassEx( &wc ) )
-//		{
-//			MessageBox( nullptr, L"Registering MDI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-//			return FALSE;
-//		}
-//
-////		// Create the MDI.
-//		CLIENTCREATESTRUCT ccs;
-//
-//		// Retrieve the handle to the window menu and assign the first sub-window identifier.
-//		ccs.hWindowMenu = GetSubMenu( m_hmenu, 5 );
-//		ccs.idFirstChild = ID_MDI_FIRSTCHILD;
-//
-//		m_hMDIwnd = CreateWindowEx(
-//			WS_EX_CLIENTEDGE,
-//			L"MDICLIENT",
-//			reinterpret_cast< LPCTSTR >( nullptr ),
-//			WS_CHILD | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL | WS_VISIBLE,
-//			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-//			m_hwnd,
-//			nullptr,
-//			GetModuleHandle( nullptr ),
-//			reinterpret_cast< LPSTR >( &ccs ) );

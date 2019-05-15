@@ -4,11 +4,11 @@
 class MainWindow : public BaseWindow<MainWindow>
 {
 protected:
-	HWND m_hMDIwnd;
+	HWND mMDIClient;
 	void OnQuit();
 	void OnAbout();
 public:
-	HWND MDIWnd() const { return m_hMDIwnd; }
+	HWND ClientWnd() const { return mMDIClient; }
 	PCWSTR ClassName() const;
 	PCWSTR WindowText() const;
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
