@@ -22,19 +22,23 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	// Run the message loop.
 	MSG msg = {};
-	while ( GetMessage( &msg, nullptr, 0, 0 ) )
+	BOOL bRet;
+
+	while ( ( bRet = GetMessage( &msg, static_cast< HWND >( nullptr ), 0, 0 ) ) != 0 )
 	{
-		if ( !TranslateMDISysAccel( win.MDIWindow(), &msg ) )
+		if ( bRet == -1 )
 		{
-			TranslateMessage( &msg );
-			DispatchMessage( &msg );
+			// TODO handle the error and possibly exit
+		}
+		else
+		{
+			if ( !TranslateMDISysAccel( win.MDIWnd(), &msg ) )
+			{
+				TranslateMessage( &msg );
+				DispatchMessage( &msg );
+			}
 		}
 	}
-	//while ( GetMessage( &msg, nullptr, 0, 0 ) )
-	//{
-	//	TranslateMessage( &msg );
-	//	DispatchMessage( &msg );
-	//}
 
 	return 0;
 }
