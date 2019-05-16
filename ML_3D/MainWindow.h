@@ -12,5 +12,8 @@ public:
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
 	BOOL RegisterMDIChild(const HBRUSH);
 	static BOOL CALLBACK AboutDlgProc( HWND, UINT, WPARAM, LPARAM );
-	static LRESULT CALLBACK MDIWndProc( HWND, UINT, WPARAM, LPARAM );
+
+	static LRESULT CALLBACK SubWndProc( HWND, UINT, WPARAM, LPARAM );
+	HWND CreateSubWindow( HWND hMDIClient );
+	BOOL RegSubWnd();
 };

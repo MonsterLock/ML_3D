@@ -59,79 +59,57 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				OnQuit();
 				return 0;
 			}
-			case WM_CREATE:
+		case WM_CREATE:
+			{
+				if ( !RegisterMDIChild( CreateSolidBrush( RGB( 255, 0, 255 ) ) ) )
 				{
-					if ( !RegisterMDIChild( CreateSolidBrush( RGB( 255, 0, 255 ) ) ) )
-					{
-						MessageBox( nullptr, L"Registering MDI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-						return FALSE;
-					}
+					MessageBox( nullptr, L"Registering MDI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+					return FALSE;
 				}
-				break;
-				case WM_COMMAND:
-					switch ( LOWORD( wParam ) )
+			}
+			break;
+		case WM_COMMAND:
+			switch ( LOWORD( wParam ) )
+			{
+				case ID_FILE_SAVE:
 					{
-						case ID_FILE_SAVE:
-							{
-								EnableMenuItem( mMenu, ID_FILE_SAVE, MF_GRAYED );
-							}
-							break;
-						case ID_FILE_EXIT:
-							{
-								OnQuit();
-							}
-							break;
-						case ID_HELP_ABOUT:
-							{
-								OnAbout();
-							}
-							break;
-						default:
-							{
-								break;
-								//if ( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
-								//{
-								//	return DefFrameProc( mMDIFrame, mMDIClient, uMsg, wParam, lParam );
-								//}
-								//else
-								//{
-								//	HWND hChild = reinterpret_cast< HWND >( SendMessage( mMDIClient, WM_MDIGETACTIVE, 0, 0 ) );
-								//	if ( hChild )
-								//	{
-								//		SendMessage( hChild, WM_COMMAND, wParam, lParam );
-								//	}
-								//}
-							}
+						EnableMenuItem( mMenu, ID_FILE_SAVE, MF_GRAYED );
 					}
 					break;
+				case ID_FILE_EXIT:
+					{
+						OnQuit();
+					}
+					break;
+				case ID_HELP_ABOUT:
+					{
+						OnAbout();
+					}
+					break;
+				default:
+					{
+						break;
+						//if ( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
+						//{
+						//	return DefFrameProc( mMDIFrame, mMDIClient, uMsg, wParam, lParam );
+						//}
+						//else
+						//{
+						//	HWND hChild = reinterpret_cast< HWND >( SendMessage( mMDIClient, WM_MDIGETACTIVE, 0, 0 ) );
+						//	if ( hChild )
+						//	{
+						//		SendMessage( hChild, WM_COMMAND, wParam, lParam );
+						//	}
+						//}
+					}
+			}
+			break;
 		default:
 			{
 				return DefFrameProc( mMDIFrame, mMDIClient, uMsg, wParam, lParam );
 			}
 	}
 	return 0;
-}
-
-BOOL MainWindow::RegisterMDIChild( const HBRUSH color )
-{
-	WNDCLASSEX wc = { 0 };
-
-	wc.cbSize = sizeof( WNDCLASSEX );
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = reinterpret_cast< WNDPROC >( MDIWndProc );
-	wc.lpszClassName = L"Child";
-	wc.lpszMenuName = nullptr;
-	wc.hInstance = GetModuleHandle( nullptr );
-	wc.hCursor = LoadCursor( nullptr, IDC_ARROW );
-	wc.hbrBackground = color;
-	wc.hIcon = static_cast< HICON >(
-		LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
-	wc.hIconSm = static_cast< HICON >(
-		LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
-
-	return RegisterClassEx( &wc ) ? TRUE : FALSE;
 }
 
 BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -160,7 +138,7 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPA
 	return TRUE;
 }
 
-LRESULT CALLBACK MainWindow::MDIWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	if ( uMsg )
 	{
@@ -168,4 +146,41 @@ LRESULT CALLBACK MainWindow::MDIWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LP
 	}
 
 	return 0;
+}
+
+HWND MainWindow::CreateSubWindow( HWND hMDIClient )
+{
+	HWND hSub;
+
+	MDICREATESTRUCT mcs;
+	mcs.szTitle;
+	mcs.szClass;
+	mcs.hOwner = GetModuleHandle( nullptr );
+	mcs.x = mcs.cx = CW_USEDEFAULT;
+	mcs.y = mcs.cy = CW_USEDEFAULT;
+	mcs.style = MDIS_ALLCHILDSTYLES;
+
+	hSub = reinterpret_cast< HWND >(
+		SendMessage( mMDIClient, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
+
+	if ( !hSub )
+	{
+		MessageBox( mMDIClient, L"Sub-window creation failed.", L"ERROR",
+					MB_ICONEXCLAMATION | MB_OK );
+	}
+	return hSub;
+}
+
+BOOL MainWindow::RegSubWnd()
+{
+	WNDCLASSEX wc = { 0 };
+	wc.cbSize = sizeof( WNDCLASSEX );
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = SubWndProc;
+	wc.lpszClassName = L"TestSubWnd";
+	wc.lpszMenuName = nullptr;
+	wc.hInstance = GetModuleHandle( nullptr );
+	wc.hbrBackground = CreateSolidBrush( RGB( 255, 69, 0 ) );
+
+	return RegisterClassEx( &wc ) ? TRUE : FALSE;
 }
