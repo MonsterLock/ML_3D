@@ -32,7 +32,7 @@ public:
 		}
 		else
 		{
-			return DefFrameProc( hwnd, nullptr, uMsg, wParam, lParam );
+			return DefWindowProc( hwnd, uMsg, wParam, lParam );
 		}
 	}
 
@@ -54,8 +54,8 @@ public:
 	virtual BOOL Create(
 		PCWSTR lpClassName,
 		PCWSTR lpWindowName,
-		LPWSTR lpMenuName,
 		DWORD dwStyle,
+		LPWSTR lpMenuName = nullptr,
 		DWORD dwExStyle = 0,
 		int x = CW_USEDEFAULT,
 		int y = CW_USEDEFAULT,
@@ -69,18 +69,19 @@ public:
 
 		// Register the frame.
 		WNDCLASSEX wc = { 0 };
-		wc.cbSize = sizeof( wc );
-		wc.style = 0;
-		wc.lpfnWndProc = DERIVED_TYPE::WndProc;
+
+		wc.cbSize = sizeof( WNDCLASSEX );
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
+		wc.style = CS_PARENTDC | CS_HREDRAW | CS_VREDRAW;
+		wc.lpfnWndProc = reinterpret_cast<WNDPROC>(WndProc);
+		wc.lpszClassName = ClassName();
+		wc.lpszMenuName = MAKEINTRESOURCE( IDR_MAIN_MENU );
 		wc.hInstance = GetModuleHandle( nullptr );
+		wc.hCursor = LoadCursor( NULL, IDC_ARROW );
+		wc.hbrBackground = reinterpret_cast< HBRUSH >( COLOR_APPWORKSPACE + 1 );
 		wc.hIcon = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
-		wc.hCursor = LoadCursor( nullptr, IDC_ARROW );
-		wc.hbrBackground = ( HBRUSH ) ( COLOR_APPWORKSPACE + 1 );
-		wc.lpszMenuName = lpMenuName;
-		wc.lpszClassName = ClassName();
 		wc.hIconSm = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
 
@@ -92,25 +93,21 @@ public:
 
 		// Create the frame.
 		mMDIFrame = CreateWindowEx(
-			0,									// Optional window styles.
-			ClassName(),						// Window class
-			WindowText(),						// Window text
-			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,//dwStyle,							// Window style
-			x, y, nWidth, nHeight,				// Size and position
-			nullptr,							// Parent window
-			nullptr,							// Menu
-			GetModuleHandle( nullptr ),			// Instance handle
-			this );								// Additional application data
+			WS_EX_APPWINDOW | WS_EX_CONTROLPARENT,		// Optional window styles.
+			ClassName(),								// Window class
+			WindowText(),								// Window text
+			dwStyle,									// Window style
+			x, y, nWidth, nHeight,						// Size and position
+			nullptr,									// Parent window
+			nullptr,									// Menu
+			GetModuleHandle( nullptr ),					// Instance handle
+			this );										// Additional application data
 
 		if ( !mMDIFrame )
 		{
 			MessageBox( nullptr, L"Creating Frame Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 			return FALSE;
 		}
-
-		// Save the menu
-		m_hmenu = GetMenu( mMDIFrame );
-
 		return ( mMDIFrame ? TRUE : FALSE );
 	}
 
@@ -121,7 +118,6 @@ protected:
 	virtual PCWSTR WindowText() const = 0;
 	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 	HWND mMDIFrame;
-	HMENU m_hmenu;
 	PCWSTR m_lpClassName;
 	PCWSTR m_lpWindowText;
 };
