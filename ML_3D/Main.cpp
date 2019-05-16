@@ -24,7 +24,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	MSG msg = {};
 	BOOL bRet;
 	ShowWindow( win.FrameWnd(), SW_SHOWNORMAL );
-	UpdateWindow( win.FrameWnd() );
+	ShowWindow( win.ClientWnd(), SW_SHOWNORMAL );
 
 	while ( ( bRet = GetMessage( &msg, static_cast< HWND >( nullptr ), 0, 0 ) ) != 0 )
 	{

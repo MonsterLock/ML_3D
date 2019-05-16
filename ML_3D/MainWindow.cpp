@@ -7,7 +7,6 @@
 
 #define _L(x)  __L(x)
 #define __L(x)  L##x
-#define ID_MDI_FIRSTCHILD 50000
 
 void MainWindow::OnQuit()
 {
@@ -22,7 +21,7 @@ void MainWindow::OnQuit()
 		_L( __FILE__ ) + // TODO: iterate through elements and check saved state
 		L"\n\nClick \"No\" to save all file(s)\n";
 
-	switch ( MessageBox( mMDIFrame, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
+	switch ( MessageBox( nullptr, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
 	{
 		case IDYES:
 			{
@@ -81,10 +80,8 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//	}
 		case WM_CREATE:
 			{
-				mHmenu = GetMenu( mMDIFrame );
 
-				// Create the MDI.
-				m_lpMDIName = L"MDICLIENT";
+
 
 				if ( !RegisterMDI( CreateSolidBrush( RGB( 255, 0, 255 ) ) ) ) // CreateSolidBrush( RGB( 255, 0, 255 ) );//reinterpret_cast< HBRUSH > ( COLOR_APPWORKSPACE );
 				{
@@ -92,27 +89,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					return FALSE;
 				}
 
-				// Retrieve the handle to the window menu and assign the first sub-window identifier.
-				CLIENTCREATESTRUCT ccs;
-				ccs.hWindowMenu = GetSubMenu( mHmenu, 5 );
-				ccs.idFirstChild = ID_MDI_FIRSTCHILD;
 
-				mMDIClient = CreateWindowEx(
-					WS_EX_CLIENTEDGE,
-					GetMDIName(),
-					nullptr,
-					WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
-					CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-					mMDIFrame,
-					0,
-					GetModuleHandle( nullptr ),
-					&ccs );
-
-				if ( !mMDIClient )
-				{
-					MessageBox( nullptr, L"Creating MDI Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-					return FALSE;
-				}
 			}
 			break;
 		case WM_CLOSE:
@@ -120,15 +97,15 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				OnQuit();
 				return 0;
 			}
-		//case WM_PAINT:
-		//	{
-		//		PAINTSTRUCT ps;
-		//		HDC hdc = BeginPaint( mMDIClient, &ps );
-		//		FillRect( hdc, &ps.rcPaint, GetClientColor() );
-		//		EndPaint( mMDIClient, &ps );
-		//		//DrawMenuBar( mMDIFrame );
-		//	}
-		//	break;
+		case WM_PAINT:
+			{
+				PAINTSTRUCT ps;
+				HDC hdc = BeginPaint( mMDIClient, &ps );
+				FillRect( hdc, &ps.rcPaint, GetClientColor() );
+				EndPaint( mMDIClient, &ps );
+				//DrawMenuBar( mMDIFrame );
+			}
+			break;
 		//case WM_SIZE:
 		//	{
 		//		RECT rcFrame;
