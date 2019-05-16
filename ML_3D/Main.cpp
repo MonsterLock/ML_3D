@@ -12,9 +12,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	MainWindow win;
 
 	if ( !win.Create(
-		L"ML_3D",
-		L"ML 3D Engine",
-		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_VISIBLE) )
+		L"ML 3D Engine"
+	) )
 	{
 		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 		return 0;
@@ -23,8 +22,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	// Run the message loop.
 	MSG msg = {};
 	BOOL bRet;
-	ShowWindow( win.FrameWnd(), SW_SHOWNORMAL );
-	ShowWindow( win.ClientWnd(), SW_SHOWNORMAL );
 
 	while ( ( bRet = GetMessage( &msg, static_cast< HWND >( nullptr ), 0, 0 ) ) != 0 )
 	{

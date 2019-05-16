@@ -179,7 +179,7 @@
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseWindow.h" />
+    <ClInclude Include="MDIWindow.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
