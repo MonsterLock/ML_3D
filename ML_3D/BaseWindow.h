@@ -79,7 +79,7 @@ public:
 		wc.lpszMenuName = MAKEINTRESOURCE( IDR_MAIN_MENU );
 		wc.hInstance = GetModuleHandle( nullptr );
 		wc.hCursor = LoadCursor( NULL, IDC_ARROW );
-		wc.hbrBackground = reinterpret_cast< HBRUSH >( COLOR_APPWORKSPACE + 1 );
+		wc.hbrBackground = CreateSolidBrush( RGB( 0, 255, 0 ) );
 		wc.hIcon = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
 		wc.hIconSm = static_cast< HICON >(
