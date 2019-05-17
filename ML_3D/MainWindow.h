@@ -7,6 +7,11 @@ protected:
 	void OnQuit();
 	void OnAbout();
 
+	BOOL LoadTextFileToEdit( HWND hEdit, LPCWSTR pszFileName );
+	BOOL SaveTextFileFromEdit( HWND hEdit, LPCWSTR pszFileName );
+	void DoFileOpen( HWND hwnd );
+	void DoFileSave( HWND hwnd );
+
 public:
 	PCWSTR WindowText() const { return mWindowText; }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );

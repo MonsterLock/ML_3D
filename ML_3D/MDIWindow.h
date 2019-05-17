@@ -3,6 +3,7 @@
 #include "resource.h"
 
 #define ID_MDI_FIRSTCHILD 50000
+#define RID_MAIN_CLIENT 1337
 
 template <class DERIVED_TYPE>
 class MDIWindow
@@ -53,7 +54,7 @@ public:
 						WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
 						CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 						pThis->mMDIFrame,
-						0,
+						reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
 						GetModuleHandle( nullptr ),
 						&ccs );
 

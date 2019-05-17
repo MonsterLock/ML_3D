@@ -7,6 +7,7 @@
 #define IDD_FILE_NEW_PAGE               107
 #define IDD_FILE_OPEN_PAGE              108
 #define IDI_ML_LOGO                     122
+#define IDR_TOOLBAR1                    126
 #define IDC_NEW_CANCEL                  1008
 #define IDC_SYSLINK                     1011
 #define IDC_NEW_OK                      1025
@@ -117,13 +118,16 @@
 #define ID_WINDOW_LAYOUTS               40106
 #define ID_FILE_NEW                     40107
 #define ID_FILE_OPEN                    40108
+#define ID_BUTTON2                      40109
+#define IDR_TB_BTN1                     40111
+#define ID_BUTTON40113                  40113
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        125
-#define _APS_NEXT_COMMAND_VALUE         40109
+#define _APS_NEXT_RESOURCE_VALUE        128
+#define _APS_NEXT_COMMAND_VALUE         40114
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
