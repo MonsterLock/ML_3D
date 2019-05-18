@@ -86,7 +86,7 @@ BOOL MainWindow::LoadTextFileToEdit( HWND hEdit, LPCWSTR pszFileName )
 
 				if ( ReadFile( hFile, pszFileText, dwFileSize, &dwRead, nullptr ) )
 				{
-					pszFileText[dwFileSize] = 0;
+					pszFileText[dwFileSize] = 0; // Add null terminator
 					if ( SetWindowText( hEdit, pszFileText ) )
 					{
 						bSuccess = TRUE;
@@ -116,29 +116,29 @@ BOOL MainWindow::SaveTextFileFromEdit( HWND hEdit, LPCWSTR pszFileName )
 
 	if ( hFile != INVALID_HANDLE_VALUE )
 	{
-		DWORD dwFileSize;
+		DWORD dwTextLength;
 
-		dwFileSize = GetFileSize( hFile, nullptr );
+		dwTextLength = GetWindowTextLength( hEdit );
 
-		if ( dwFileSize != 0xFFFFFFFF )
+		if ( dwTextLength != 0xFFFFFFFF )
 		{
-			LPWSTR pszFileText;
+			LPWSTR pszText;
+			DWORD dwBufferSize = dwTextLength + 1;
 
-			pszFileText = reinterpret_cast< LPWSTR > ( GlobalAlloc( GPTR, dwFileSize + 1 ) );
+			pszText = reinterpret_cast< LPWSTR > ( GlobalAlloc( GPTR, dwBufferSize ) );
 
-			if ( pszFileText )
+			if ( pszText )
 			{
-				DWORD dwRead;
-
-				if ( ReadFile( hFile, pszFileText, dwFileSize, &dwRead, nullptr ) )
+				if ( GetWindowText( hEdit, pszText, dwBufferSize ) )
 				{
-					pszFileText[dwFileSize] = 0;
-					if ( SetWindowText( hEdit, pszFileText ) )
+					DWORD dwWritten;
+
+					if ( WriteFile( hFile, pszText, dwTextLength, &dwWritten, nullptr ) )
 					{
 						bSuccess = TRUE;
 					}
 				}
-				GlobalFree( pszFileText );
+				GlobalFree( pszText );
 			}
 		}
 		CloseHandle( hFile );
@@ -197,7 +197,6 @@ void MainWindow::DoFileSave( HWND hwnd )
 		{
 			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 0, reinterpret_cast< LPARAM >( L"Saved..." ) );
 			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 1, reinterpret_cast< LPARAM >( szFileName ) );
-
 			SetWindowText( hwnd, szFileName );
 		}
 	}
@@ -214,9 +213,9 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			}
 		case WM_CREATE:
 			{
-				if ( !RegisterMDIChild( CreateSolidBrush( RGB( 255, 0, 255 ) ) ) )
+				if ( !RegSubWnd() )
 				{
-					MessageBox( nullptr, L"Registering MDI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+					MessageBox( nullptr, L"Registering Sub-window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 					return FALSE;
 				}
 
@@ -236,8 +235,12 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					GetModuleHandle( nullptr ),
 					nullptr );
 
+				if ( !hTool )
+				{
+					MessageBox( nullptr, L"Create the toolbar.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+				}
 				// Send the toolbar button struct for backward compatibility.
-				SendMessage( hTool, TB_BUTTONSTRUCTSIZE, reinterpret_cast< WPARAM >( sizeof( TBBUTTON ) ), 0 );
+				SendMessage( hTool, TB_BUTTONSTRUCTSIZE, static_cast< WPARAM >( sizeof( TBBUTTON ) ), 0 );
 
 				tbab.hInst = HINST_COMMCTRL;
 				tbab.nID = IDB_STD_SMALL_COLOR;
@@ -257,10 +260,9 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				tbb[2].iBitmap = STD_FILESAVE;
 				tbb[2].fsState = TBSTATE_ENABLED;
 				tbb[2].fsStyle = TBSTYLE_BUTTON;
-				tbb[2].idCommand = ID_FILE_OPEN;
+				tbb[2].idCommand = ID_FILE_SAVEAS;
 
 				SendMessage( hTool, TB_ADDBUTTONS, sizeof( tbb ) / sizeof( TBBUTTON ), reinterpret_cast< LPARAM >( &tbb ) );
-
 
 				// Create status Bar
 				HWND hStatus;
@@ -277,6 +279,10 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					GetModuleHandle( nullptr ),
 					nullptr );
 
+				if ( !hStatus )
+				{
+					MessageBox( nullptr, L"Create the statusbar.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+				}
 				SendMessage( hStatus, SB_SETPARTS, sizeof( statwidths ) / sizeof( int ), reinterpret_cast< LPARAM >( statwidths ) );
 				SendMessage( hStatus, SB_SETTEXT, 0, reinterpret_cast< LPARAM > ( L"Message" ) );
 			}
@@ -337,14 +343,18 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 						}
 					}
 					break;
-				case ID_FILE_SAVE:
+				case ID_FILE_STARTUP:
 					{
-						EnableMenuItem( mMenu, ID_FILE_SAVE, MF_GRAYED );
+						break;
+					}
+				case ID_FILE_SAVEALL:
+					{
+						EnableMenuItem( mMenu, ID_FILE_SAVEALL, MF_GRAYED );
 					}
 					break;
 				case ID_FILE_EXIT:
 					{
-						OnQuit();
+						PostMessage( mMDIFrame, WM_CLOSE, 0, 0 );
 					}
 					break;
 				case ID_HELP_ABOUT:
@@ -404,18 +414,45 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPA
 	return TRUE;
 }
 
+/*
+When the MDI client window creates an MDI child window by calling CreateWindow, the system sends a WM_CREATE message to the created window.
+The lParam member of the WM_CREATE message contains a pointer to a CREATESTRUCT structure.
+The lpCreateParams member of this structure contains a pointer to the MDICREATESTRUCT structure passed with the WM_MDICREATE message that created the MDI child window.
+
+	DERIVED_TYPE* pThis = nullptr;
+	CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* >( lParam );
+	pThis = reinterpret_cast< DERIVED_TYPE* >( pCreate->lpCreateParams );
+	SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
+
+		CREATESTRUCT* pCreateStruct;
+		MDICREATESTRUCT* pMDICreateStruct;
+
+		pCreateStruct = (CREATESTRUCT*)lParam;
+		pMDICreateStruct = (MDICREATESTRUCT*)pCreateStruct->lpCreateParams;
+
+		//
+		pMDICreateStruct now points to the same MDICREATESTRUCT that you
+		sent along with the WM_MDICREATE message and you can use it
+		to access the lParam.
+		//
+*/
 LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	MDICREATESTRUCT mcs = ( ( MDICREATESTRUCT* ) ( ( CREATESTRUCT* ) lParam )->lpCreateParams )->lParam;
+	HWND hFrame = GetParent( GetParent( hwnd ) );
+	MainWindow* mainWnd = reinterpret_cast<MainWindow*>(GetWindowLongPtr( hFrame, GWLP_USERDATA ));
 
 	switch ( uMsg )
 	{
 		case WM_CREATE:
 			{
+				if ( !mainWnd )
+				{
+					MessageBox( hwnd, L"Could not get parent window.", L"ERROR", MB_OK | MB_ICONERROR );
+				}
+				// Create edit control.
 				HFONT hfDef;
 				HWND hEdit;
 
-				// Create edit control.
 				hEdit = CreateWindowEx(
 					WS_EX_CLIENTEDGE,
 					L"Edit",
@@ -429,49 +466,105 @@ LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LP
 
 				if ( !hEdit )
 				{
-					// Error
+					MessageBox( hwnd, L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
 
-				hfDef = reinterpret_cast< HFONT >( GetStockObject( DEFAULT_GUI_FONT );
+				hfDef = reinterpret_cast< HFONT >( GetStockObject( DEFAULT_GUI_FONT ) );
 				SendMessage( hEdit, WM_SETFONT, static_cast< WPARAM >( RID_MAIN_CLIENT ), MAKELPARAM( FALSE, 0 ) );
 			}
 			break;
 		case WM_MDIACTIVATE:
 			{
-				HMENU hFileMenu;
+				HMENU
+					hMainMenu = GetMenu( hFrame ),
+					hFileMenu = GetSubMenu( hMainMenu, 0 );
 				UINT EnableFlag;
 
-				if ( mMDIFrame == reinterpret_cast< HWND >( LpARAM ) )
+				if ( hFrame == reinterpret_cast< HWND >( lParam ) )
 				{
+					EnableFlag = MF_ENABLED;
+				}
+				else
+				{
+					EnableFlag = MF_GRAYED;
+				}
 
+				//EnableMenuItem( hMainMenu, 1, MF_BYPOSITION | EnableFlag );
+				//EnableMenuItem( hMainMenu, 2, MF_BYPOSITION | EnableFlag );
+
+				hFileMenu = GetSubMenu( hMainMenu, 0 );
+				EnableMenuItem( hFileMenu, ID_FILE_SAVEAS, MF_BYCOMMAND | EnableFlag );
+				//EnableMenuItem( hFileMenu, ID_FILE_CLOSE, MF_BYCOMMAND | EnableFlag );
+				//EnableMenuItem( hFileMenu, ID_FILE_CLOSEALL, MF_BYCOMMAND | EnableFlag );
+				//mainWnd->DoFileOpen( hwnd );
+				DrawMenuBar( hFrame );
+			}
+			break;
+		case WM_COMMAND:
+			{
+				switch ( LOWORD( wParam ) )
+				{
+					case ID_FILE_OPEN:
+						{
+							mainWnd->DoFileOpen( hwnd );
+						}
+						break;
+					case ID_FILE_SAVEAS:
+						{
+							mainWnd->DoFileSave( hwnd );
+						}
+						break;
+						//case ID_EDIT_CUT:
+						//	SendDlgItemMessage( hwnd, RID_MAIN_CLIENT, WM_CUT, 0, 0 );
 				}
 			}
-			return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
+			break;
+		case WM_SIZE:
+			{
+				HWND hEdit;
+				RECT rcClient;
+
+				// Calculate remaining height and size edit.
+				GetClientRect( hwnd, &rcClient );
+
+				hEdit = GetDlgItem( hwnd, RID_MAIN_CLIENT );
+				SetWindowPos( hEdit, nullptr, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER );
+			}
+		default:
+			{
+				return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
+			}
 	}
 
 	return 0;
 }
 
-HWND MainWindow::CreateSubWindow( HWND hMDIClient )
+LRESULT MainWindow::HandleSubWndMessage( UINT, WPARAM, LPARAM )
+{
+	return LRESULT();
+}
+
+HWND MainWindow::CreateSubWindow( HWND hwnd )
 {
 	HWND hSub;
 
 	MDICREATESTRUCT mcs;
-	mcs.szTitle;
-	mcs.szClass;
+	mcs.szTitle = L"[Untitled]";
+	mcs.szClass = L"TestSubWnd";
 	mcs.hOwner = GetModuleHandle( nullptr );
 	mcs.x = mcs.cx = CW_USEDEFAULT;
 	mcs.y = mcs.cy = CW_USEDEFAULT;
 	mcs.style = MDIS_ALLCHILDSTYLES;
 
 	hSub = reinterpret_cast< HWND >(
-		SendMessage( mMDIClient, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
+		SendMessage( hwnd, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
 
 	if ( !hSub )
 	{
-		MessageBox( mMDIClient, L"Sub-window creation failed.", L"ERROR",
+		MessageBox( hwnd, L"Sub-window creation failed.", L"ERROR",
 					MB_ICONEXCLAMATION | MB_OK );
 	}
+
 	return hSub;
 }
 
@@ -484,7 +577,7 @@ BOOL MainWindow::RegSubWnd()
 	wc.lpszClassName = L"TestSubWnd";
 	wc.lpszMenuName = nullptr;
 	wc.hInstance = GetModuleHandle( nullptr );
-	wc.hbrBackground = CreateSolidBrush( RGB( 255, 69, 0 ) );
+	wc.hbrBackground = ( HBRUSH ) ( COLOR_3DFACE + 1 );//CreateSolidBrush( RGB( 255, 69, 0 ) );
 
 	return RegisterClassEx( &wc ) ? TRUE : FALSE;
 }

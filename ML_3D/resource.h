@@ -121,13 +121,18 @@
 #define ID_BUTTON2                      40109
 #define IDR_TB_BTN1                     40111
 #define ID_BUTTON40113                  40113
+#define ID_WINDOW_WINDOW                40114
+#define ID_WINDOW_WINDOWS               40115
+#define ID_Menu40116                    40116
+#define ID_WINDOWS_CURRENTWIDOWS        40117
+#define ID_WINDOWS_C                    40118
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        128
-#define _APS_NEXT_COMMAND_VALUE         40114
+#define _APS_NEXT_COMMAND_VALUE         40119
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

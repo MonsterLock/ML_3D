@@ -15,10 +15,10 @@ protected:
 public:
 	PCWSTR WindowText() const { return mWindowText; }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
-	BOOL RegisterMDIChild(const HBRUSH);
 	static BOOL CALLBACK AboutDlgProc( HWND, UINT, WPARAM, LPARAM );
 
 	static LRESULT CALLBACK SubWndProc( HWND, UINT, WPARAM, LPARAM );
+	LRESULT HandleSubWndMessage( UINT, WPARAM, LPARAM );
 	HWND CreateSubWindow( HWND hMDIClient );
 	BOOL RegSubWnd();
 };
