@@ -1,12 +1,14 @@
 #pragma once
 #include "MDIWindow.h"
+#include "StatusBar.h"
 
 class MainWindow : public MDIWindow<MainWindow>
 {
 protected:
+	StatusBar sbMain;
+
 	void OnQuit();
 	void OnAbout();
-
 	BOOL LoadTextFileToEdit( HWND hEdit, LPCWSTR pszFileName );
 	BOOL SaveTextFileFromEdit( HWND hEdit, LPCWSTR pszFileName );
 	void DoFileOpen( HWND hwnd );

@@ -15,8 +15,7 @@
 void MainWindow::OnQuit()
 {
 	wchar_t szFileName[MAX_PATH];
-	HINSTANCE hInstance = GetModuleHandle( nullptr );
-	GetModuleFileName( hInstance, szFileName, MAX_PATH );
+	GetModuleFileName( GetModuleHandle( nullptr ), szFileName, MAX_PATH );
 
 	std::wstring message =
 		L"The project:\n\"" +
@@ -167,8 +166,9 @@ void MainWindow::DoFileOpen( HWND hwnd )
 
 		if ( LoadTextFileToEdit( hEdit, szFileName ) )
 		{
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 0, reinterpret_cast< LPARAM >( "Opened..." ) );
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 1, reinterpret_cast< LPARAM >( szFileName ) );
+			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 0, reinterpret_cast< LPARAM >( L"Opened..." ) );
+			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 1, reinterpret_cast< LPARAM >( L"Console" ) );
+			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 2, reinterpret_cast< LPARAM >( szFileName ) );
 			SetWindowText( hwnd, szFileName );
 		}
 	}
@@ -265,26 +265,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				SendMessage( hTool, TB_ADDBUTTONS, sizeof( tbb ) / sizeof( TBBUTTON ), reinterpret_cast< LPARAM >( &tbb ) );
 
 				// Create status Bar
-				HWND hStatus;
-				int statwidths[ ] = { 100, -1 };
-
-				hStatus = CreateWindowEx(
-					0,
-					STATUSCLASSNAME,
-					nullptr,
-					WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
-					0, 0, 0, 0,
-					mMDIFrame,
-					reinterpret_cast< HMENU >( RID_MAIN_STATUS ),
-					GetModuleHandle( nullptr ),
-					nullptr );
-
-				if ( !hStatus )
-				{
-					MessageBox( nullptr, L"Create the statusbar.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-				}
-				SendMessage( hStatus, SB_SETPARTS, sizeof( statwidths ) / sizeof( int ), reinterpret_cast< LPARAM >( statwidths ) );
-				SendMessage( hStatus, SB_SETTEXT, 0, reinterpret_cast< LPARAM > ( L"Message" ) );
+				sbMain.CreateStatusBar( mMDIFrame, RID_MAIN_STATUS );
 			}
 			break;
 		case WM_SIZE:
@@ -312,7 +293,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				iToolHeight = rcTool.bottom - rcTool.top;
 
 				// Size status bar window.
-				hStatus = GetDlgItem( mMDIFrame, RID_MAIN_STATUS );
+				hStatus = sbMain.GetSBHandle();
 				SendMessage( hStatus, WM_SIZE, 0, 0 );
 
 				GetWindowRect( hStatus, &rcStatus );
@@ -329,6 +310,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case WM_COMMAND:
 			switch ( LOWORD( wParam ) )
 			{
+				// Main Menu Items
 				case ID_FILE_NEW:
 					{
 						CreateSubWindow( mMDIClient );
@@ -414,28 +396,6 @@ BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPA
 	return TRUE;
 }
 
-/*
-When the MDI client window creates an MDI child window by calling CreateWindow, the system sends a WM_CREATE message to the created window.
-The lParam member of the WM_CREATE message contains a pointer to a CREATESTRUCT structure.
-The lpCreateParams member of this structure contains a pointer to the MDICREATESTRUCT structure passed with the WM_MDICREATE message that created the MDI child window.
-
-	DERIVED_TYPE* pThis = nullptr;
-	CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* >( lParam );
-	pThis = reinterpret_cast< DERIVED_TYPE* >( pCreate->lpCreateParams );
-	SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
-
-		CREATESTRUCT* pCreateStruct;
-		MDICREATESTRUCT* pMDICreateStruct;
-
-		pCreateStruct = (CREATESTRUCT*)lParam;
-		pMDICreateStruct = (MDICREATESTRUCT*)pCreateStruct->lpCreateParams;
-
-		//
-		pMDICreateStruct now points to the same MDICREATESTRUCT that you
-		sent along with the WM_MDICREATE message and you can use it
-		to access the lParam.
-		//
-*/
 LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	HWND hFrame = GetParent( GetParent( hwnd ) );
@@ -578,6 +538,7 @@ BOOL MainWindow::RegSubWnd()
 	wc.lpszMenuName = nullptr;
 	wc.hInstance = GetModuleHandle( nullptr );
 	wc.hbrBackground = ( HBRUSH ) ( COLOR_3DFACE + 1 );//CreateSolidBrush( RGB( 255, 69, 0 ) );
+	wc.hIconSm = LoadIcon( nullptr, IDI_WINLOGO );
 
 	return RegisterClassEx( &wc ) ? TRUE : FALSE;
 }

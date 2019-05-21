@@ -36,8 +36,8 @@ public:
 		{
 			case WM_NCCREATE:
 				{
-					CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* >( lParam );
-					pThis = reinterpret_cast< DERIVED_TYPE* >( pCreate->lpCreateParams );
+					pThis = reinterpret_cast< DERIVED_TYPE* >(
+						(reinterpret_cast< CREATESTRUCT* >( lParam ))->lpCreateParams );
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 					pThis->mMDIFrame = hwnd;
 					pThis->mMenu = GetMenu( hwnd );
@@ -52,7 +52,7 @@ public:
 						pThis->mClientClass,
 						nullptr,
 						WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
-						CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+						0, 0, 0, 0,
 						pThis->mMDIFrame,
 						reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
 						GetModuleHandle( nullptr ),
@@ -143,12 +143,11 @@ protected:
 	const PCWSTR
 		mFrameClass = L"MDIFRAME",
 		mClientClass = L"MDICLIENT";
-
 	HWND
 		mMDIFrame,
 		mMDIClient;
-	PCWSTR mWindowText;
 	HMENU mMenu;
+	PCWSTR mWindowText;
 	HBRUSH mClientColor;
 };
 
