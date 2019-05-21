@@ -7,7 +7,6 @@
 #define IDD_FILE_NEW_PAGE               107
 #define IDD_FILE_OPEN_PAGE              108
 #define IDI_ML_LOGO                     122
-#define IDR_TOOLBAR1                    126
 #define IDC_NEW_CANCEL                  1008
 #define IDC_SYSLINK                     1011
 #define IDC_NEW_OK                      1025
@@ -120,7 +119,6 @@
 #define ID_FILE_OPEN                    40108
 #define ID_BUTTON2                      40109
 #define IDR_TB_BTN1                     40111
-#define ID_BUTTON40113                  40113
 #define ID_WINDOW_WINDOW                40114
 #define ID_WINDOW_WINDOWS               40115
 #define ID_Menu40116                    40116

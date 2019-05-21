@@ -12,9 +12,11 @@ class StatusBar
 		-1 };		// File
 
 public:
+	HWND GetStatusBar() { return hStatus; }
+
 	BOOL CreateStatusBar( HWND hRoot, unsigned int RID_SB )
 	{
-		if ( !hStatus )
+		if ( !hStatus && hRoot)
 		{
 			hStatus = CreateWindowEx(
 				0,
@@ -27,15 +29,15 @@ public:
 				GetModuleHandle( nullptr ),
 				nullptr );
 
-			SendMessage( hStatus, SB_SETPARTS, 4, reinterpret_cast< LPARAM >( sbWidths ) );
-			SendMessage( hStatus, SB_SETTEXT, 0, reinterpret_cast< LPARAM > ( L"Welcome" ) );
-			SendMessage( hStatus, SB_SETTEXT, 1, reinterpret_cast< LPARAM > ( L"" ) );
-			SendMessage( hStatus, SB_SETTEXT, 2, reinterpret_cast< LPARAM > ( L"Start Page" ) );
+			SendMessage( hStatus, SB_SETPARTS, sizeof( sbWidths ) / sizeof( int ), reinterpret_cast< LPARAM >( sbWidths ) );
 
 			return TRUE;
 		}
 		return FALSE;
 	}
 
-	HWND GetSBHandle() { return hStatus; }
+	void SetText( unsigned int index, const wchar_t* text )
+	{
+		SendMessage( hStatus, SB_SETTEXT, index, reinterpret_cast< LPARAM > ( text ) );
+	}
 };

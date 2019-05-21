@@ -11,13 +11,7 @@ Engine::~Engine()
 
 int Engine::Run()
 {
-	if ( !win.Create(
-		L"ML 3D Engine"
-	) )
-	{
-		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-		return 0;
-	}
+	Init();
 
 	// Run the message loop.
 	MSG msg = {};
@@ -44,7 +38,12 @@ int Engine::Run()
 
 BOOL Engine::Init()
 {
-	return 0;
+	if ( !win.Create( L"ML 3D Engine" ) )
+	{
+		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+		return FALSE;
+	}
+	return TRUE;
 }
 
 BOOL Engine::Release()

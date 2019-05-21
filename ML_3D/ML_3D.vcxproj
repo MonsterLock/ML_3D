@@ -189,6 +189,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StatusBar.h" />
+    <ClInclude Include="ToolBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc" />

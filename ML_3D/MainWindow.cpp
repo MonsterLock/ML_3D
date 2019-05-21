@@ -12,205 +12,14 @@
 #define RID_MAIN_TB 1338
 #define RID_MAIN_STATUS 1339
 
-void MainWindow::OnQuit()
-{
-	wchar_t szFileName[MAX_PATH];
-	GetModuleFileName( GetModuleHandle( nullptr ), szFileName, MAX_PATH );
-
-	std::wstring message =
-		L"The project:\n\"" +
-		static_cast< std::wstring >( szFileName ) +
-		L"\"\nhas not saved [# of unsaved files] / [total number of project files].\n\nAre you sure you want to discard changes to:\n" +
-		_L( __FILE__ ) + // TODO: iterate through elements and check saved state
-		L"\n\nClick \"No\" to save all file(s)\n";
-
-	switch ( MessageBox( mMDIFrame, message.c_str(), WindowText(), MB_YESNOCANCEL | MB_DEFBUTTON2 | MB_ICONWARNING ) )
-	{
-		case IDYES:
-			{
-				DestroyWindow( mMDIFrame );
-				PostQuitMessage( 0 );
-			}
-			break;
-		case IDNO:
-			{
-				// TODO save files
-				DestroyWindow( mMDIFrame );
-				PostQuitMessage( 0 );
-			}
-			break;
-		default:
-			return;
-	}
-}
-
-void MainWindow::OnAbout()
-{
-	DialogBox(
-		GetModuleHandle( nullptr ),
-		MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ),
-		mMDIFrame,
-		AboutDlgProc );
-}
-
-BOOL MainWindow::LoadTextFileToEdit( HWND hEdit, LPCWSTR pszFileName )
-{
-	HANDLE hFile;
-	BOOL bSuccess = FALSE;
-
-	hFile = CreateFile(
-		pszFileName,
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		nullptr,
-		OPEN_EXISTING,
-		0,
-		nullptr );
-
-	if ( hFile != INVALID_HANDLE_VALUE )
-	{
-		DWORD dwFileSize;
-
-		dwFileSize = GetFileSize( hFile, nullptr );
-
-		if ( dwFileSize != 0xFFFFFFFF )
-		{
-			LPWSTR pszFileText;
-
-			pszFileText = reinterpret_cast< LPWSTR > ( GlobalAlloc( GPTR, dwFileSize + 1 ) );
-
-			if ( pszFileText )
-			{
-				DWORD dwRead;
-
-				if ( ReadFile( hFile, pszFileText, dwFileSize, &dwRead, nullptr ) )
-				{
-					pszFileText[dwFileSize] = 0; // Add null terminator
-					if ( SetWindowText( hEdit, pszFileText ) )
-					{
-						bSuccess = TRUE;
-					}
-				}
-				GlobalFree( pszFileText );
-			}
-		}
-		CloseHandle( hFile );
-	}
-	return bSuccess;
-}
-
-BOOL MainWindow::SaveTextFileFromEdit( HWND hEdit, LPCWSTR pszFileName )
-{
-	HANDLE hFile;
-	BOOL bSuccess = FALSE;
-
-	hFile = CreateFile(
-		pszFileName,
-		GENERIC_WRITE,
-		0,
-		nullptr,
-		CREATE_ALWAYS,
-		FILE_ATTRIBUTE_NORMAL,
-		nullptr );
-
-	if ( hFile != INVALID_HANDLE_VALUE )
-	{
-		DWORD dwTextLength;
-
-		dwTextLength = GetWindowTextLength( hEdit );
-
-		if ( dwTextLength != 0xFFFFFFFF )
-		{
-			LPWSTR pszText;
-			DWORD dwBufferSize = dwTextLength + 1;
-
-			pszText = reinterpret_cast< LPWSTR > ( GlobalAlloc( GPTR, dwBufferSize ) );
-
-			if ( pszText )
-			{
-				if ( GetWindowText( hEdit, pszText, dwBufferSize ) )
-				{
-					DWORD dwWritten;
-
-					if ( WriteFile( hFile, pszText, dwTextLength, &dwWritten, nullptr ) )
-					{
-						bSuccess = TRUE;
-					}
-				}
-				GlobalFree( pszText );
-			}
-		}
-		CloseHandle( hFile );
-	}
-	return bSuccess;
-}
-
-void MainWindow::DoFileOpen( HWND hwnd )
-{
-	OPENFILENAME ofn;
-	wchar_t szFileName[MAX_PATH] = L"";
-
-	ZeroMemory( &ofn, sizeof( ofn ) );
-
-	ofn.lStructSize = sizeof( ofn );
-	ofn.hwndOwner = hwnd;
-	ofn.lpstrFilter = L"Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
-	ofn.lpstrFile = szFileName;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-	ofn.lpstrDefExt = L"txt";
-
-	if ( GetOpenFileName( &ofn ) )
-	{
-		HWND hEdit = GetDlgItem( hwnd, RID_MAIN_CLIENT );
-
-		if ( LoadTextFileToEdit( hEdit, szFileName ) )
-		{
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 0, reinterpret_cast< LPARAM >( L"Opened..." ) );
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 1, reinterpret_cast< LPARAM >( L"Console" ) );
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 2, reinterpret_cast< LPARAM >( szFileName ) );
-			SetWindowText( hwnd, szFileName );
-		}
-	}
-}
-
-void MainWindow::DoFileSave( HWND hwnd )
-{
-	OPENFILENAME ofn;
-	wchar_t szFileName[MAX_PATH] = L"";
-
-	ZeroMemory( &ofn, sizeof( ofn ) );
-
-	ofn.lStructSize = sizeof( ofn );
-	ofn.hwndOwner = hwnd;
-	ofn.lpstrFilter = L"Text Files (*.txt)\0*.txt\0All Files (*.*.)\0*.*\0";
-	ofn.lpstrFile = szFileName;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.lpstrDefExt = L"txt";
-	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-
-	if ( GetSaveFileName( &ofn ) )
-	{
-		HWND hEdit = GetDlgItem( hwnd, RID_MAIN_CLIENT );
-
-		if ( SaveTextFileFromEdit( hEdit, szFileName ) )
-		{
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 0, reinterpret_cast< LPARAM >( L"Saved..." ) );
-			SendDlgItemMessage( mMDIFrame, RID_MAIN_STATUS, SB_SETTEXT, 1, reinterpret_cast< LPARAM >( szFileName ) );
-			SetWindowText( hwnd, szFileName );
-		}
-	}
-}
-
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( uMsg )
 	{
 		case WM_CLOSE:
 			{
-				OnQuit();
-				return 0;
 			}
+			break;
 		case WM_CREATE:
 			{
 				if ( !RegSubWnd() )
@@ -219,52 +28,10 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					return FALSE;
 				}
 
-				// Create toolbar window.
-				HWND hTool;
-				TBBUTTON tbb[3];
-				TBADDBITMAP tbab;
+				// Create toolbar.
+				tbMain.CreateToolbar( mMDIFrame, RID_MAIN_TB );
 
-				hTool = CreateWindowEx(
-					0,
-					TOOLBARCLASSNAME,
-					nullptr,
-					WS_CHILD | WS_VISIBLE,
-					0, 0, 0, 0,
-					mMDIFrame,
-					reinterpret_cast< HMENU >( RID_MAIN_TB ),
-					GetModuleHandle( nullptr ),
-					nullptr );
-
-				if ( !hTool )
-				{
-					MessageBox( nullptr, L"Create the toolbar.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-				}
-				// Send the toolbar button struct for backward compatibility.
-				SendMessage( hTool, TB_BUTTONSTRUCTSIZE, static_cast< WPARAM >( sizeof( TBBUTTON ) ), 0 );
-
-				tbab.hInst = HINST_COMMCTRL;
-				tbab.nID = IDB_STD_SMALL_COLOR;
-				SendMessage( hTool, TB_ADDBITMAP, 0, reinterpret_cast< LPARAM >( &tbab ) );
-
-				ZeroMemory( &tbb, sizeof( tbb ) );
-				tbb[0].iBitmap = STD_FILENEW;
-				tbb[0].fsState = TBSTATE_ENABLED;
-				tbb[0].fsStyle = TBSTYLE_BUTTON;
-				tbb[0].idCommand = ID_FILE_NEW;
-
-				tbb[1].iBitmap = STD_FILEOPEN;
-				tbb[1].fsState = TBSTATE_ENABLED;
-				tbb[1].fsStyle = TBSTYLE_BUTTON;
-				tbb[1].idCommand = ID_FILE_OPEN;
-
-				tbb[2].iBitmap = STD_FILESAVE;
-				tbb[2].fsState = TBSTATE_ENABLED;
-				tbb[2].fsStyle = TBSTYLE_BUTTON;
-				tbb[2].idCommand = ID_FILE_SAVEAS;
-
-				SendMessage( hTool, TB_ADDBUTTONS, sizeof( tbb ) / sizeof( TBBUTTON ), reinterpret_cast< LPARAM >( &tbb ) );
-
-				// Create status Bar
+				// Create statusbar.
 				sbMain.CreateStatusBar( mMDIFrame, RID_MAIN_STATUS );
 			}
 			break;
@@ -286,14 +53,14 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					iStatusHeight;
 
 				// Size toolbar window.
-				hTool = GetDlgItem( mMDIFrame, RID_MAIN_TB );
+				hTool = tbMain.GetToolbar();
 				SendMessage( hTool, TB_AUTOSIZE, 0, 0 );
 
 				GetWindowRect( hTool, &rcTool );
 				iToolHeight = rcTool.bottom - rcTool.top;
 
 				// Size status bar window.
-				hStatus = sbMain.GetSBHandle();
+				hStatus = sbMain.GetStatusBar();
 				SendMessage( hStatus, WM_SIZE, 0, 0 );
 
 				GetWindowRect( hStatus, &rcStatus );
@@ -318,11 +85,11 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					break;
 				case ID_FILE_OPEN:
 					{
-						HWND hSub = CreateSubWindow( mMDIClient );
-						if ( hSub )
-						{
-							DoFileOpen( hSub );
-						}
+						//HWND hSub = CreateSubWindow( mMDIClient );
+						//if ( hSub )
+						//{
+						//	DoFileOpen( hSub );
+						//}
 					}
 					break;
 				case ID_FILE_STARTUP:
@@ -341,7 +108,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					break;
 				case ID_HELP_ABOUT:
 					{
-						OnAbout();
+						//OnAbout();
 					}
 					break;
 				default:
@@ -370,36 +137,10 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	return 0;
 }
 
-BOOL CALLBACK MainWindow::AboutDlgProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
-{
-	switch ( uMsg )
-	{
-		case WM_INITDIALOG:
-			return true;
-		case WM_COMMAND:
-			switch ( LOWORD( wParam ) )
-			{
-				case IDOK:
-					{
-						EndDialog( hwnd, IDOK );
-					}
-					break;
-				default: break;
-			}
-		case WM_NOTIFY:
-			{
-				// TODO
-			}
-		default:
-			return FALSE;
-	}
-	return TRUE;
-}
-
 LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	HWND hFrame = GetParent( GetParent( hwnd ) );
-	MainWindow* mainWnd = reinterpret_cast<MainWindow*>(GetWindowLongPtr( hFrame, GWLP_USERDATA ));
+	MainWindow* mainWnd = reinterpret_cast< MainWindow* >( GetWindowLongPtr( hFrame, GWLP_USERDATA ) );
 
 	switch ( uMsg )
 	{
@@ -466,12 +207,12 @@ LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LP
 				{
 					case ID_FILE_OPEN:
 						{
-							mainWnd->DoFileOpen( hwnd );
+							//mainWnd->DoFileOpen( hwnd );
 						}
 						break;
 					case ID_FILE_SAVEAS:
 						{
-							mainWnd->DoFileSave( hwnd );
+							//mainWnd->DoFileSave( hwnd );
 						}
 						break;
 						//case ID_EDIT_CUT:
@@ -537,7 +278,7 @@ BOOL MainWindow::RegSubWnd()
 	wc.lpszClassName = L"TestSubWnd";
 	wc.lpszMenuName = nullptr;
 	wc.hInstance = GetModuleHandle( nullptr );
-	wc.hbrBackground = ( HBRUSH ) ( COLOR_3DFACE + 1 );//CreateSolidBrush( RGB( 255, 69, 0 ) );
+	wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_WINDOWFRAME );
 	wc.hIconSm = LoadIcon( nullptr, IDI_WINLOGO );
 
 	return RegisterClassEx( &wc ) ? TRUE : FALSE;

@@ -133,8 +133,7 @@ public:
 
 	HWND FrameWnd() const { return mMDIFrame; }
 	HWND ClientWnd() const { return mMDIClient; }
-	void SetClientColor( HBRUSH color ) { mClientColor = color; }
-	HBRUSH GetClientColor() const { return mClientColor; }
+	HMENU MainMenu() { return mMenu; }
 
 protected:
 	virtual PCWSTR WindowText() const = 0;
@@ -148,7 +147,6 @@ protected:
 		mMDIClient;
 	HMENU mMenu;
 	PCWSTR mWindowText;
-	HBRUSH mClientColor;
 };
 
 //CreateSolidBrush(RGB(0, 0, 0));
