@@ -2,6 +2,11 @@
 // Microsoft Visual C++ generated include file.
 // Used by ML_3D.rc
 //
+#define ID_MDI_FIRSTCHILD 50000
+#define RID_MAIN_CLIENT 1337
+#define RID_MAIN_TB 1338
+#define RID_MAIN_STATUS 1339
+
 #define IDR_MAIN_MENU                   101
 #define IDD_HELP_ABOUT_PAGE             103
 #define IDD_FILE_NEW_PAGE               107
@@ -68,7 +73,6 @@
 #define ID_WINDOW_MANAGEWINDOWLAYOUT    40050
 #define ID_WINDOW_APPLYWINDOWLAYOUT     40051
 #define ID_WINDOW_RESETWINDOWLAYOUT     40052
-#define ID_WINDOW_CLOSEALLWINDOWS       40053
 #define ID_HELP_VIEWHELP                40054
 #define ID_HELP_ABOUT                   40055
 #define ID_EDIT_FIND40056               40056
@@ -117,20 +121,14 @@
 #define ID_WINDOW_LAYOUTS               40106
 #define ID_FILE_NEW                     40107
 #define ID_FILE_OPEN                    40108
-#define ID_BUTTON2                      40109
-#define IDR_TB_BTN1                     40111
-#define ID_WINDOW_WINDOW                40114
-#define ID_WINDOW_WINDOWS               40115
-#define ID_Menu40116                    40116
-#define ID_WINDOWS_CURRENTWIDOWS        40117
-#define ID_WINDOWS_C                    40118
+#define ID_EDIT_FINDREPLACE             40119
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        128
-#define _APS_NEXT_COMMAND_VALUE         40119
+#define _APS_NEXT_COMMAND_VALUE         40120
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

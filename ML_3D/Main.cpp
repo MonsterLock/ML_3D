@@ -1,4 +1,4 @@
-#include "Engine.h"
+#include "MainWindow.h"
 #include "FILEIO.h"
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -27,6 +27,32 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 	//RemoveDirectory( L"TestFileIO" );
 	//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-	Engine eng;
-	return eng.Run();
+	MainWindow win;
+
+	if ( !win.Create() )
+	{
+		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+		return 0;
+	}
+
+	MSG msg = {};
+	BOOL bRet;
+
+	while ( ( bRet = GetMessage( &msg, static_cast< HWND >( nullptr ), 0, 0 ) ) != 0 )
+	{
+		if ( bRet == -1 )
+		{
+			MessageBox( nullptr, L"GetMessage Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+		}
+		else
+		{
+			if ( !TranslateMDISysAccel( win.ClientWnd(), &msg ) )
+			{
+				TranslateMessage( &msg );
+				DispatchMessage( &msg );
+			}
+		}
+	}
+
+	return msg.wParam;
 }

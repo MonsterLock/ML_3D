@@ -2,31 +2,27 @@
 #include <Windows.h>
 #include "resource.h"
 
-#define ID_MDI_FIRSTCHILD 50000
-#define RID_MAIN_CLIENT 1337
-
 template <class DERIVED_TYPE>
 class MDIWindow
 {
+protected:
+	virtual PCWSTR WindowText() const = 0;
+	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
+
+	const PCWSTR
+		mFrameClass = L"MDIFRAME",
+		mClientClass = L"MDICLIENT";
+	HWND
+		mMDIFrame,
+		mMDIClient;
+	HMENU mMenu;
+
 public:
 	MDIWindow()
 		:
 		mMDIFrame( nullptr ),
-		mMDIClient( nullptr ),
-		mWindowText( nullptr )
+		mMDIClient( nullptr )
 	{}
-
-	virtual ~MDIWindow()
-	{
-		if ( !mMDIFrame )
-		{
-			delete mMDIFrame;
-		}
-		if ( !mMDIClient )
-		{
-			delete mMDIClient;
-		}
-	}
 
 	static LRESULT CALLBACK WndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	{
@@ -37,7 +33,7 @@ public:
 			case WM_NCCREATE:
 				{
 					pThis = reinterpret_cast< DERIVED_TYPE* >(
-						(reinterpret_cast< CREATESTRUCT* >( lParam ))->lpCreateParams );
+						( reinterpret_cast< CREATESTRUCT* >( lParam ) )->lpCreateParams );
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 					pThis->mMDIFrame = hwnd;
 					pThis->mMenu = GetMenu( hwnd );
@@ -81,10 +77,8 @@ public:
 		}
 	}
 
-	virtual BOOL Create( PCWSTR lpWindowName )
+	virtual BOOL Create()
 	{
-		mWindowText = lpWindowName;
-
 		// Register the frame window class.
 		WNDCLASSEX wc = { 0 };
 		wc.cbSize = sizeof( WNDCLASSEX );
@@ -134,19 +128,6 @@ public:
 	HWND FrameWnd() const { return mMDIFrame; }
 	HWND ClientWnd() const { return mMDIClient; }
 	HMENU MainMenu() { return mMenu; }
-
-protected:
-	virtual PCWSTR WindowText() const = 0;
-	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
-
-	const PCWSTR
-		mFrameClass = L"MDIFRAME",
-		mClientClass = L"MDICLIENT";
-	HWND
-		mMDIFrame,
-		mMDIClient;
-	HMENU mMenu;
-	PCWSTR mWindowText;
 };
 
 //CreateSolidBrush(RGB(0, 0, 0));
