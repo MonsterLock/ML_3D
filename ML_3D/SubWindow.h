@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "resource.h"
 
 template <class DERIVED_TYPE>
 class SubWindow
@@ -8,29 +9,25 @@ protected:
 	virtual LRESULT HandleSubWndMessage( UINT, WPARAM, LPARAM ) = 0;
 	virtual PCWSTR WindowText() const = 0;
 
-	HWND mSubWnd,
-		mParent;
-
+	HWND mSubWnd;
 	PCWSTR mSubWindowClass;
 
 public:
 	SubWindow()
 		:
-		mSubWnd( nullptr ),
-		mParent( nullptr )
+		mSubWnd( nullptr )
 	{}
 
 	static LRESULT CALLBACK SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	{
 		DERIVED_TYPE* pThis = nullptr;
 
-		switch ( uMsg )
+		switch( uMsg )
 		{
 			case WM_NCCREATE:
 				{
-					CREATESTRUCT* pCreate = reinterpret_cast< CREATESTRUCT* > ( lParam );
-					MDICREATESTRUCT* pMDICreate = reinterpret_cast< MDICREATESTRUCT* > ( pCreate->lpCreateParams );
-					pThis = reinterpret_cast< DERIVED_TYPE* >( pMDICreate->lParam );
+					pThis = reinterpret_cast< DERIVED_TYPE* >( ( reinterpret_cast< MDICREATESTRUCT* > ( (
+						reinterpret_cast< CREATESTRUCT* > ( lParam ) )->lpCreateParams ) )->lParam );
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 					pThis->mSubWnd = hwnd;
 				}
@@ -40,7 +37,7 @@ public:
 					pThis = reinterpret_cast< DERIVED_TYPE* >( GetWindowLongPtr( hwnd, GWLP_USERDATA ) );
 				}
 		}
-		if ( pThis )
+		if( pThis )
 		{
 			return pThis->HandleSubWndMessage( uMsg, wParam, lParam );
 		}
@@ -61,15 +58,15 @@ public:
 		// Register the sub-window class
 		WNDCLASSEX wc = { 0 };
 		wc.cbSize = sizeof( WNDCLASSEX );
-		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.lpfnWndProc = SubWndProc;
 		wc.lpszClassName = ClassName();
 		wc.lpszMenuName = nullptr;
 		wc.hInstance = GetModuleHandle( nullptr );
-		wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_WINDOWFRAME );
+		wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_BACKGROUND );
+		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.hIconSm = rIcon;
 
-		if ( !RegisterClassEx( &wc ) )
+		if( !RegisterClassEx( &wc ) )
 		{
 			MessageBox( nullptr, L"Registering Sub-window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 			return FALSE;
@@ -79,26 +76,20 @@ public:
 
 	BOOL CreateSubWnd(
 		HWND hParent,
-		DWORD dwStyle,
-		int x, int y,
-		int width, int height )
+		DWORD dwStyle )
 	{
-		mParent = hParent;
-
 		MDICREATESTRUCT mcs;
 		mcs.szClass = ClassName();
 		mcs.szTitle = WindowText();
 		mcs.hOwner = GetModuleHandle( nullptr );
-		mcs.x = x;
-		mcs.y = y;
-		mcs.cx = width;
-		mcs.cy = height;
-		mcs.style = MDIS_ALLCHILDSTYLES | WS_VISIBLE | dwStyle;
+		mcs.x = mcs.cx = CW_USEDEFAULT;
+		mcs.y = mcs.cy = CW_USEDEFAULT;
+		mcs.style = MDIS_ALLCHILDSTYLES  | dwStyle;
 		mcs.lParam = reinterpret_cast< LPARAM >( this );
 
 		mSubWnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
 
-		if ( !mSubWnd )
+		if( !mSubWnd )
 		{
 			MessageBox( hParent, L"Creating Sub-window failed.", L"ERROR", MB_ICONEXCLAMATION | MB_OK );
 			return FALSE;

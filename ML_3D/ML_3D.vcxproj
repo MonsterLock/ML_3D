@@ -183,6 +183,7 @@
     <ClCompile Include="FILEIO.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="SceneWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleWindow.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="MDIWindow.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="StatusBar.h" />
     <ClInclude Include="SubWindow.h" />
     <ClInclude Include="ToolBar.h" />

@@ -9,25 +9,36 @@
 #define __L(x)  L##x
 #define RES_STATUS
 
+constexpr static float rightDivide = 0.8f;
+
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	switch ( uMsg )
+	switch( uMsg )
 	{
+		case WM_CLOSE:
+			{
+				break; // TODO shutdown
+			}
+			break;
 		case WM_CREATE:
 			{
-				// Create window.
+				// Create scene window.
+				sceneWindow.RegSubWnd(
+					L"SceneWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				sceneWindow.CreateSubWnd(
+					mMDIClient,
+					0 );
+
+				// Create console window.
 				consoleWindow.RegSubWnd(
 					L"ConsoleWindow",
 					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
-
-				RECT mainRect;
-				GetClientRect( mMDIFrame, &mainRect );
-
 				consoleWindow.CreateSubWnd(
 					mMDIClient,
-					WS_OVERLAPPEDWINDOW ,
-					0, 0, 0, 0 );
+					0 );
 
 				// Create toolbar.
 				tbMain.CreateToolbar( mMDIFrame, RID_MAIN_TB );
@@ -38,57 +49,20 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_SIZE:
 			{
-				HWND
-					hClient,
-					hTool,
-					hStatus;
-
-				RECT
-					rcClient,
-					rcTool,
-					rcStatus;
-
-				int
-					iClientHeight,
-					iToolHeight,
-					iStatusHeight;
-
-				// Size toolbar window.
-				hTool = tbMain.GetToolbar();
-				SendMessage( hTool, TB_AUTOSIZE, 0, 0 );
-
-				GetWindowRect( hTool, &rcTool );
-				iToolHeight = rcTool.bottom - rcTool.top;
-
-				// Size status bar window.
-				hStatus = sbMain.GetStatusBar();
-				SendMessage( hStatus, WM_SIZE, 0, 0 );
-
-				GetWindowRect( hStatus, &rcStatus );
-				iStatusHeight = rcStatus.bottom - rcStatus.top;
-
-				// Calculate remaining height and size edit
-				GetClientRect( mMDIFrame, &rcClient );
-				iClientHeight = rcClient.bottom - iToolHeight - iStatusHeight;
-
-				hClient = GetDlgItem( mMDIFrame, RID_MAIN_CLIENT );
-				SetWindowPos( hClient, nullptr, 0, iToolHeight, rcClient.right, iClientHeight, SWP_NOZORDER );
-
-				GetClientRect( hClient, &rcClient );
-				SetWindowPos( consoleWindow.HSubWnd(), nullptr, 0, static_cast< int >( rcClient.bottom * 0.87f ), rcClient.right, static_cast< int >( rcClient.bottom * 0.13f ), SWP_NOZORDER );
+				CallSize();
 			}
 			break;
 		case WM_COMMAND:
-			if ( !GlobalCommands( uMsg, wParam, lParam ) )
+			if( !GlobalCommands( uMsg, wParam, lParam ) )
 			{
-				if ( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
+				if( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
 				{
 					return DefFrameProc( mMDIFrame, mMDIClient, WM_COMMAND, wParam, lParam );
 				}
 				else
 				{
 					HWND hChild = reinterpret_cast< HWND >( SendMessage( mMDIClient, WM_MDIGETACTIVE, 0, 0 ) );
-					if ( hChild )
+					if( hChild )
 					{
 						SendMessage( hChild, WM_COMMAND, wParam, lParam );
 					}
@@ -105,7 +79,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	switch ( LOWORD( wParam ) )
+	switch( LOWORD( wParam ) )
 	{
 		case ID_FILE_NEW: {}break;
 		case ID_FILE_OPEN: {}break;
@@ -115,7 +89,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_FILE_SAVEALL: {}break;
 		case ID_FILE_BUILDPROPERTIES: {} break;
 		case ID_FILE_BUILDANDRUN: {} break;
-		case ID_FILE_EXIT: {} break;
+		case ID_FILE_EXIT: { SendMessage( FrameWnd(), WM_CLOSE, 0, 0 ); } break;
 		case ID_GOTO_FILE: {} break;
 		case ID_GOTO_OBJECT: {} break;
 		case ID_GOTO_LASTEDIT: {} break;
@@ -134,12 +108,16 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_EDIT_SELECTALL: {} break;
 		case ID_EDIT_SELECTIONGROUP: {} break;
 		case ID_VIEW_PROJECTWINDOW: {} break;
-		case ID_VIEW_SCENEVIEW: {} break;
+		case ID_VIEW_SCENEVIEW: { ToggleWindow( sceneWindow.HSubWnd(), ID_VIEW_SCENEVIEW, 2 ); } break;
 		case ID_VIEW_HIERARCHYWINDOW: {} break;
 		case ID_VIEW_IN: {} break;
-		case ID_VIEW_TOOLBAR: {} break;
+		case ID_VIEW_TOOLBAR:
+			{
+				ToggleWindow( tbMain.GetToolbar(), ID_VIEW_TOOLBAR, 2 );
+				CallSize();
+			} break;
 		case ID_VIEW_GAMEVIEW: {} break;
-		//case ID_VIEW_CONSOLEWINDOW: {} break;
+		case ID_VIEW_CONSOLEWINDOW: { ToggleWindow( consoleWindow.HSubWnd(), ID_VIEW_CONSOLEWINDOW, 2 ); } break;
 		case ID_VIEW_ANI: {} break;
 		case ID_VIEW_PROFILERWINDOW: {} break;
 		case ID_VIEW_LIGHTINGWINDOW: {} break;
@@ -207,4 +185,76 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			}
 	}
 	return TRUE;
+}
+
+void MainWindow::ToggleWindow( HWND wnd, int item, int  index )
+{
+	HMENU hFileMenu = GetSubMenu( mMenu, index );
+	if( IsWindowVisible( wnd ) )
+	{
+		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND | MF_UNCHECKED );
+		ShowWindow( wnd, SW_HIDE );
+	}
+	else
+	{
+		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND | MF_CHECKED );
+		ShowWindow( wnd, SW_SHOW );
+	}
+}
+
+void MainWindow::CallSize()
+{
+	HWND
+		hClient,
+		hTool,
+		hStatus;
+
+	RECT
+		rcClient,
+		rcTool,
+		rcStatus;
+
+	int
+		iClientHeight,
+		iToolHeight,
+		iStatusHeight;
+
+	// Size toolbar window.
+	hTool = tbMain.GetToolbar();
+	SendMessage( hTool, TB_AUTOSIZE, 0, 0 );
+
+	if( IsWindowVisible( hTool ) )
+	{
+		GetWindowRect( hTool, &rcTool );
+		iToolHeight = rcTool.bottom - rcTool.top;
+	}
+	else
+	{
+		iToolHeight = 0;
+	}
+
+	// Size status bar window.
+	hStatus = sbMain.GetStatusBar();
+	SendMessage( hStatus, WM_SIZE, 0, 0 );
+
+	GetWindowRect( hStatus, &rcStatus );
+	iStatusHeight = rcStatus.bottom - rcStatus.top;
+
+	// Calculate remaining height and size edit
+	GetClientRect( mMDIFrame, &rcClient );
+	iClientHeight = rcClient.bottom - iToolHeight - iStatusHeight;
+
+	hClient = GetDlgItem( mMDIFrame, RID_MAIN_CLIENT );
+	SetWindowPos( hClient, nullptr,
+				  0, iToolHeight, rcClient.right, iClientHeight,
+				  SWP_NOZORDER );
+
+	// Calculate sub-windows
+	GetClientRect( hClient, &rcClient );
+	SetWindowPos( sceneWindow.HSubWnd(), nullptr,
+				  0, 0, static_cast< int >( rcClient.right * rightDivide ), static_cast< int >( rcClient.bottom * 0.87f ),
+				  SWP_NOZORDER );
+	SetWindowPos( consoleWindow.HSubWnd(), nullptr,
+				  0, static_cast< int >( rcClient.bottom * 0.87f ), static_cast< int >( rcClient.right * rightDivide ), static_cast< int >( rcClient.bottom * 0.13f ),
+				  SWP_NOZORDER );
 }

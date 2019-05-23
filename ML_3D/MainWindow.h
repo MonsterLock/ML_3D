@@ -1,5 +1,6 @@
 #pragma once
 #include "MDIWindow.h"
+#include "SceneWindow.h"
 #include "ConsoleWindow.h"
 #include "StatusBar.h"
 #include "ToolBar.h"
@@ -7,16 +8,15 @@
 class MainWindow : public MDIWindow<MainWindow>
 {
 protected:
+	SceneWindow sceneWindow;
 	ConsoleWindow consoleWindow;
 	StatusBar sbMain;
 	ToolBar tbMain;
 
+	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
+	void ToggleWindow( HWND, int, int );
+	void CallSize();
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
-	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
-
-	//static LRESULT CALLBACK SubWndProc( HWND, UINT, WPARAM, LPARAM );
-	//HWND CreateSubWindow( HWND hMDIClient );
-	//BOOL RegSubWnd();
 };

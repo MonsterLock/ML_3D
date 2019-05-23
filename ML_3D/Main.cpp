@@ -1,13 +1,13 @@
 #include "MainWindow.h"
 #include "FILEIO.h"
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 #include <fbxsdk.h>
 #include <string>
 #include <shobjidl.h>
 
-const COMDLG_FILTERSPEC c_rgSaveTypes[ ] =
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+const COMDLG_FILTERSPEC c_rgSaveTypes[] =
 {
 	{L"Word Document (*.doc)",       L"*.doc"},
 	{L"Text Document (*.txt)",       L"*.txt"},
@@ -29,7 +29,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 	MainWindow win;
 
-	if ( !win.Create() )
+	if( !win.Create() )
 	{
 		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 		return 0;
@@ -37,10 +37,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	MSG msg = {};
 
-	while ( msg.message != WM_QUIT )
+	while( msg.message != WM_QUIT )
 	{
-		if ( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) &&
-			 !TranslateMDISysAccel( win.ClientWnd(), &msg ) )
+		if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) &&
+			!TranslateMDISysAccel( win.ClientWnd(), &msg ) )
 		{
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );

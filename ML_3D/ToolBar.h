@@ -21,7 +21,7 @@ public:
 				0,
 				TOOLBARCLASSNAME,
 				nullptr,
-				WS_CHILD | WS_VISIBLE,
+				WS_CHILD,
 				0, 0, 0, 0,
 				hRoot,
 				reinterpret_cast< HMENU >( RID_SB ),

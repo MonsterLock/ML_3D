@@ -1,7 +1,7 @@
-#include "ConsoleWindow.h"
+#include "SceneWindow.h"
 #include "windowsx.h"
 
-LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT SceneWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -25,8 +25,13 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 				{
 					MessageBox( mSubWnd, L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Console" );
+				Edit_SetText( hEdit, L"Scene" );
 				Edit_SetReadOnly( hEdit, TRUE );
+			}
+			break;
+		case WM_COMMAND:
+			{
+				break;
 			}
 			break;
 		case WM_SIZE:

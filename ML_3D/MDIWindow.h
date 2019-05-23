@@ -28,7 +28,7 @@ public:
 	{
 		DERIVED_TYPE* pThis = nullptr;
 
-		switch ( uMsg )
+		switch( uMsg )
 		{
 			case WM_NCCREATE:
 				{
@@ -44,7 +44,7 @@ public:
 					ccs.idFirstChild = ID_MDI_FIRSTCHILD;
 
 					pThis->mMDIClient = CreateWindowEx(
-						WS_EX_CLIENTEDGE,
+						0,
 						pThis->mClientClass,
 						nullptr,
 						MDIS_ALLCHILDSTYLES | WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
@@ -54,7 +54,7 @@ public:
 						GetModuleHandle( nullptr ),
 						&ccs );
 
-					if ( !pThis->mMDIClient )
+					if( !pThis->mMDIClient )
 					{
 						MessageBox( nullptr, L"Creating Client Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 						return FALSE;
@@ -67,7 +67,7 @@ public:
 				}
 				break;
 		}
-		if ( pThis )
+		if( pThis )
 		{
 			return pThis->HandleMessage( uMsg, wParam, lParam );
 		}
@@ -96,7 +96,7 @@ public:
 		wc.hIconSm = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
 
-		if ( !RegisterClassEx( &wc ) )
+		if( !RegisterClassEx( &wc ) )
 		{
 			MessageBox( nullptr, L"Registering Frame Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 			return FALSE;
@@ -104,7 +104,7 @@ public:
 
 		// Create the frame window.
 		mMDIFrame = CreateWindowEx(
-			WS_EX_APPWINDOW | WS_EX_CONTROLPARENT,							// Optional window styles.
+			WS_EX_APPWINDOW,												// Optional window styles.
 			mFrameClass,													// Window class
 			WindowText(),													// Window text
 			WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_VISIBLE,				// Window style
@@ -114,7 +114,7 @@ public:
 			GetModuleHandle( nullptr ),										// Instance handle
 			this );															// Additional application data
 
-		if ( !mMDIFrame )
+		if( !mMDIFrame )
 		{
 			MessageBox( nullptr, L"Creating Frame Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 			return FALSE;

@@ -9,7 +9,7 @@ FILEIO::~FILEIO()
 
 DWORD FILEIO::CreateNewDir( LPCWSTR lpDir )
 {
-	if ( CreateDirectory( lpDir, nullptr ) )
+	if( CreateDirectory( lpDir, nullptr ) )
 	{
 		return 0;
 	}
@@ -28,7 +28,7 @@ DWORD FILEIO::SaveDir( LPCWSTR lpDir )
 
 DWORD FILEIO::RemoveDir( LPCWSTR lpDir )
 {
-	if ( RemoveDirectory( lpDir ) )
+	if( RemoveDirectory( lpDir ) )
 	{
 		return 0;
 	}
@@ -37,7 +37,7 @@ DWORD FILEIO::RemoveDir( LPCWSTR lpDir )
 
 DWORD FILEIO::SetCurrentDir( LPCWSTR lpDir )
 {
-	if ( SetCurrentDirectory( lpDir ) )
+	if( SetCurrentDirectory( lpDir ) )
 	{
 		return 0;
 	}
@@ -46,7 +46,7 @@ DWORD FILEIO::SetCurrentDir( LPCWSTR lpDir )
 
 DWORD FILEIO::GetCurrentDir( LPWSTR lpDir )
 {
-	if ( GetCurrentDirectory( MAX_PATH, lpDir ) )
+	if( GetCurrentDirectory( MAX_PATH, lpDir ) )
 	{
 		return 0;
 	}
@@ -66,7 +66,7 @@ DWORD FILEIO::ListDirContents( LPCWSTR lpDir )
 	// Three characters are for the "\*" plus NULL appended below.
 	StringCchLength( lpDir, MAX_PATH, &length_of_arg );
 
-	if ( length_of_arg > ( MAX_PATH - 3 ) )
+	if( length_of_arg > ( MAX_PATH - 3 ) )
 	{
 		// Dir path is too long
 	}
@@ -79,7 +79,7 @@ DWORD FILEIO::ListDirContents( LPCWSTR lpDir )
 	// Find the first file in the directory.
 	hFind = FindFirstFile( szDir, &ffd );
 
-	if ( INVALID_HANDLE_VALUE == hFind )
+	if( INVALID_HANDLE_VALUE == hFind )
 	{
 		// First file not found.
 		return dwError;
@@ -88,7 +88,7 @@ DWORD FILEIO::ListDirContents( LPCWSTR lpDir )
 	// List all the files in the directory with some info about them.
 	do
 	{
-		if ( ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
+		if( ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
 		{
 
 		}
@@ -98,10 +98,11 @@ DWORD FILEIO::ListDirContents( LPCWSTR lpDir )
 			fileSize.HighPart = ffd.nFileSizeHigh;
 
 		}
-	} while ( FindNextFile( hFind, &ffd ) != 0 );
+	}
+	while( FindNextFile( hFind, &ffd ) != 0 );
 
 	dwError = GetLastError();
-	if ( dwError != ERROR_NO_MORE_FILES )
+	if( dwError != ERROR_NO_MORE_FILES )
 	{
 		// We never reached all the files.
 	}
@@ -112,7 +113,7 @@ DWORD FILEIO::ListDirContents( LPCWSTR lpDir )
 
 DWORD FILEIO::MoveDir( LPWSTR lpDir, LPWSTR lpDirTar, LPPROGRESS_ROUTINE progressProc, LPVOID copyData, DWORD dwFlags )
 {
-	if ( MoveFileWithProgress( lpDir, lpDirTar, progressProc, copyData, dwFlags ) )
+	if( MoveFileWithProgress( lpDir, lpDirTar, progressProc, copyData, dwFlags ) )
 	{
 		return 0;
 	}
@@ -139,7 +140,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 		FALSE,                         // do not watch subtree
 		FILE_NOTIFY_CHANGE_FILE_NAME ); // watch file name changes
 
-	if ( dwChangeHandles[0] == INVALID_HANDLE_VALUE )
+	if( dwChangeHandles[0] == INVALID_HANDLE_VALUE )
 	{
 		printf( "\n ERROR: FindFirstChangeNotification function failed.\n" );
 		ExitProcess( GetLastError() );
@@ -152,7 +153,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 		TRUE,                          // watch the subtree
 		FILE_NOTIFY_CHANGE_DIR_NAME );  // watch dir name changes
 
-	if ( dwChangeHandles[1] == INVALID_HANDLE_VALUE )
+	if( dwChangeHandles[1] == INVALID_HANDLE_VALUE )
 	{
 		printf( "\n ERROR: FindFirstChangeNotification function failed.\n" );
 		ExitProcess( GetLastError() );
@@ -161,7 +162,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 
 	// Make a final validation check on our handles.
 
-	if ( ( dwChangeHandles[0] == NULL ) || ( dwChangeHandles[1] == NULL ) )
+	if( ( dwChangeHandles[0] == NULL ) || ( dwChangeHandles[1] == NULL ) )
 	{
 		printf( "\n ERROR: Unexpected NULL from FindFirstChangeNotification.\n" );
 		ExitProcess( GetLastError() );
@@ -170,7 +171,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 	// Change notification is set. Now wait on both notification
 	// handles and refresh accordingly.
 
-	while ( TRUE )
+	while( TRUE )
 	{
 		// Wait for notification.
 
@@ -179,7 +180,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 		dwWaitStatus = WaitForMultipleObjects( 2, dwChangeHandles,
 											   FALSE, INFINITE );
 
-		switch ( dwWaitStatus )
+		switch( dwWaitStatus )
 		{
 			case WAIT_OBJECT_0:
 
@@ -187,7 +188,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 				// Refresh this directory and restart the notification.
 
 				RefreshDir( lpDir );
-				if ( FindNextChangeNotification( dwChangeHandles[0] ) == FALSE )
+				if( FindNextChangeNotification( dwChangeHandles[0] ) == FALSE )
 				{
 					printf( "\n ERROR: FindNextChangeNotification function failed.\n" );
 					ExitProcess( GetLastError() );
@@ -200,7 +201,7 @@ DWORD FILEIO::WatchDir( LPWSTR lpDir )
 				// Refresh the tree and restart the notification.
 
 				RefreshTree( lpDrive );
-				if ( FindNextChangeNotification( dwChangeHandles[1] ) == FALSE )
+				if( FindNextChangeNotification( dwChangeHandles[1] ) == FALSE )
 				{
 					printf( "\n ERROR: FindNextChangeNotification function failed.\n" );
 					ExitProcess( GetLastError() );
