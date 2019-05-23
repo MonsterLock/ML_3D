@@ -1,10 +1,9 @@
 #include "ConsoleWindow.h"
 #include "resource.h"
+#include "windowsx.h"
 
 LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	HWND hFrame = GetParent(mParent);
-
 	switch ( uMsg )
 	{
 		case WM_CREATE:
@@ -14,11 +13,11 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 				HWND hEdit;
 
 				hEdit = CreateWindowEx(
-					WS_EX_CLIENTEDGE,
+					0,
 					L"Edit",
 					L"",
-					WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
-					0, 0, 100, 100,
+					WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
+					0, 0, 0, 0,
 					mSubWnd,
 					reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
 					GetModuleHandle( nullptr ),
@@ -31,50 +30,26 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 
 				hfDef = reinterpret_cast< HFONT >( GetStockObject( DEFAULT_GUI_FONT ) );
 				SendMessage( hEdit, WM_SETFONT, static_cast< WPARAM >( RID_MAIN_CLIENT ), MAKELPARAM( FALSE, 0 ) );
-			}
-			break;
-		case WM_MDIACTIVATE:
-			{
-				HMENU
-					hMainMenu = GetMenu( hFrame ),
-					hFileMenu = GetSubMenu( hMainMenu, 0 );
-				UINT EnableFlag;
-
-				if ( hFrame == reinterpret_cast< HWND >( lParam ) )
-				{
-					EnableFlag = MF_ENABLED;
-				}
-				else
-				{
-					EnableFlag = MF_GRAYED;
-				}
-
-				//EnableMenuItem( hMainMenu, 1, MF_BYPOSITION | EnableFlag );
-				//EnableMenuItem( hMainMenu, 2, MF_BYPOSITION | EnableFlag );
-
-				hFileMenu = GetSubMenu( hMainMenu, 0 );
-				EnableMenuItem( hFileMenu, ID_FILE_SAVEAS, MF_BYCOMMAND | EnableFlag );
-				//mainWnd->DoFileOpen( hwnd );
-				DrawMenuBar( hFrame );
+				Edit_SetText(hEdit, L"HELLO");
+				Edit_SetReadOnly( hEdit, TRUE );
+				ToggleWindow( ID_VIEW_CONSOLEWINDOW, 2 );
 			}
 			break;
 		case WM_COMMAND:
 			{
 				switch ( LOWORD( wParam ) )
 				{
-					case ID_FILE_OPEN:
+					case ID_VIEW_CONSOLEWINDOW:
 						{
-							//mainWnd->DoFileOpen( hwnd );
+							ToggleWindow( ID_VIEW_CONSOLEWINDOW, 2 );
 						}
 						break;
-					case ID_FILE_SAVEAS:
-						{
-							//mainWnd->DoFileSave( hwnd );
-						}
-						break;
-						//case ID_EDIT_CUT:
-						//	SendDlgItemMessage( hwnd, RID_MAIN_CLIENT, WM_CUT, 0, 0 );
 				}
+			}
+			break;
+		case WM_CLOSE:
+			{
+				ToggleWindow( ID_VIEW_CONSOLEWINDOW, 2 );
 			}
 			break;
 		case WM_SIZE:
@@ -94,4 +69,20 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 
 	return 0;
+}
+
+void ConsoleWindow::ToggleWindow( int item, int index )
+{
+	HMENU hFileMenu = GetSubMenu( GetMenu( GetParent( mParent ) ), index );
+	DWORD isChecked = CheckMenuItem( hFileMenu, item, MF_BYCOMMAND );
+	if ( isChecked == MF_UNCHECKED  )
+	{
+		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND |  MF_CHECKED);
+		ShowWindow(HSubWnd(), SW_SHOW);
+	}
+	else
+	{
+		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND |  MF_UNCHECKED);
+		ShowWindow(HSubWnd(), SW_HIDE);
+	}
 }

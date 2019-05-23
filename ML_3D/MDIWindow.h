@@ -47,7 +47,7 @@ public:
 						WS_EX_CLIENTEDGE,
 						pThis->mClientClass,
 						nullptr,
-						WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
+						MDIS_ALLCHILDSTYLES | WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE,
 						0, 0, 0, 0,
 						pThis->mMDIFrame,
 						reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),

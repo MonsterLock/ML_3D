@@ -18,13 +18,16 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				// Create window.
 				consoleWindow.RegSubWnd(
 					L"ConsoleWindow",
-					CS_VREDRAW | CS_HREDRAW,
+					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
+
+				RECT mainRect;
+				GetClientRect( mMDIFrame, &mainRect );
 
 				consoleWindow.CreateSubWnd(
 					mMDIClient,
-					MDIS_ALLCHILDSTYLES,
-					CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT );
+					WS_OVERLAPPEDWINDOW ,
+					0, 0, 0, 0 );
 
 				// Create toolbar.
 				tbMain.CreateToolbar( mMDIFrame, RID_MAIN_TB );
@@ -70,6 +73,9 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 				hClient = GetDlgItem( mMDIFrame, RID_MAIN_CLIENT );
 				SetWindowPos( hClient, nullptr, 0, iToolHeight, rcClient.right, iClientHeight, SWP_NOZORDER );
+
+				GetClientRect( hClient, &rcClient );
+				SetWindowPos( consoleWindow.HSubWnd(), nullptr, 0, static_cast< int >( rcClient.bottom * 0.87f ), rcClient.right, static_cast< int >( rcClient.bottom * 0.13f ), SWP_NOZORDER );
 			}
 			break;
 		case WM_COMMAND:
@@ -101,10 +107,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( LOWORD( wParam ) )
 	{
-		case ID_FILE_NEW:
-			{
-
-			}break;
+		case ID_FILE_NEW: {}break;
 		case ID_FILE_OPEN: {}break;
 		case ID_FILE_STARTUP: {}break;
 		case ID_FILE_SAVE: {}break;
@@ -136,7 +139,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_VIEW_IN: {} break;
 		case ID_VIEW_TOOLBAR: {} break;
 		case ID_VIEW_GAMEVIEW: {} break;
-		case ID_VIEW_CONSOLEWINDOW: {} break;
+		//case ID_VIEW_CONSOLEWINDOW: {} break;
 		case ID_VIEW_ANI: {} break;
 		case ID_VIEW_PROFILERWINDOW: {} break;
 		case ID_VIEW_LIGHTINGWINDOW: {} break;
@@ -205,144 +208,3 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	}
 	return TRUE;
 }
-//LRESULT CALLBACK MainWindow::SubWndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
-//{
-//	HWND hFrame = GetParent( GetParent( hwnd ) );
-//	MainWindow* mainWnd = reinterpret_cast< MainWindow* >( GetWindowLongPtr( hFrame, GWLP_USERDATA ) );
-//
-//	switch ( uMsg )
-//	{
-//		case WM_CREATE:
-//			{
-//				if ( !mainWnd )
-//				{
-//					MessageBox( hwnd, L"Could not get parent window.", L"ERROR", MB_OK | MB_ICONERROR );
-//				}
-//				// Create edit control.
-//				HFONT hfDef;
-//				HWND hEdit;
-//
-//				hEdit = CreateWindowEx(
-//					WS_EX_CLIENTEDGE,
-//					L"Edit",
-//					L"",
-//					WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
-//					0, 0, 100, 100,
-//					hwnd,
-//					reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
-//					GetModuleHandle( nullptr ),
-//					nullptr );
-//
-//				if ( !hEdit )
-//				{
-//					MessageBox( hwnd, L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
-//				}
-//
-//				hfDef = reinterpret_cast< HFONT >( GetStockObject( DEFAULT_GUI_FONT ) );
-//				SendMessage( hEdit, WM_SETFONT, static_cast< WPARAM >( RID_MAIN_CLIENT ), MAKELPARAM( FALSE, 0 ) );
-//			}
-//			break;
-//		case WM_MDIACTIVATE:
-//			{
-//				HMENU
-//					hMainMenu = GetMenu( hFrame ),
-//					hFileMenu = GetSubMenu( hMainMenu, 0 );
-//				UINT EnableFlag;
-//
-//				if ( hFrame == reinterpret_cast< HWND >( lParam ) )
-//				{
-//					EnableFlag = MF_ENABLED;
-//				}
-//				else
-//				{
-//					EnableFlag = MF_GRAYED;
-//				}
-//
-//				//EnableMenuItem( hMainMenu, 1, MF_BYPOSITION | EnableFlag );
-//				//EnableMenuItem( hMainMenu, 2, MF_BYPOSITION | EnableFlag );
-//
-//				hFileMenu = GetSubMenu( hMainMenu, 0 );
-//				EnableMenuItem( hFileMenu, ID_FILE_SAVEAS, MF_BYCOMMAND | EnableFlag );
-//				//EnableMenuItem( hFileMenu, ID_FILE_CLOSE, MF_BYCOMMAND | EnableFlag );
-//				//EnableMenuItem( hFileMenu, ID_FILE_CLOSEALL, MF_BYCOMMAND | EnableFlag );
-//				//mainWnd->DoFileOpen( hwnd );
-//				DrawMenuBar( hFrame );
-//			}
-//			break;
-//		case WM_COMMAND:
-//			{
-//				switch ( LOWORD( wParam ) )
-//				{
-//					case ID_FILE_OPEN:
-//						{
-//							//mainWnd->DoFileOpen( hwnd );
-//						}
-//						break;
-//					case ID_FILE_SAVEAS:
-//						{
-//							//mainWnd->DoFileSave( hwnd );
-//						}
-//						break;
-//						//case ID_EDIT_CUT:
-//						//	SendDlgItemMessage( hwnd, RID_MAIN_CLIENT, WM_CUT, 0, 0 );
-//				}
-//			}
-//			break;
-//		case WM_SIZE:
-//			{
-//				HWND hEdit;
-//				RECT rcClient;
-//
-//				// Calculate remaining height and size edit.
-//				GetClientRect( hwnd, &rcClient );
-//
-//				hEdit = GetDlgItem( hwnd, RID_MAIN_CLIENT );
-//				SetWindowPos( hEdit, nullptr, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER );
-//			}
-//		default:
-//			{
-//				return DefMDIChildProc( hwnd, uMsg, wParam, lParam );
-//			}
-//	}
-//
-//	return 0;
-//}
-
-//HWND MainWindow::CreateSubWindow( HWND hwnd )
-//{
-//	HWND hSub;
-//
-//	MDICREATESTRUCT mcs;
-//	mcs.szTitle = L"[Untitled]";
-//	mcs.szClass = L"TestSubWnd";
-//	mcs.hOwner = GetModuleHandle( nullptr );
-//	mcs.x = mcs.cx = CW_USEDEFAULT;
-//	mcs.y = mcs.cy = CW_USEDEFAULT;
-//	mcs.style = MDIS_ALLCHILDSTYLES;
-//
-//	hSub = reinterpret_cast< HWND >(
-//		SendMessage( hwnd, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
-//
-//	if ( !hSub )
-//	{
-//		MessageBox( hwnd, L"Sub-window creation failed.", L"ERROR",
-//					MB_ICONEXCLAMATION | MB_OK );
-//	}
-//
-//	return hSub;
-//}
-//
-//BOOL MainWindow::RegSubWnd()
-//{
-//	WNDCLASSEX wc = { 0 };
-//	wc.cbSize = sizeof( WNDCLASSEX );
-//	wc.style = CS_HREDRAW | CS_VREDRAW;
-//	wc.lpfnWndProc = SubWndProc;
-//	wc.lpszClassName = L"TestSubWnd";
-//	wc.lpszMenuName = nullptr;
-//	wc.hInstance = GetModuleHandle( nullptr );
-//	wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_WINDOWFRAME );
-//	wc.hIconSm = LoadIcon( nullptr, IDI_WINLOGO );
-//
-//	return RegisterClassEx( &wc ) ? TRUE : FALSE;
-//}

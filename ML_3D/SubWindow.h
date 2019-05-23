@@ -54,21 +54,14 @@ public:
 	BOOL RegSubWnd(
 		PCWSTR lpWindowClass,
 		DWORD dwStyle,
-		HICON rIcon,
-		DWORD dwExStyle = WS_EX_MDICHILD,
-		int x = CW_USEDEFAULT,
-		int y = CW_USEDEFAULT,
-		int nWidth = CW_USEDEFAULT,
-		int nHeight = CW_USEDEFAULT,
-		HWND hWndParent = 0,
-		HMENU hMenu = 0 )
+		HICON rIcon )
 	{
 		mSubWindowClass = lpWindowClass;
 
 		// Register the sub-window class
 		WNDCLASSEX wc = { 0 };
 		wc.cbSize = sizeof( WNDCLASSEX );
-		wc.style = dwStyle;
+		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.lpfnWndProc = SubWndProc;
 		wc.lpszClassName = ClassName();
 		wc.lpszMenuName = nullptr;
@@ -93,14 +86,14 @@ public:
 		mParent = hParent;
 
 		MDICREATESTRUCT mcs;
-		mcs.szTitle = WindowText();
 		mcs.szClass = ClassName();
+		mcs.szTitle = WindowText();
 		mcs.hOwner = GetModuleHandle( nullptr );
 		mcs.x = x;
 		mcs.y = y;
 		mcs.cx = width;
 		mcs.cy = height;
-		mcs.style = dwStyle;
+		mcs.style = MDIS_ALLCHILDSTYLES | WS_VISIBLE | dwStyle;
 		mcs.lParam = reinterpret_cast< LPARAM >( this );
 
 		mSubWnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
@@ -117,42 +110,3 @@ public:
 	HWND HSubWnd() const { return mSubWnd; }
 	PCWSTR ClassName() const { return mSubWindowClass; }
 };
-
-//HWND MainWindow::CreateSubWindow( HWND hwnd )
-//{
-//	HWND hSub;
-//
-//	MDICREATESTRUCT mcs;
-//	mcs.szTitle = L"[Untitled]";
-//	mcs.szClass = L"TestSubWnd";
-//	mcs.hOwner = GetModuleHandle( nullptr );
-//	mcs.x = mcs.cx = CW_USEDEFAULT;
-//	mcs.y = mcs.cy = CW_USEDEFAULT;
-//	mcs.style = MDIS_ALLCHILDSTYLES;
-//
-//	hSub = reinterpret_cast< HWND >(
-//		SendMessage( hwnd, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
-//
-//	if ( !hSub )
-//	{
-//		MessageBox( hwnd, L"Sub-window creation failed.", L"ERROR",
-//					MB_ICONEXCLAMATION | MB_OK );
-//	}
-//
-//	return hSub;
-//}
-//
-//BOOL MainWindow::RegSubWnd()
-//{
-//	WNDCLASSEX wc = { 0 };
-//	wc.cbSize = sizeof( WNDCLASSEX );
-//	wc.style = CS_HREDRAW | CS_VREDRAW;
-//	wc.lpfnWndProc = SubWndProc;
-//	wc.lpszClassName = L"TestSubWnd";
-//	wc.lpszMenuName = nullptr;
-//	wc.hInstance = GetModuleHandle( nullptr );
-//	wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_WINDOWFRAME );
-//	wc.hIconSm = LoadIcon( nullptr, IDI_WINLOGO );
-//
-//	return RegisterClassEx( &wc ) ? TRUE : FALSE;
-//}

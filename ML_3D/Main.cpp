@@ -36,23 +36,16 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	}
 
 	MSG msg = {};
-	BOOL bRet;
 
-	while ( ( bRet = GetMessage( &msg, static_cast< HWND >( nullptr ), 0, 0 ) ) != 0 )
+	while ( msg.message != WM_QUIT )
 	{
-		if ( bRet == -1 )
+		if ( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) &&
+			 !TranslateMDISysAccel( win.ClientWnd(), &msg ) )
 		{
-			MessageBox( nullptr, L"GetMessage Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-		}
-		else
-		{
-			if ( !TranslateMDISysAccel( win.ClientWnd(), &msg ) )
-			{
-				TranslateMessage( &msg );
-				DispatchMessage( &msg );
-			}
+			TranslateMessage( &msg );
+			DispatchMessage( &msg );
 		}
 	}
 
-	return msg.wParam;
+	return static_cast< int >( msg.wParam );
 }
