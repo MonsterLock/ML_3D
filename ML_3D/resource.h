@@ -2,11 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by ML_3D.rc
 //
-#define ID_MDI_FIRSTCHILD 50000
-#define RID_MAIN_CLIENT 1337
-#define RID_MAIN_TB 1338
-#define RID_MAIN_STATUS 1339
-
 #define IDR_MAIN_MENU                   101
 #define IDD_HELP_ABOUT_PAGE             103
 #define IDD_FILE_NEW_PAGE               107
@@ -27,6 +22,9 @@
 #define IDC_RICHEDIT22                  1050
 #define IDC_BUTTON2                     1052
 #define IDC_ML_LOGOBM                   1053
+#define RID_MAIN_CLIENT                 1337
+#define RID_MAIN_TB                     1338
+#define RID_MAIN_STATUS                 1339
 #define ID_FILE_SAVE                    40003
 #define ID_FILE_SAVEAS                  40004
 #define ID_FILE_SAVEALL                 40005
@@ -50,7 +48,6 @@
 #define ID_VIEW_PROJECTWINDOW           40026
 #define ID_VIEW_SCENEVIEW               40027
 #define ID_VIEW_HIERARCHYWINDOW         40028
-#define ID_VIEW_IN                      40029
 #define ID_VIEW_TOOLBAR                 40030
 #define ID_VIEW_GAMEVIEW                40031
 #define ID_PROJECT_ADDNEW               40032
@@ -75,7 +72,6 @@
 #define ID_WINDOW_RESETWINDOWLAYOUT     40052
 #define ID_HELP_VIEWHELP                40054
 #define ID_HELP_ABOUT                   40055
-#define ID_EDIT_FIND40056               40056
 #define ID_TOOLS_CREATEELEMENT          40060
 #define ID_TOOLS_CREATESUB              40061
 #define ID_TOOLS_AUDIO                  40066
@@ -122,13 +118,15 @@
 #define ID_FILE_NEW                     40107
 #define ID_FILE_OPEN                    40108
 #define ID_EDIT_FINDREPLACE             40119
+#define ID_VIEW_INFO                    40120
+#define ID_MDI_FIRSTCHILD               50000
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        128
-#define _APS_NEXT_COMMAND_VALUE         40120
+#define _APS_NEXT_COMMAND_VALUE         40121
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

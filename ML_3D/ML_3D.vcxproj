@@ -179,19 +179,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="FILEIO.cpp" />
+    <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="HierarchyWindow.cpp" />
+    <ClCompile Include="InformationWindow.cpp" />
+    <ClCompile Include="LightingWindow.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="ProfilerWindow.cpp" />
+    <ClCompile Include="ProjectWindow.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Element.h" />
     <ClInclude Include="ErrorHandler.h" />
     <ClInclude Include="FILEIO.h" />
+    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="HierarchyWindow.h" />
+    <ClInclude Include="InformationWindow.h" />
+    <ClInclude Include="LightingWindow.h" />
     <ClInclude Include="MDIWindow.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="ProfilerWindow.h" />
+    <ClInclude Include="ProjectWindow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneWindow.h" />
     <ClInclude Include="StatusBar.h" />

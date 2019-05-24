@@ -11,6 +11,7 @@
 
 constexpr static float verticalDivide = 0.8f;
 constexpr static float leftHorizontalDivide = 0.85f;
+constexpr static float rightHorizontalDivide = 0.33f;
 constexpr static float tabHeight = 0.03f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -36,21 +37,67 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_CREATE:
 			{
-				// Create scene window.
-				sceneWindow.RegSubWnd(
-					L"SceneWindow",
+				animationWindow.RegSubWnd(
+					L"AnimationWindow",
 					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
-				sceneWindow.CreateSubWnd(
+				animationWindow.CreateSubWnd(
 					ClientWnd(),
 					0 );
-
-				// Create console window.
 				consoleWindow.RegSubWnd(
 					L"ConsoleWindow",
 					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
 				consoleWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				gameWindow.RegSubWnd(
+					L"GameWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				gameWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				hierarchyWindow.RegSubWnd(
+					L"HierarchyWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				hierarchyWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				informationWindow.RegSubWnd(
+					L"InformationWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				informationWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				lightingWindow.RegSubWnd(
+					L"LightingWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				lightingWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				profilerWindow.RegSubWnd(
+					L"ProfilerWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				profilerWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				projectWindow.RegSubWnd(
+					L"ProjectWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				projectWindow.CreateSubWnd(
+					ClientWnd(),
+					0 );
+				sceneWindow.RegSubWnd(
+					L"SceneWindow",
+					0,
+					LoadIcon( nullptr, IDI_WINLOGO ) );
+				sceneWindow.CreateSubWnd(
 					ClientWnd(),
 					0 );
 
@@ -159,8 +206,8 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_EDIT_SELECTIONGROUP: {} break;
 		case ID_VIEW_PROJECTWINDOW: {} break;
 		case ID_VIEW_SCENEVIEW: { ToggleWindow( sceneWindow.Wnd(), ID_VIEW_SCENEVIEW, 2 ); } break;
-		case ID_VIEW_HIERARCHYWINDOW: {} break;
-		case ID_VIEW_IN: {} break;
+		case ID_VIEW_HIERARCHYWINDOW: { ToggleWindow( hierarchyWindow.Wnd(), ID_VIEW_HIERARCHYWINDOW, 2 ); } break;
+		case ID_VIEW_INFO: { ToggleWindow( informationWindow.Wnd(), ID_VIEW_INFO, 2 ); } break;
 		case ID_VIEW_TOOLBAR:
 			{
 				ToggleWindow( tbMain.GetToolbar(), ID_VIEW_TOOLBAR, 2 );
@@ -300,19 +347,21 @@ void MainWindow::CallSize()
 	GetClientRect( hClient, &rcClient );
 
 	int newVerticalDivide = static_cast< int >( rcClient.right * verticalDivide );
+	int newTabHeight = static_cast< int >( rcClient.bottom * tabHeight );
 
+	// Left Side
 	SetWindowPos(
 		tabMain.GetTabControl(),
 		nullptr,
 		0, 0,
-		newVerticalDivide, static_cast< int >( rcClient.bottom * tabHeight ),
+		newVerticalDivide, newTabHeight,
 		SWP_SHOWWINDOW | SWP_NOZORDER );
 
 	SetWindowPos(
 		tabInfo.GetTabControl(),
 		nullptr,
 		0, static_cast< int >( rcClient.bottom * ( 1.0f - tabHeight ) ),
-		newVerticalDivide, static_cast< int >( rcClient.bottom * tabHeight ),
+		newVerticalDivide, newTabHeight,
 		SWP_SHOWWINDOW | SWP_NOZORDER );
 
 	SetWindowPos(
@@ -327,5 +376,31 @@ void MainWindow::CallSize()
 		nullptr,
 		0, static_cast< int >( rcClient.bottom * leftHorizontalDivide ),
 		newVerticalDivide, static_cast< int >( rcClient.bottom * ( 1.0f - leftHorizontalDivide - tabHeight ) ),
+		SWP_NOZORDER );
+
+	// Right Side
+	int newWidth = rcClient.right - newVerticalDivide;
+	int rightTab = static_cast< int >( rcClient.bottom * rightHorizontalDivide );
+	int newRightHorizontal = static_cast< int >( rcClient.bottom * ( rightHorizontalDivide + tabHeight ) );
+
+	SetWindowPos(
+		tabProperties.GetTabControl(),
+		nullptr,
+		newVerticalDivide, rightTab,
+		newWidth, newTabHeight,
+		SWP_SHOWWINDOW | SWP_NOZORDER );
+
+	SetWindowPos(
+		hierarchyWindow.Wnd(),
+		nullptr,
+		newVerticalDivide, 0,
+		newWidth, rightTab,
+		SWP_NOZORDER );
+
+	SetWindowPos(
+		informationWindow.Wnd(),
+		nullptr,
+		newVerticalDivide, newRightHorizontal,
+		newWidth, rcClient.bottom - newRightHorizontal,
 		SWP_NOZORDER );
 }

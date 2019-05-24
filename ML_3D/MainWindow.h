@@ -1,26 +1,36 @@
 #pragma once
 #include "MDIWindow.h"
-#include "SceneWindow.h"
+#include "AnimationWindow.h"
 #include "ConsoleWindow.h"
+#include "GameWindow.h"
+#include "HierarchyWindow.h"
+#include "InformationWindow.h"
+#include "LightingWindow.h"
+#include "ProfilerWindow.h"
+#include "ProjectWindow.h"
+#include "SceneWindow.h"
 #include "StatusBar.h"
-#include "ToolBar.h"
 #include "TabControl.h"
+#include "ToolBar.h"
 
 class MainWindow : public MDIWindow<MainWindow>
 {
 protected:
-	SceneWindow sceneWindow;
+	AnimationWindow animationWindow;
 	ConsoleWindow consoleWindow;
+	GameWindow gameWindow;
+	HierarchyWindow hierarchyWindow;
+	InformationWindow informationWindow;
+	LightingWindow lightingWindow;
+	ProfilerWindow profilerWindow;
+	ProjectWindow projectWindow;
+	SceneWindow sceneWindow;
 	StatusBar sbMain;
 	ToolBar tbMain;
 	TabControl
 		tabMain,
 		tabProperties,
 		tabInfo;
-
-	//HWND
-	//	tabMain,
-	//	tabProperties, tabInfo;
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
 	void ToggleWindow( HWND, int, int );
