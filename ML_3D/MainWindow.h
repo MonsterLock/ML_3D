@@ -4,6 +4,7 @@
 #include "ConsoleWindow.h"
 #include "StatusBar.h"
 #include "ToolBar.h"
+#include "TabControl.h"
 
 class MainWindow : public MDIWindow<MainWindow>
 {
@@ -12,6 +13,14 @@ protected:
 	ConsoleWindow consoleWindow;
 	StatusBar sbMain;
 	ToolBar tbMain;
+	TabControl
+		tabMain,
+		tabProperties,
+		tabInfo;
+
+	//HWND
+	//	tabMain,
+	//	tabProperties, tabInfo;
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
 	void ToggleWindow( HWND, int, int );

@@ -62,7 +62,7 @@ public:
 		wc.lpszClassName = ClassName();
 		wc.lpszMenuName = nullptr;
 		wc.hInstance = GetModuleHandle( nullptr );
-		wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_BACKGROUND );
+		wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_APPWORKSPACE );
 		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.hIconSm = rIcon;
 
@@ -98,6 +98,6 @@ public:
 		return TRUE;
 	}
 
-	HWND HSubWnd() const { return mSubWnd; }
+	HWND Wnd() const { return mSubWnd; }
 	PCWSTR ClassName() const { return mSubWindowClass; }
 };

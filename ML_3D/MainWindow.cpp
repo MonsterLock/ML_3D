@@ -9,15 +9,29 @@
 #define __L(x)  L##x
 #define RES_STATUS
 
-constexpr static float rightDivide = 0.8f;
+constexpr static float verticalDivide = 0.8f;
+constexpr static float leftHorizontalDivide = 0.85f;
+constexpr static float tabHeight = 0.03f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
+		case WM_GETDLGCODE:
+			{
+				if( wParam == VK_ESCAPE )
+				{
+					SendMessage( FrameWnd(), WM_CLOSE, 0, 0 );
+				}
+			}
+			break;
 		case WM_CLOSE:
 			{
-				break; // TODO shutdown
+				MessageBox( nullptr, L"Think you're gonig to exit?", L"NOPE", MB_OK | MB_ICONEXCLAMATION );
+				/* TODO:
+				- Save window configurations
+				- Check for any unsaved work
+				- Clean resources */
 			}
 			break;
 		case WM_CREATE:
@@ -28,7 +42,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
 				sceneWindow.CreateSubWnd(
-					mMDIClient,
+					ClientWnd(),
 					0 );
 
 				// Create console window.
@@ -37,14 +51,50 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					0,
 					LoadIcon( nullptr, IDI_WINLOGO ) );
 				consoleWindow.CreateSubWnd(
-					mMDIClient,
+					ClientWnd(),
 					0 );
 
 				// Create toolbar.
-				tbMain.CreateToolbar( mMDIFrame, RID_MAIN_TB );
+				if( !tbMain.CreateToolbar( FrameWnd(), RID_MAIN_TB ) )
+				{
+					MessageBox( ClientWnd(), L"Could not create toolbar.", L"ERROR", MB_OK | MB_ICONERROR );
+				}
 
 				// Create statusbar.
-				sbMain.CreateStatusBar( mMDIFrame, RID_MAIN_STATUS );
+				if( !sbMain.CreateStatusBar( FrameWnd(), RID_MAIN_STATUS ) )
+				{
+					MessageBox( ClientWnd(), L"Could not create statusbar.", L"ERROR", MB_OK | MB_ICONERROR );
+				}
+
+				// Create tabs controls
+				if( !tabMain.CreateTabs( ClientWnd(), 0, L"TABMAIN" ) ||
+					!tabProperties.CreateTabs( ClientWnd(), 0, L"TABPROPERTIES" ) ||
+					!tabInfo.CreateTabs( ClientWnd(), TCS_BOTTOM, L"TABINFO" ) )
+				{
+					MessageBox( ClientWnd(), L"Could not create tab control(s).", L"ERROR", MB_OK | MB_ICONERROR );
+				}
+
+				TCITEM tab;
+				tab.mask = TCIF_TEXT;
+
+				tab.pszText = const_cast< LPWSTR >( L"Scene View" );
+				TabCtrl_InsertItem( tabMain.GetTabControl(), 0, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Game View" );
+				TabCtrl_InsertItem( tabMain.GetTabControl(), 1, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Animation View" );
+				TabCtrl_InsertItem( tabMain.GetTabControl(), 2, &tab );
+
+				tab.pszText = const_cast< LPWSTR >( L"Information" );
+				TabCtrl_InsertItem( tabProperties.GetTabControl(), 3, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Lighting" );
+				TabCtrl_InsertItem( tabProperties.GetTabControl(), 4, &tab );
+
+				tab.pszText = const_cast< LPWSTR >( L"Project" );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 5, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Console" );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 6, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Profiler" );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 7, &tab );
 			}
 			break;
 		case WM_SIZE:
@@ -57,11 +107,11 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			{
 				if( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
 				{
-					return DefFrameProc( mMDIFrame, mMDIClient, WM_COMMAND, wParam, lParam );
+					return DefFrameProc( FrameWnd(), ClientWnd(), WM_COMMAND, wParam, lParam );
 				}
 				else
 				{
-					HWND hChild = reinterpret_cast< HWND >( SendMessage( mMDIClient, WM_MDIGETACTIVE, 0, 0 ) );
+					HWND hChild = reinterpret_cast< HWND >( SendMessage( ClientWnd(), WM_MDIGETACTIVE, 0, 0 ) );
 					if( hChild )
 					{
 						SendMessage( hChild, WM_COMMAND, wParam, lParam );
@@ -71,7 +121,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		default:
 			{
-				return DefFrameProc( mMDIFrame, mMDIClient, uMsg, wParam, lParam );
+				return DefFrameProc( FrameWnd(), ClientWnd(), uMsg, wParam, lParam );
 			}
 	}
 	return 0;
@@ -108,7 +158,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_EDIT_SELECTALL: {} break;
 		case ID_EDIT_SELECTIONGROUP: {} break;
 		case ID_VIEW_PROJECTWINDOW: {} break;
-		case ID_VIEW_SCENEVIEW: { ToggleWindow( sceneWindow.HSubWnd(), ID_VIEW_SCENEVIEW, 2 ); } break;
+		case ID_VIEW_SCENEVIEW: { ToggleWindow( sceneWindow.Wnd(), ID_VIEW_SCENEVIEW, 2 ); } break;
 		case ID_VIEW_HIERARCHYWINDOW: {} break;
 		case ID_VIEW_IN: {} break;
 		case ID_VIEW_TOOLBAR:
@@ -117,7 +167,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				CallSize();
 			} break;
 		case ID_VIEW_GAMEVIEW: {} break;
-		case ID_VIEW_CONSOLEWINDOW: { ToggleWindow( consoleWindow.HSubWnd(), ID_VIEW_CONSOLEWINDOW, 2 ); } break;
+		case ID_VIEW_CONSOLEWINDOW: { ToggleWindow( consoleWindow.Wnd(), ID_VIEW_CONSOLEWINDOW, 2 ); } break;
 		case ID_VIEW_ANI: {} break;
 		case ID_VIEW_PROFILERWINDOW: {} break;
 		case ID_VIEW_LIGHTINGWINDOW: {} break;
@@ -179,10 +229,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_HELP_ABOUT: {} break;
 		case ID_HELP_VIEWHELP: {} break;
 		case ID_HELP_REPORTABUG: {} break;
-		default:
-			{
-				return FALSE;
-			}
+		default: return FALSE;
 	}
 	return TRUE;
 }
@@ -241,20 +288,44 @@ void MainWindow::CallSize()
 	iStatusHeight = rcStatus.bottom - rcStatus.top;
 
 	// Calculate remaining height and size edit
-	GetClientRect( mMDIFrame, &rcClient );
+	GetClientRect( FrameWnd(), &rcClient );
 	iClientHeight = rcClient.bottom - iToolHeight - iStatusHeight;
 
-	hClient = GetDlgItem( mMDIFrame, RID_MAIN_CLIENT );
+	hClient = GetDlgItem( FrameWnd(), RID_MAIN_CLIENT );
 	SetWindowPos( hClient, nullptr,
 				  0, iToolHeight, rcClient.right, iClientHeight,
 				  SWP_NOZORDER );
 
 	// Calculate sub-windows
 	GetClientRect( hClient, &rcClient );
-	SetWindowPos( sceneWindow.HSubWnd(), nullptr,
-				  0, 0, static_cast< int >( rcClient.right * rightDivide ), static_cast< int >( rcClient.bottom * 0.87f ),
-				  SWP_NOZORDER );
-	SetWindowPos( consoleWindow.HSubWnd(), nullptr,
-				  0, static_cast< int >( rcClient.bottom * 0.87f ), static_cast< int >( rcClient.right * rightDivide ), static_cast< int >( rcClient.bottom * 0.13f ),
-				  SWP_NOZORDER );
+
+	int newVerticalDivide = static_cast< int >( rcClient.right * verticalDivide );
+
+	SetWindowPos(
+		tabMain.GetTabControl(),
+		nullptr,
+		0, 0,
+		newVerticalDivide, static_cast< int >( rcClient.bottom * tabHeight ),
+		SWP_SHOWWINDOW | SWP_NOZORDER );
+
+	SetWindowPos(
+		tabInfo.GetTabControl(),
+		nullptr,
+		0, static_cast< int >( rcClient.bottom * ( 1.0f - tabHeight ) ),
+		newVerticalDivide, static_cast< int >( rcClient.bottom * tabHeight ),
+		SWP_SHOWWINDOW | SWP_NOZORDER );
+
+	SetWindowPos(
+		sceneWindow.Wnd(),
+		nullptr,
+		0, static_cast< int >( rcClient.bottom * tabHeight ),
+		newVerticalDivide, static_cast< int >( rcClient.bottom * ( leftHorizontalDivide - tabHeight ) ),
+		SWP_NOZORDER );
+
+	SetWindowPos(
+		consoleWindow.Wnd(),
+		nullptr,
+		0, static_cast< int >( rcClient.bottom * leftHorizontalDivide ),
+		newVerticalDivide, static_cast< int >( rcClient.bottom * ( 1.0f - leftHorizontalDivide - tabHeight ) ),
+		SWP_NOZORDER );
 }

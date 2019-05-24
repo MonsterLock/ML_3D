@@ -65,6 +65,9 @@
     <ClInclude Include="SceneWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TabControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc">

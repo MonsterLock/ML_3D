@@ -8,38 +8,36 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 		case WM_CREATE:
 			{
 				// Create edit control.
-				HWND hEdit;
-
-				hEdit = CreateWindowEx(
+				HWND hEdit = CreateWindowEx(
 					0,
 					L"Edit",
 					L"",
 					WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 					0, 0, 0, 0,
-					mSubWnd,
+					Wnd(),
 					reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
 					GetModuleHandle( nullptr ),
 					nullptr );
 
 				if( !hEdit )
 				{
-					MessageBox( mSubWnd, L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
+					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Console" );
+				Edit_SetText( hEdit, L" CONSOLE" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;
 		case WM_SIZE:
 			{
 				// Calculate remaining height and size edit.
-				HWND hEdit = GetDlgItem( mSubWnd, RID_MAIN_CLIENT );
+				HWND hEdit = GetDlgItem( Wnd(), RID_MAIN_CLIENT );
 				RECT rcClient;
-				GetClientRect( mSubWnd, &rcClient );
+				GetClientRect( Wnd(), &rcClient );
 				SetWindowPos( hEdit, nullptr, 0, 0, rcClient.right, rcClient.bottom, SWP_NOZORDER );
 			}
 		default:
 			{
-				return DefMDIChildProc( mSubWnd, uMsg, wParam, lParam );
+				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
 

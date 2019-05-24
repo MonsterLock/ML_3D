@@ -23,10 +23,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	//	_CrtSetBreakAlloc();
 
-	//CreateDirectory( L"TestFileIO", nullptr );
-	//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
-	//RemoveDirectory( L"TestFileIO" );
-	//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+	InitCommonControls();
+
 	MainWindow win;
 
 	if( !win.Create() )
@@ -49,3 +47,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	return static_cast< int >( msg.wParam );
 }
+
+//CreateDirectory( L"TestFileIO", nullptr );
+//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+//RemoveDirectory( L"TestFileIO" );
+//MessageBox( nullptr, std::to_wstring( GetLastError() ).c_str(), L"ERROR", MB_OK | MB_ICONEXCLAMATION );

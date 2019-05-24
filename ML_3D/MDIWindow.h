@@ -40,7 +40,7 @@ public:
 
 					// Create the client window.
 					CLIENTCREATESTRUCT ccs;
-					ccs.hWindowMenu = GetSubMenu( pThis->mMenu, 5 );
+					ccs.hWindowMenu = GetSubMenu( pThis->mMenu, 0 );
 					ccs.idFirstChild = ID_MDI_FIRSTCHILD;
 
 					pThis->mMDIClient = CreateWindowEx(

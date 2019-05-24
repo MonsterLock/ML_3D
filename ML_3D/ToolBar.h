@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 
-
 class ToolBar
 {
 	HWND hTool;
