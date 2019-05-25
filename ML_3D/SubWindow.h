@@ -84,7 +84,7 @@ public:
 		mcs.hOwner = GetModuleHandle( nullptr );
 		mcs.x = mcs.cx = CW_USEDEFAULT;
 		mcs.y = mcs.cy = CW_USEDEFAULT;
-		mcs.style = MDIS_ALLCHILDSTYLES  | dwStyle;
+		mcs.style = MDIS_ALLCHILDSTYLES | dwStyle;
 		mcs.lParam = reinterpret_cast< LPARAM >( this );
 
 		mSubWnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );

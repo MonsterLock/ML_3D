@@ -45,11 +45,7 @@
 #define ID_NEXT_OBJECT                  40023
 #define ID_PREVIOUS_FILE                40024
 #define ID_PREVIOUS_OBJECT              40025
-#define ID_VIEW_PROJECTWINDOW           40026
-#define ID_VIEW_SCENEVIEW               40027
-#define ID_VIEW_HIERARCHYWINDOW         40028
 #define ID_VIEW_TOOLBAR                 40030
-#define ID_VIEW_GAMEVIEW                40031
 #define ID_PROJECT_ADDNEW               40032
 #define ID_PROJECT_ADDEXISTING          40033
 #define ID_SHOWALL_WINDOWS              40035
@@ -57,10 +53,6 @@
 #define ID_SHOWALL_FILES                40037
 #define ID_SHOWALL_OBJECTS              40038
 #define ID_PROJECT_PROPERTIES           40039
-#define ID_VIEW_CONSOLEWINDOW           40040
-#define ID_VIEW_ANI                     40041
-#define ID_VIEW_PROFILERWINDOW          40042
-#define ID_VIEW_LIGHTINGWINDOW          40043
 #define ID_WINDOW_FLOAT                 40044
 #define ID_WINDOW_FLOATALL              40045
 #define ID_WINDOW_DOCK                  40046
@@ -118,7 +110,10 @@
 #define ID_FILE_NEW                     40107
 #define ID_FILE_OPEN                    40108
 #define ID_EDIT_FINDREPLACE             40119
-#define ID_VIEW_INFO                    40120
+#define ID_VIEW_VIEWPANEL               40121
+#define ID_VIEW_SYSTEMPANEL             40124
+#define ID_VIEW_CATEGORYPANEL           40126
+#define ID_VIEW_PROPERTIESPANEL         40127
 #define ID_MDI_FIRSTCHILD               50000
 
 // Next default values for new objects
@@ -126,7 +121,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        128
-#define _APS_NEXT_COMMAND_VALUE         40121
+#define _APS_NEXT_COMMAND_VALUE         40128
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -37,7 +37,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 	while( msg.message != WM_QUIT )
 	{
-		if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) &&
+		if(	PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) &&
 			!TranslateMDISysAccel( win.ClientWnd(), &msg ) )
 		{
 			TranslateMessage( &msg );

@@ -9,10 +9,11 @@
 #define __L(x)  L##x
 #define RES_STATUS
 
-constexpr static float verticalDivide = 0.8f;
-constexpr static float leftHorizontalDivide = 0.85f;
-constexpr static float rightHorizontalDivide = 0.33f;
-constexpr static float tabHeight = 0.03f;
+constexpr static float
+tabRatio = 0.03f,
+verticalRatio = 0.8f,
+leftHorizontalRatio = 0.85f,
+rightHorizontalRatio = 0.33f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
@@ -37,69 +38,33 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_CREATE:
 			{
-				animationWindow.RegSubWnd(
-					L"AnimationWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				animationWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				consoleWindow.RegSubWnd(
-					L"ConsoleWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				consoleWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				gameWindow.RegSubWnd(
-					L"GameWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				gameWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				hierarchyWindow.RegSubWnd(
-					L"HierarchyWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				hierarchyWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				informationWindow.RegSubWnd(
-					L"InformationWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				informationWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				lightingWindow.RegSubWnd(
-					L"LightingWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				lightingWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				profilerWindow.RegSubWnd(
-					L"ProfilerWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				profilerWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				projectWindow.RegSubWnd(
-					L"ProjectWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				projectWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
-				sceneWindow.RegSubWnd(
-					L"SceneWindow",
-					0,
-					LoadIcon( nullptr, IDI_WINLOGO ) );
-				sceneWindow.CreateSubWnd(
-					ClientWnd(),
-					0 );
+				// Create windows.
+				animationWindow.RegSubWnd( L"AnimationWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				animationWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				consoleWindow.RegSubWnd( L"ConsoleWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				consoleWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				gameWindow.RegSubWnd( L"GameWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				gameWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				hierarchyWindow.RegSubWnd( L"HierarchyWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				hierarchyWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				informationWindow.RegSubWnd( L"InformationWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				informationWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				lightingWindow.RegSubWnd( L"LightingWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				lightingWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				profilerWindow.RegSubWnd( L"ProfilerWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				profilerWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				projectWindow.RegSubWnd( L"ProjectWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				projectWindow.CreateSubWnd( ClientWnd(), 0 );
+
+				sceneWindow.RegSubWnd( L"SceneWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
+				sceneWindow.CreateSubWnd( ClientWnd(), 0 );
 
 				// Create toolbar.
 				if( !tbMain.CreateToolbar( FrameWnd(), RID_MAIN_TB ) )
@@ -114,7 +79,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 
 				// Create tabs controls
-				if( !tabMain.CreateTabs( ClientWnd(), 0, L"TABMAIN" ) ||
+				if( !tabView.CreateTabs( ClientWnd(), 0, L"TABMAIN" ) ||
 					!tabProperties.CreateTabs( ClientWnd(), 0, L"TABPROPERTIES" ) ||
 					!tabInfo.CreateTabs( ClientWnd(), TCS_BOTTOM, L"TABINFO" ) )
 				{
@@ -125,28 +90,62 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				tab.mask = TCIF_TEXT;
 
 				tab.pszText = const_cast< LPWSTR >( L"Scene View" );
-				TabCtrl_InsertItem( tabMain.GetTabControl(), 0, &tab );
+				TabCtrl_InsertItem( tabView.GetTabControl(), 0, &tab );
 				tab.pszText = const_cast< LPWSTR >( L"Game View" );
-				TabCtrl_InsertItem( tabMain.GetTabControl(), 1, &tab );
+				TabCtrl_InsertItem( tabView.GetTabControl(), 1, &tab );
 				tab.pszText = const_cast< LPWSTR >( L"Animation View" );
-				TabCtrl_InsertItem( tabMain.GetTabControl(), 2, &tab );
-
-				tab.pszText = const_cast< LPWSTR >( L"Information" );
-				TabCtrl_InsertItem( tabProperties.GetTabControl(), 3, &tab );
-				tab.pszText = const_cast< LPWSTR >( L"Lighting" );
-				TabCtrl_InsertItem( tabProperties.GetTabControl(), 4, &tab );
+				TabCtrl_InsertItem( tabView.GetTabControl(), 2, &tab );
+				currentViewWnd = sceneWindow.Wnd();
 
 				tab.pszText = const_cast< LPWSTR >( L"Project" );
-				TabCtrl_InsertItem( tabInfo.GetTabControl(), 5, &tab );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 0, &tab );
 				tab.pszText = const_cast< LPWSTR >( L"Console" );
-				TabCtrl_InsertItem( tabInfo.GetTabControl(), 6, &tab );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 1, &tab );
 				tab.pszText = const_cast< LPWSTR >( L"Profiler" );
-				TabCtrl_InsertItem( tabInfo.GetTabControl(), 7, &tab );
+				TabCtrl_InsertItem( tabInfo.GetTabControl(), 2, &tab );
+				currentInfoWnd = projectWindow.Wnd();
+
+				currentCategoryWnd = hierarchyWindow.Wnd();
+
+				tab.pszText = const_cast< LPWSTR >( L"Information" );
+				TabCtrl_InsertItem( tabProperties.GetTabControl(), 0, &tab );
+				tab.pszText = const_cast< LPWSTR >( L"Lighting" );
+				TabCtrl_InsertItem( tabProperties.GetTabControl(), 1, &tab );
+				currentPropertiesWnd = informationWindow.Wnd();
+
+				ShowWindow( currentViewWnd, SW_SHOW );
+				ShowWindow( currentInfoWnd, SW_SHOW );
+				ShowWindow( currentCategoryWnd, SW_SHOW );
+				ShowWindow( currentPropertiesWnd, SW_SHOW );
 			}
 			break;
 		case WM_SIZE:
 			{
 				CallSize();
+			}
+			break;
+		case WM_NOTIFY:
+			{
+				if( HIWORD( wParam ) == TCN_SELCHANGE )
+				{
+					int
+						tabViewIndex = SendMessage( tabView.GetTabControl(), TCM_GETCURSEL, 0, 0 ),
+						tabInfoIndex = SendMessage( tabInfo.GetTabControl(), TCM_GETCURSEL, 0, 0 ),
+						tabCategoryIndex = 0,
+						tabPropertiesIndex = SendMessage( tabProperties.GetTabControl(), TCM_GETCURSEL, 0, 0 );
+
+					HWND
+						tabViewSelect = ViewPanel( tabViewIndex ),
+						tabInfoSelect = InfoPanel( tabInfoIndex ),
+						tabCategorySelect = CategoryPanel( tabCategoryIndex ),
+						tabPropertiesSelect = PropertiesPanel( tabPropertiesIndex );
+
+					ChangeTabs( currentViewWnd, tabViewSelect );
+					ChangeTabs( currentInfoWnd, tabInfoSelect );
+					ChangeTabs( currentCategoryWnd, tabCategorySelect );
+					ChangeTabs( currentPropertiesWnd, tabPropertiesSelect );
+					CallSize();
+				}
 			}
 			break;
 		case WM_COMMAND:
@@ -204,20 +203,83 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_EDIT_DELETE: {} break;
 		case ID_EDIT_SELECTALL: {} break;
 		case ID_EDIT_SELECTIONGROUP: {} break;
-		case ID_VIEW_PROJECTWINDOW: {} break;
-		case ID_VIEW_SCENEVIEW: { ToggleWindow( sceneWindow.Wnd(), ID_VIEW_SCENEVIEW, 2 ); } break;
-		case ID_VIEW_HIERARCHYWINDOW: { ToggleWindow( hierarchyWindow.Wnd(), ID_VIEW_HIERARCHYWINDOW, 2 ); } break;
-		case ID_VIEW_INFO: { ToggleWindow( informationWindow.Wnd(), ID_VIEW_INFO, 2 ); } break;
 		case ID_VIEW_TOOLBAR:
 			{
-				ToggleWindow( tbMain.GetToolbar(), ID_VIEW_TOOLBAR, 2 );
+				if( IsWindowVisible( tbMain.GetToolbar() ) )
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					ShowWindow( tbMain.GetToolbar(), SW_HIDE );
+
+				}
+				else
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
+					ShowWindow( tbMain.GetToolbar(), SW_SHOW );
+				}
 				CallSize();
 			} break;
-		case ID_VIEW_GAMEVIEW: {} break;
-		case ID_VIEW_CONSOLEWINDOW: { ToggleWindow( consoleWindow.Wnd(), ID_VIEW_CONSOLEWINDOW, 2 ); } break;
-		case ID_VIEW_ANI: {} break;
-		case ID_VIEW_PROFILERWINDOW: {} break;
-		case ID_VIEW_LIGHTINGWINDOW: {} break;
+		case ID_VIEW_VIEWPANEL:
+			{
+				if( IsWindowVisible( tabView.GetTabControl() ) )
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					ShowWindow( tabView.GetTabControl(), SW_HIDE );
+					ShowWindow( currentViewWnd, SW_HIDE );
+				}
+				else
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
+					ShowWindow( tabView.GetTabControl(), SW_SHOW );
+					ShowWindow( currentViewWnd, SW_SHOW );
+				}
+				CallSize();
+			} break;
+		case ID_VIEW_CATEGORYPANEL:
+			{
+				if( IsWindowVisible( hierarchyWindow.Wnd() ) )
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_CATEGORYPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					ShowWindow( currentCategoryWnd, SW_HIDE );
+				}
+				else
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_CATEGORYPANEL, MF_BYCOMMAND | MF_CHECKED );
+					ShowWindow( currentCategoryWnd, SW_SHOW );
+				}
+				CallSize();
+			} break;
+		case ID_VIEW_PROPERTIESPANEL:
+			{
+				if( IsWindowVisible( tabProperties.GetTabControl() ) )
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_PROPERTIESPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					ShowWindow( tabProperties.GetTabControl(), SW_HIDE );
+					ShowWindow( currentPropertiesWnd, SW_HIDE );
+				}
+				else
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_PROPERTIESPANEL, MF_BYCOMMAND | MF_CHECKED );
+					ShowWindow( tabProperties.GetTabControl(), SW_SHOW );
+					ShowWindow( currentPropertiesWnd, SW_SHOW );
+				}
+				CallSize();
+			} break;
+		case ID_VIEW_SYSTEMPANEL:
+			{
+				if( IsWindowVisible( tabInfo.GetTabControl() ) )
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_SYSTEMPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					ShowWindow( tabInfo.GetTabControl(), SW_HIDE );
+					ShowWindow( currentInfoWnd, SW_HIDE );
+				}
+				else
+				{
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_SYSTEMPANEL, MF_BYCOMMAND | MF_CHECKED );
+					ShowWindow( tabInfo.GetTabControl(), SW_SHOW );
+					ShowWindow( currentInfoWnd, SW_SHOW );
+				}
+				CallSize();
+			} break;
 		case ID_VIEW_WIREFRAME: {} break;
 		case ID_VIEW_ORTHOGRAPHIC: {} break;
 		case ID_VIEW_PERSPECTIVE: {} break;
@@ -281,21 +343,58 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	return TRUE;
 }
 
-void MainWindow::ToggleWindow( HWND wnd, int item, int  index )
+HWND MainWindow::ViewPanel( int index )
 {
-	HMENU hFileMenu = GetSubMenu( mMenu, index );
-	if( IsWindowVisible( wnd ) )
+	switch( index )
 	{
-		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND | MF_UNCHECKED );
-		ShowWindow( wnd, SW_HIDE );
-	}
-	else
-	{
-		CheckMenuItem( hFileMenu, item, MF_BYCOMMAND | MF_CHECKED );
-		ShowWindow( wnd, SW_SHOW );
+		case 0: { return sceneWindow.Wnd(); } break;
+		case 1: { return gameWindow.Wnd(); }break;
+		case 2: { return animationWindow.Wnd(); }break;
+		default:return nullptr;
 	}
 }
 
+HWND MainWindow::InfoPanel( int index )
+{
+	switch( index )
+	{
+		case 0: { return projectWindow.Wnd(); } break;
+		case 1: { return consoleWindow.Wnd(); }break;
+		case 2: { return profilerWindow.Wnd(); }break;
+		default:return nullptr;
+	}
+}
+
+HWND MainWindow::CategoryPanel( int index )
+{
+	switch( index )
+	{
+		case 0: { return hierarchyWindow.Wnd(); } break;
+		default:return nullptr;
+	}
+}
+
+HWND MainWindow::PropertiesPanel( int index )
+{
+	switch( index )
+	{
+		case 0: { return informationWindow.Wnd(); } break;
+		case 1: { return lightingWindow.Wnd(); }break;
+		default:return nullptr;
+	}
+}
+
+void MainWindow::ChangeTabs( HWND currentTab, HWND newTab )
+{
+	if( currentTab != newTab )
+	{
+		ShowWindow( currentTab, SW_HIDE );
+		ShowWindow( newTab, SW_SHOW );
+		currentTab = newTab;
+	}
+}
+
+// TODO: Clean this
 void MainWindow::CallSize()
 {
 	HWND
@@ -339,68 +438,142 @@ void MainWindow::CallSize()
 	iClientHeight = rcClient.bottom - iToolHeight - iStatusHeight;
 
 	hClient = GetDlgItem( FrameWnd(), RID_MAIN_CLIENT );
-	SetWindowPos( hClient, nullptr,
-				  0, iToolHeight, rcClient.right, iClientHeight,
-				  SWP_NOZORDER );
+	SetWindowPos( hClient, nullptr, 0, iToolHeight, rcClient.right, iClientHeight, SWP_NOZORDER );
 
 	// Calculate sub-windows
 	GetClientRect( hClient, &rcClient );
 
-	int newVerticalDivide = static_cast< int >( rcClient.right * verticalDivide );
-	int newTabHeight = static_cast< int >( rcClient.bottom * tabHeight );
+	int
+		tabHeight = static_cast< int >( rcClient.bottom * tabRatio ),
+		verticalDivide = verticalDivide = static_cast< int >( rcClient.right * verticalRatio ),
+		rightWidth = rcClient.right - verticalDivide,
+		leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ),
+		rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
 
-	// Left Side
-	SetWindowPos(
-		tabMain.GetTabControl(),
-		nullptr,
-		0, 0,
-		newVerticalDivide, newTabHeight,
-		SWP_SHOWWINDOW | SWP_NOZORDER );
+	char clientState = 0x00;
 
-	SetWindowPos(
-		tabInfo.GetTabControl(),
-		nullptr,
-		0, static_cast< int >( rcClient.bottom * ( 1.0f - tabHeight ) ),
-		newVerticalDivide, newTabHeight,
-		SWP_SHOWWINDOW | SWP_NOZORDER );
+	if( IsWindowVisible( tabView.GetTabControl() ) ) { clientState ^= 1 << 0; }
+	if( IsWindowVisible( tabInfo.GetTabControl() ) ) { clientState ^= 1 << 1; }
+	if( IsWindowVisible( hierarchyWindow.Wnd() ) ) { clientState ^= 1 << 2; }
+	if( IsWindowVisible( tabProperties.GetTabControl() ) ) { clientState ^= 1 << 3; }
 
-	SetWindowPos(
-		sceneWindow.Wnd(),
-		nullptr,
-		0, static_cast< int >( rcClient.bottom * tabHeight ),
-		newVerticalDivide, static_cast< int >( rcClient.bottom * ( leftHorizontalDivide - tabHeight ) ),
-		SWP_NOZORDER );
+	switch( static_cast< unsigned int >( clientState ) )
+	{
+		case 0: { return; }
+		case 1:
+			{
+				verticalDivide = rcClient.right;
+				leftHorizontalDivide = rcClient.bottom;
+			} break;
+		case 2:
+			{
+				verticalDivide = rcClient.right;
+				leftHorizontalDivide = 0;
+			} break;
+		case 3:
+			{
+				verticalDivide = rcClient.right;
+				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
+			} break;
+		case 4:
+			{
+				verticalDivide = 0;
+				rightWidth = rcClient.right;
+				rightHorizontalDivide = rcClient.bottom;
+			} break;
+		case 5:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = rcClient.bottom;
+				rightHorizontalDivide = rcClient.bottom;
+			} break;
+		case 6:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = 0;
+				rightHorizontalDivide = rcClient.bottom;
+			} break;
+		case 7:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
+				rightHorizontalDivide = rcClient.bottom;
+			} break;
+		case 8:
+			{
+				verticalDivide = 0;
+				rightWidth = rcClient.right;
+				rightHorizontalDivide = 0;
+			} break;
+		case 9:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = rcClient.bottom;
+				rightHorizontalDivide = 0;
 
-	SetWindowPos(
-		consoleWindow.Wnd(),
-		nullptr,
-		0, static_cast< int >( rcClient.bottom * leftHorizontalDivide ),
-		newVerticalDivide, static_cast< int >( rcClient.bottom * ( 1.0f - leftHorizontalDivide - tabHeight ) ),
-		SWP_NOZORDER );
+			} break;
+		case 10:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = 0;
+				rightHorizontalDivide = 0;
+			} break;
+		case 11:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
+				rightHorizontalDivide = 0;
+			} break;
+		case 12:
+			{
+				verticalDivide = 0;
+				rightWidth = rcClient.right;
+				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
+			} break;
+		case 13:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = rcClient.bottom;
+				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
+			} break;
+		case 14:
+			{
+				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = 0;
+				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
+			} break;
+		case 15:
+			{
+				verticalDivide = verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
+				rightWidth = rcClient.right - verticalDivide;
+				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
+				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
+			} break;
 
-	// Right Side
-	int newWidth = rcClient.right - newVerticalDivide;
-	int rightTab = static_cast< int >( rcClient.bottom * rightHorizontalDivide );
-	int newRightHorizontal = static_cast< int >( rcClient.bottom * ( rightHorizontalDivide + tabHeight ) );
+		default:
+			break;
+	}
 
-	SetWindowPos(
-		tabProperties.GetTabControl(),
-		nullptr,
-		newVerticalDivide, rightTab,
-		newWidth, newTabHeight,
-		SWP_SHOWWINDOW | SWP_NOZORDER );
+	// Top-Left Panel
+	SetWindowPos( tabView.GetTabControl(), nullptr, 0, 0, verticalDivide, tabHeight, SWP_NOZORDER );
+	SetWindowPos( currentViewWnd, nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
-	SetWindowPos(
-		hierarchyWindow.Wnd(),
-		nullptr,
-		newVerticalDivide, 0,
-		newWidth, rightTab,
-		SWP_NOZORDER );
+	// Bot-Left Panel
+	SetWindowPos( tabInfo.GetTabControl(), nullptr, 0, rcClient.bottom - tabHeight, verticalDivide, tabHeight, SWP_NOZORDER );
+	SetWindowPos( currentInfoWnd, nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
-	SetWindowPos(
-		informationWindow.Wnd(),
-		nullptr,
-		newVerticalDivide, newRightHorizontal,
-		newWidth, rcClient.bottom - newRightHorizontal,
-		SWP_NOZORDER );
+	// Top-Right Panel
+	SetWindowPos( currentCategoryWnd, nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
+
+	// Bot-Right Panel
+	SetWindowPos( tabProperties.GetTabControl(), nullptr, verticalDivide, rightHorizontalDivide, rightWidth, tabHeight, SWP_NOZORDER );
+	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide + tabHeight, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
 }

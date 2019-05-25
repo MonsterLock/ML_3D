@@ -27,13 +27,24 @@ protected:
 	SceneWindow sceneWindow;
 	StatusBar sbMain;
 	ToolBar tbMain;
+
 	TabControl
-		tabMain,
+		tabView,
 		tabProperties,
 		tabInfo;
 
+	HWND
+		currentViewWnd = nullptr,
+		currentInfoWnd = nullptr,
+		currentCategoryWnd = nullptr,
+		currentPropertiesWnd = nullptr;
+
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
-	void ToggleWindow( HWND, int, int );
+	HWND ViewPanel( int index );
+	HWND InfoPanel( int index );
+	HWND PropertiesPanel( int index );
+	HWND CategoryPanel( int index );
+	void ChangeTabs( HWND currentTab, HWND newTab );
 	void CallSize();
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
