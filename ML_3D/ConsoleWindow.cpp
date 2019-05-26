@@ -23,7 +23,7 @@ LRESULT ConsoleWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L" CONSOLE" );
+				Edit_SetText( hEdit, L"Console" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;

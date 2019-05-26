@@ -191,6 +191,7 @@
     <ClCompile Include="ProfilerWindow.cpp" />
     <ClCompile Include="ProjectWindow.cpp" />
     <ClCompile Include="SceneWindow.cpp" />
+    <ClCompile Include="WindowsMessageMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationWindow.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="SubWindow.h" />
     <ClInclude Include="TabControl.h" />
     <ClInclude Include="ToolBar.h" />
+    <ClInclude Include="WindowsMessageMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc" />

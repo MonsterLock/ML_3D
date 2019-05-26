@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <Commctrl.h>
 #include <string>
+#include "WindowsMessageMap.h"
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -17,16 +18,11 @@ rightHorizontalRatio = 0.33f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
+	static WindowsMessageMap mm;
+	OutputDebugStringA( mm( uMsg, lParam, wParam ).c_str() );
+
 	switch( uMsg )
 	{
-		case WM_GETDLGCODE:
-			{
-				if( wParam == VK_ESCAPE )
-				{
-					SendMessage( FrameWnd(), WM_CLOSE, 0, 0 );
-				}
-			}
-			break;
 		case WM_CLOSE:
 			{
 				MessageBox( nullptr, L"Think you're gonig to exit?", L"NOPE", MB_OK | MB_ICONEXCLAMATION );
@@ -79,9 +75,9 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 
 				// Create tabs controls
-				if( !tabView.CreateTabs( ClientWnd(), 0, L"TABMAIN" ) ||
-					!tabProperties.CreateTabs( ClientWnd(), 0, L"TABPROPERTIES" ) ||
-					!tabInfo.CreateTabs( ClientWnd(), TCS_BOTTOM, L"TABINFO" ) )
+				if( !tabView.CreateTabs( FrameWnd(), 0, L"TABMAIN" ) ||
+					!tabProperties.CreateTabs( FrameWnd(), 0, L"TABPROPERTIES" ) ||
+					!tabInfo.CreateTabs( FrameWnd(), TCS_BOTTOM, L"TABINFO" ) )
 				{
 					MessageBox( ClientWnd(), L"Could not create tab control(s).", L"ERROR", MB_OK | MB_ICONERROR );
 				}
@@ -126,41 +122,39 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_NOTIFY:
 			{
-				if( HIWORD( wParam ) == TCN_SELCHANGE )
-				{
-					int
-						tabViewIndex = SendMessage( tabView.GetTabControl(), TCM_GETCURSEL, 0, 0 ),
-						tabInfoIndex = SendMessage( tabInfo.GetTabControl(), TCM_GETCURSEL, 0, 0 ),
-						tabCategoryIndex = 0,
-						tabPropertiesIndex = SendMessage( tabProperties.GetTabControl(), TCM_GETCURSEL, 0, 0 );
+				int
+					tabViewIndex = TabCtrl_GetCurSel( tabView.GetTabControl() ),
+					tabInfoIndex = TabCtrl_GetCurSel( tabInfo.GetTabControl() ),
+					tabCategoryIndex = 0,
+					tabPropertiesIndex = TabCtrl_GetCurSel( tabProperties.GetTabControl() );
 
-					HWND
-						tabViewSelect = ViewPanel( tabViewIndex ),
-						tabInfoSelect = InfoPanel( tabInfoIndex ),
-						tabCategorySelect = CategoryPanel( tabCategoryIndex ),
-						tabPropertiesSelect = PropertiesPanel( tabPropertiesIndex );
+				HWND
+					tabViewSelect = ViewPanel( tabViewIndex ),
+					tabInfoSelect = InfoPanel( tabInfoIndex ),
+					tabCategorySelect = CategoryPanel( tabCategoryIndex ),
+					tabPropertiesSelect = PropertiesPanel( tabPropertiesIndex );
 
-					ChangeTabs( currentViewWnd, tabViewSelect );
-					ChangeTabs( currentInfoWnd, tabInfoSelect );
-					ChangeTabs( currentCategoryWnd, tabCategorySelect );
-					ChangeTabs( currentPropertiesWnd, tabPropertiesSelect );
-					CallSize();
-				}
+				ChangeTabs( currentViewWnd, tabViewSelect );
+				ChangeTabs( currentInfoWnd, tabInfoSelect );
+				ChangeTabs( currentCategoryWnd, tabCategorySelect );
+				ChangeTabs( currentPropertiesWnd, tabPropertiesSelect );
 			}
 			break;
 		case WM_COMMAND:
-			if( !GlobalCommands( uMsg, wParam, lParam ) )
 			{
-				if( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
+				if( !GlobalCommands( uMsg, wParam, lParam ) )
 				{
-					return DefFrameProc( FrameWnd(), ClientWnd(), WM_COMMAND, wParam, lParam );
-				}
-				else
-				{
-					HWND hChild = reinterpret_cast< HWND >( SendMessage( ClientWnd(), WM_MDIGETACTIVE, 0, 0 ) );
-					if( hChild )
+					if( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
 					{
-						SendMessage( hChild, WM_COMMAND, wParam, lParam );
+						return DefFrameProc( FrameWnd(), ClientWnd(), WM_COMMAND, wParam, lParam );
+					}
+					else
+					{
+						HWND hChild = reinterpret_cast< HWND >( SendMessage( ClientWnd(), WM_MDIGETACTIVE, 0, 0 ) );
+						if( hChild )
+						{
+							SendMessage( hChild, WM_COMMAND, wParam, lParam );
+						}
 					}
 				}
 			}
@@ -207,13 +201,13 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			{
 				if( IsWindowVisible( tbMain.GetToolbar() ) )
 				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_TOOLBAR, MF_BYCOMMAND | MF_UNCHECKED );
 					ShowWindow( tbMain.GetToolbar(), SW_HIDE );
 
 				}
 				else
 				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
+					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_TOOLBAR, MF_BYCOMMAND | MF_CHECKED );
 					ShowWindow( tbMain.GetToolbar(), SW_SHOW );
 				}
 				CallSize();
@@ -384,13 +378,14 @@ HWND MainWindow::PropertiesPanel( int index )
 	}
 }
 
-void MainWindow::ChangeTabs( HWND currentTab, HWND newTab )
+void MainWindow::ChangeTabs( HWND& currentTab, HWND& newTab )
 {
 	if( currentTab != newTab )
 	{
 		ShowWindow( currentTab, SW_HIDE );
-		ShowWindow( newTab, SW_SHOW );
 		currentTab = newTab;
+		CallSize();
+		ShowWindow( currentTab, SW_SHOW );
 	}
 }
 
@@ -450,130 +445,50 @@ void MainWindow::CallSize()
 		leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ),
 		rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
 
-	char clientState = 0x00;
+	unsigned short clientState = 0x0000;
 
-	if( IsWindowVisible( tabView.GetTabControl() ) ) { clientState ^= 1 << 0; }
-	if( IsWindowVisible( tabInfo.GetTabControl() ) ) { clientState ^= 1 << 1; }
-	if( IsWindowVisible( hierarchyWindow.Wnd() ) ) { clientState ^= 1 << 2; }
-	if( IsWindowVisible( tabProperties.GetTabControl() ) ) { clientState ^= 1 << 3; }
+	if( IsWindowVisible( tabView.GetTabControl() ) ) { clientState = 0x000F; }
+	if( IsWindowVisible( tabInfo.GetTabControl() ) ) { clientState = ( clientState | 0x00F0 ); }
+	if( IsWindowVisible( hierarchyWindow.Wnd() ) ) { clientState = ( clientState | 0x0F00 ); }
+	if( IsWindowVisible( tabProperties.GetTabControl() ) ) { clientState = ( clientState | 0xF000 ); }
 
-	switch( static_cast< unsigned int >( clientState ) )
+	if( !clientState )
 	{
-		case 0: { return; }
-		case 1:
-			{
-				verticalDivide = rcClient.right;
-				leftHorizontalDivide = rcClient.bottom;
-			} break;
-		case 2:
-			{
-				verticalDivide = rcClient.right;
-				leftHorizontalDivide = 0;
-			} break;
-		case 3:
-			{
-				verticalDivide = rcClient.right;
-				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
-			} break;
-		case 4:
-			{
-				verticalDivide = 0;
-				rightWidth = rcClient.right;
-				rightHorizontalDivide = rcClient.bottom;
-			} break;
-		case 5:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = rcClient.bottom;
-				rightHorizontalDivide = rcClient.bottom;
-			} break;
-		case 6:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = 0;
-				rightHorizontalDivide = rcClient.bottom;
-			} break;
-		case 7:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
-				rightHorizontalDivide = rcClient.bottom;
-			} break;
-		case 8:
-			{
-				verticalDivide = 0;
-				rightWidth = rcClient.right;
-				rightHorizontalDivide = 0;
-			} break;
-		case 9:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = rcClient.bottom;
-				rightHorizontalDivide = 0;
+		return;
+	}
 
-			} break;
-		case 10:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = 0;
-				rightHorizontalDivide = 0;
-			} break;
-		case 11:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
-				rightHorizontalDivide = 0;
-			} break;
-		case 12:
-			{
-				verticalDivide = 0;
-				rightWidth = rcClient.right;
-				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
-			} break;
-		case 13:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = rcClient.bottom;
-				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
-			} break;
-		case 14:
-			{
-				verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = 0;
-				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
-			} break;
-		case 15:
-			{
-				verticalDivide = verticalDivide = static_cast< int >( rcClient.right * verticalRatio );
-				rightWidth = rcClient.right - verticalDivide;
-				leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio );
-				rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
-			} break;
+	switch( clientState & 0xFF )
+	{
 
-		default:
-			break;
+		case 0x0F: { leftHorizontalDivide = rcClient.bottom; } break;
+		case 0xF0: { leftHorizontalDivide = 0; }break;
+		case 0xFF: { leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ); }break;
+	}
+	switch( ( clientState & 0xFF00 ) >> 8 )
+	{
+		case 0x0F: { rightHorizontalDivide = rcClient.bottom; }break;
+		case 0xF0: { rightHorizontalDivide = 0; }break;
+		case 0xFF: { rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio ); }break;
+	}
+	switch( clientState )
+	{
+		case 0x0F: { leftHorizontalDivide = rcClient.bottom; }break;
+		case 0xF0: { leftHorizontalDivide = 0; }break;
+		case 0xFF: { leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ); }break;
 	}
 
 	// Top-Left Panel
-	SetWindowPos( tabView.GetTabControl(), nullptr, 0, 0, verticalDivide, tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabView.GetTabControl(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
 	SetWindowPos( currentViewWnd, nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Bot-Left Panel
-	SetWindowPos( tabInfo.GetTabControl(), nullptr, 0, rcClient.bottom - tabHeight, verticalDivide, tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabInfo.GetTabControl(), HWND_TOP, 0, rcClient.bottom - tabHeight + iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
 	SetWindowPos( currentInfoWnd, nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Top-Right Panel
 	SetWindowPos( currentCategoryWnd, nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
 
 	// Bot-Right Panel
-	SetWindowPos( tabProperties.GetTabControl(), nullptr, verticalDivide, rightHorizontalDivide, rightWidth, tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabProperties.GetTabControl(), HWND_TOP, verticalDivide, rightHorizontalDivide + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
 	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide + tabHeight, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
 }

@@ -44,7 +44,7 @@ protected:
 	HWND InfoPanel( int index );
 	HWND PropertiesPanel( int index );
 	HWND CategoryPanel( int index );
-	void ChangeTabs( HWND currentTab, HWND newTab );
+	void ChangeTabs( HWND& currentTab, HWND& newTab );
 	void CallSize();
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
