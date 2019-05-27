@@ -62,19 +62,13 @@ public:
 				}
 				break;
 			default:
-				{
-					pThis = reinterpret_cast< DERIVED_TYPE* >( GetWindowLongPtr( hwnd, GWLP_USERDATA ) );
-				}
+				pThis = reinterpret_cast< DERIVED_TYPE* >( GetWindowLongPtr( hwnd, GWLP_USERDATA ) );
 				break;
 		}
 		if( pThis )
-		{
 			return pThis->HandleMessage( uMsg, wParam, lParam );
-		}
 		else
-		{
 			return DefFrameProc( hwnd, nullptr, uMsg, wParam, lParam );
-		}
 	}
 
 	virtual BOOL Create()

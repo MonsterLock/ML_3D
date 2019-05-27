@@ -34,6 +34,16 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_CREATE:
 			{
+				// Create font.
+				HDC hdc;
+				long lfHeight;
+
+				hdc = GetDC( NULL );
+				lfHeight = -MulDiv( 12, GetDeviceCaps( hdc, LOGPIXELSY ), 72 );
+				ReleaseDC( NULL, hdc );
+
+				hf = CreateFont( lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, const_cast< LPCWSTR >( L"Consolas" ) );
+
 				// Create windows.
 				animationWindow.RegSubWnd( L"AnimationWindow", 0, LoadIcon( nullptr, IDI_WINLOGO ) );
 				animationWindow.CreateSubWnd( ClientWnd(), 0 );
@@ -64,32 +74,30 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 				// Create toolbar.
 				if( !tbMain.CreateToolbar( FrameWnd(), RID_MAIN_TB ) )
-				{
 					MessageBox( ClientWnd(), L"Could not create toolbar.", L"ERROR", MB_OK | MB_ICONERROR );
-				}
 
 				// Create statusbar.
 				if( !sbMain.CreateStatusBar( FrameWnd(), RID_MAIN_STATUS ) )
-				{
 					MessageBox( ClientWnd(), L"Could not create statusbar.", L"ERROR", MB_OK | MB_ICONERROR );
-				}
+				SendMessage( sbMain.GetStatusBar(), WM_SETFONT, WPARAM( hf ), TRUE );
 
 				// Create tabs controls
 				if( !tabView.CreateTabs( FrameWnd(), 0, L"TABMAIN" ) ||
-					!tabProperties.CreateTabs( FrameWnd(), 0, L"TABPROPERTIES" ) ||
+					!tabProperties.CreateTabs( FrameWnd(), TCS_BOTTOM, L"TABPROPERTIES" ) ||
 					!tabInfo.CreateTabs( FrameWnd(), TCS_BOTTOM, L"TABINFO" ) )
-				{
 					MessageBox( ClientWnd(), L"Could not create tab control(s).", L"ERROR", MB_OK | MB_ICONERROR );
-				}
+				SendMessage( tabView.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
+				SendMessage( tabProperties.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
+				SendMessage( tabInfo.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
 
 				TCITEM tab;
 				tab.mask = TCIF_TEXT;
 
-				tab.pszText = const_cast< LPWSTR >( L"Scene View" );
+				tab.pszText = const_cast< LPWSTR >( L"Scene" );
 				TabCtrl_InsertItem( tabView.GetTabControl(), 0, &tab );
-				tab.pszText = const_cast< LPWSTR >( L"Game View" );
+				tab.pszText = const_cast< LPWSTR >( L"Game" );
 				TabCtrl_InsertItem( tabView.GetTabControl(), 1, &tab );
-				tab.pszText = const_cast< LPWSTR >( L"Animation View" );
+				tab.pszText = const_cast< LPWSTR >( L"Animation" );
 				TabCtrl_InsertItem( tabView.GetTabControl(), 2, &tab );
 				currentViewWnd = sceneWindow.Wnd();
 
@@ -416,10 +424,7 @@ void MainWindow::CallSize()
 		GetWindowRect( hTool, &rcTool );
 		iToolHeight = rcTool.bottom - rcTool.top;
 	}
-	else
-	{
-		iToolHeight = 0;
-	}
+	else iToolHeight = 0;
 
 	// Size status bar window.
 	hStatus = sbMain.GetStatusBar();
@@ -445,37 +450,36 @@ void MainWindow::CallSize()
 		leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ),
 		rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio );
 
-	unsigned short clientState = 0x0000;
+	unsigned int clientState = 0x0;
 
-	if( IsWindowVisible( tabView.GetTabControl() ) ) { clientState = 0x000F; }
-	if( IsWindowVisible( tabInfo.GetTabControl() ) ) { clientState = ( clientState | 0x00F0 ); }
-	if( IsWindowVisible( hierarchyWindow.Wnd() ) ) { clientState = ( clientState | 0x0F00 ); }
+	if( IsWindowVisible( tabView.GetTabControl() ) ) { clientState = 0xF; }
+	if( IsWindowVisible( tabInfo.GetTabControl() ) ) { clientState = ( clientState | 0xF0 ); }
+	if( IsWindowVisible( hierarchyWindow.Wnd() ) ) { clientState = ( clientState | 0xF00 ); }
 	if( IsWindowVisible( tabProperties.GetTabControl() ) ) { clientState = ( clientState | 0xF000 ); }
 
-	if( !clientState )
-	{
-		return;
-	}
+	if( !clientState ) return;
 
 	switch( clientState & 0xFF )
 	{
-
 		case 0x0F: { leftHorizontalDivide = rcClient.bottom; } break;
 		case 0xF0: { leftHorizontalDivide = 0; }break;
 		case 0xFF: { leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ); }break;
+		default: { clientState = ( clientState | 0xF0000 ); } break;
 	}
 	switch( ( clientState & 0xFF00 ) >> 8 )
 	{
 		case 0x0F: { rightHorizontalDivide = rcClient.bottom; }break;
 		case 0xF0: { rightHorizontalDivide = 0; }break;
 		case 0xFF: { rightHorizontalDivide = static_cast< int >( rcClient.bottom * rightHorizontalRatio ); }break;
+		default: { clientState = ( clientState | 0xF00000 ); } break;
 	}
-	switch( clientState )
+	switch( ( clientState & 0xFF0000 ) >> 16 )
 	{
-		case 0x0F: { leftHorizontalDivide = rcClient.bottom; }break;
-		case 0xF0: { leftHorizontalDivide = 0; }break;
-		case 0xFF: { leftHorizontalDivide = static_cast< int >( rcClient.bottom * leftHorizontalRatio ); }break;
+		case 0x00: { verticalDivide = static_cast< int >( rcClient.right * verticalRatio ); }break;
+		case 0x0F: { verticalDivide = 0; }break;
+		case 0xF0: { verticalDivide = rcClient.right; }break;
 	}
+	rightWidth = rcClient.right - verticalDivide;
 
 	// Top-Left Panel
 	SetWindowPos( tabView.GetTabControl(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
@@ -489,6 +493,6 @@ void MainWindow::CallSize()
 	SetWindowPos( currentCategoryWnd, nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
 
 	// Bot-Right Panel
-	SetWindowPos( tabProperties.GetTabControl(), HWND_TOP, verticalDivide, rightHorizontalDivide + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide + tabHeight, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabProperties.GetTabControl(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
 }

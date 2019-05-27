@@ -44,7 +44,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 			DispatchMessage( &msg );
 		}
 	}
-
 	return static_cast< int >( msg.wParam );
 }
 

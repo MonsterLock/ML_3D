@@ -9,7 +9,6 @@ class ToolBar
 	TBADDBITMAP tbab;
 
 public:
-
 	HWND GetToolbar() { return hTool; }
 
 	BOOL CreateToolbar( HWND hRoot, unsigned int RID_SB )
@@ -35,7 +34,7 @@ public:
 			SendMessage( hTool, TB_ADDBITMAP, 0, reinterpret_cast< LPARAM >( &tbab ) );
 
 			ZeroMemory( &tbb, sizeof( tbb ) );
-			tbb[0].iBitmap = STD_FILENEW;
+			tbb[0].iBitmap = STD_REPLACE;
 			tbb[0].fsState = TBSTATE_ENABLED;
 			tbb[0].fsStyle = TBSTYLE_BUTTON;
 			//tbb[0].idCommand = 4000;
@@ -54,7 +53,6 @@ public:
 
 			return TRUE;
 		}
-
 		return FALSE;
 	}
 };

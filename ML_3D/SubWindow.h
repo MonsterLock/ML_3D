@@ -33,18 +33,14 @@ public:
 				}
 				break;
 			default:
-				{
-					pThis = reinterpret_cast< DERIVED_TYPE* >( GetWindowLongPtr( hwnd, GWLP_USERDATA ) );
-				}
+				pThis = reinterpret_cast< DERIVED_TYPE* >( GetWindowLongPtr( hwnd, GWLP_USERDATA ) );
+				break;
 		}
 		if( pThis )
-		{
 			return pThis->HandleSubWndMessage( uMsg, wParam, lParam );
-		}
 		else
-		{
 			return  DefMDIChildProc( hwnd, uMsg, wParam, lParam );
-		}
+
 		return  DefMDIChildProc( hwnd, uMsg, wParam, lParam );
 	}
 

@@ -38,6 +38,7 @@ protected:
 		currentInfoWnd = nullptr,
 		currentCategoryWnd = nullptr,
 		currentPropertiesWnd = nullptr;
+	HFONT hf;
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
 	HWND ViewPanel( int index );
