@@ -58,7 +58,7 @@ public:
 		wc.lpszClassName = ClassName();
 		wc.lpszMenuName = nullptr;
 		wc.hInstance = GetModuleHandle( nullptr );
-		wc.hbrBackground = reinterpret_cast< HBRUSH > ( COLOR_APPWORKSPACE );
+		wc.hbrBackground = reinterpret_cast< HBRUSH >( COLOR_APPWORKSPACE);
 		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.hIconSm = rIcon;
 

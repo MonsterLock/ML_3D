@@ -4,24 +4,11 @@
 //
 #define IDR_MAIN_MENU                   101
 #define IDD_HELP_ABOUT_PAGE             103
-#define IDD_FILE_NEW_PAGE               107
-#define IDD_FILE_OPEN_PAGE              108
 #define IDI_ML_LOGO                     122
-#define IDC_NEW_CANCEL                  1008
 #define IDC_SYSLINK                     1011
-#define IDC_NEW_OK                      1025
-#define IDC_NEW_LIST                    1030
-#define IDC_NEW_NAME                    1032
-#define IDC_NEW_BROWSE                  1033
-#define IDC_NEW_INFO                    1034
-#define IDC_MFCSHELLTREE1               1038
-#define IDC_MFCEDITBROWSE1              1039
-#define IDC_MFCSHELLLIST2               1043
-#define IDC_COMBO1                      1047
-#define IDC_RICHEDIT21                  1048
-#define IDC_RICHEDIT22                  1050
-#define IDC_BUTTON2                     1052
 #define IDC_ML_LOGOBM                   1053
+#define IDC_MFCLINK1                    1056
+#define IDC_LIST1                       1057
 #define RID_MAIN_CLIENT                 1337
 #define RID_MAIN_TB                     1338
 #define RID_MAIN_STATUS                 1339
@@ -114,15 +101,18 @@
 #define ID_VIEW_SYSTEMPANEL             40124
 #define ID_VIEW_CATEGORYPANEL           40126
 #define ID_VIEW_PROPERTIESPANEL         40127
+#define ID_TOGGLE_MODE                  45002
+#define ID_DRAW_MODE                    45003
+#define ID_SELECT_MODE                  45004
 #define ID_MDI_FIRSTCHILD               50000
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        128
-#define _APS_NEXT_COMMAND_VALUE         40128
-#define _APS_NEXT_CONTROL_VALUE         1054
+#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_COMMAND_VALUE         40132
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

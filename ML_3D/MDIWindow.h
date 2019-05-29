@@ -24,6 +24,11 @@ public:
 		mMDIClient( nullptr )
 	{}
 
+	HWND FrameWnd() const { return mMDIFrame; }
+	HWND ClientWnd() const { return mMDIClient; }
+	HMENU MainMenu() { return mMenu; }
+	PCWSTR FrameName() { return mFrameClass; }
+
 	static LRESULT CALLBACK WndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	{
 		DERIVED_TYPE* pThis = nullptr;
@@ -83,7 +88,7 @@ public:
 		wc.lpszClassName = mFrameClass;
 		wc.lpszMenuName = MAKEINTRESOURCE( IDR_MAIN_MENU );
 		wc.hInstance = GetModuleHandle( nullptr );
-		wc.hbrBackground = CreateSolidBrush( RGB( 0, 255, 0 ) ); // Client window didn't render if green shows.
+		wc.hbrBackground = reinterpret_cast< HBRUSH >( COLOR_ACTIVEBORDER );
 		wc.hCursor = LoadCursor( nullptr, IDC_ARROW );
 		wc.hIcon = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 32, 32, 0 ) );
@@ -118,10 +123,6 @@ public:
 
 		return TRUE;
 	}
-
-	HWND FrameWnd() const { return mMDIFrame; }
-	HWND ClientWnd() const { return mMDIClient; }
-	HMENU MainMenu() { return mMenu; }
 };
 
 //CreateSolidBrush(RGB(0, 0, 0));

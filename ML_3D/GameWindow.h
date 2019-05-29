@@ -7,4 +7,3 @@ public:
 	PCWSTR WindowText() const { return L"GameView"; }
 	LRESULT HandleSubWndMessage( UINT, WPARAM, LPARAM );
 };
-

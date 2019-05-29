@@ -7,4 +7,3 @@ public:
 	PCWSTR WindowText() const { return L"Project"; }
 	LRESULT HandleSubWndMessage( UINT, WPARAM, LPARAM );
 };
-

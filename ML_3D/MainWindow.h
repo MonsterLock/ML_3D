@@ -41,12 +41,15 @@ protected:
 	HFONT hf;
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
-	HWND ViewPanel( int index );
-	HWND InfoPanel( int index );
-	HWND PropertiesPanel( int index );
-	HWND CategoryPanel( int index );
-	void ChangeTabs( HWND& currentTab, HWND& newTab );
+	static BOOL CALLBACK SetFont( HWND, LPARAM );
+	HWND ViewPanel( int );
+	HWND InfoPanel( int );
+	HWND PropertiesPanel( int );
+	HWND CategoryPanel( int );
+	void ChangeTabs( HWND&, HWND& );
 	void CallSize();
+
+	static BOOL CALLBACK AboutDlg( HWND, UINT, WPARAM, LPARAM );
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );

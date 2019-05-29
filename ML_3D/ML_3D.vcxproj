@@ -221,7 +221,6 @@
   <ItemGroup>
     <Image Include="Images\ml_3d.ico" />
     <Image Include="Images\ML_3D.png" />
-    <Image Include="images\toolbar1.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

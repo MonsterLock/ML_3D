@@ -6,10 +6,6 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-#define _L(x)  __L(x)
-#define __L(x)  L##x
-#define RES_STATUS
-
 constexpr static float
 tabRatio = 0.03f,
 verticalRatio = 0.8f,
@@ -25,11 +21,22 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	{
 		case WM_CLOSE:
 			{
-				MessageBox( nullptr, L"Think you're gonig to exit?", L"NOPE", MB_OK | MB_ICONEXCLAMATION );
 				/* TODO:
 				- Save window configurations
 				- Check for any unsaved work
 				- Clean resources */
+				if( MainMenu() )
+					DestroyMenu( MainMenu() );
+				DestroyWindow( FrameWnd() );
+				UnregisterClass(
+					FrameName(),
+					GetModuleHandle( nullptr )
+				);
+			}
+			return 0;
+		case WM_DESTROY:
+			{
+				PostQuitMessage( 0 );
 			}
 			break;
 		case WM_CREATE:
@@ -79,16 +86,12 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				// Create statusbar.
 				if( !sbMain.CreateStatusBar( FrameWnd(), RID_MAIN_STATUS ) )
 					MessageBox( ClientWnd(), L"Could not create statusbar.", L"ERROR", MB_OK | MB_ICONERROR );
-				SendMessage( sbMain.GetStatusBar(), WM_SETFONT, WPARAM( hf ), TRUE );
 
 				// Create tabs controls
 				if( !tabView.CreateTabs( FrameWnd(), 0, L"TABMAIN" ) ||
 					!tabProperties.CreateTabs( FrameWnd(), TCS_BOTTOM, L"TABPROPERTIES" ) ||
 					!tabInfo.CreateTabs( FrameWnd(), TCS_BOTTOM, L"TABINFO" ) )
 					MessageBox( ClientWnd(), L"Could not create tab control(s).", L"ERROR", MB_OK | MB_ICONERROR );
-				SendMessage( tabView.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
-				SendMessage( tabProperties.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
-				SendMessage( tabInfo.GetTabControl(), WM_SETFONT, WPARAM( hf ), TRUE );
 
 				TCITEM tab;
 				tab.mask = TCIF_TEXT;
@@ -100,6 +103,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				tab.pszText = const_cast< LPWSTR >( L"Animation" );
 				TabCtrl_InsertItem( tabView.GetTabControl(), 2, &tab );
 				currentViewWnd = sceneWindow.Wnd();
+				ShowWindow( currentViewWnd, SW_SHOW );
 
 				tab.pszText = const_cast< LPWSTR >( L"Project" );
 				TabCtrl_InsertItem( tabInfo.GetTabControl(), 0, &tab );
@@ -108,19 +112,20 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				tab.pszText = const_cast< LPWSTR >( L"Profiler" );
 				TabCtrl_InsertItem( tabInfo.GetTabControl(), 2, &tab );
 				currentInfoWnd = projectWindow.Wnd();
+				ShowWindow( currentInfoWnd, SW_SHOW );
 
 				currentCategoryWnd = hierarchyWindow.Wnd();
+				ShowWindow( currentCategoryWnd, SW_SHOW );
 
 				tab.pszText = const_cast< LPWSTR >( L"Information" );
 				TabCtrl_InsertItem( tabProperties.GetTabControl(), 0, &tab );
 				tab.pszText = const_cast< LPWSTR >( L"Lighting" );
 				TabCtrl_InsertItem( tabProperties.GetTabControl(), 1, &tab );
 				currentPropertiesWnd = informationWindow.Wnd();
-
-				ShowWindow( currentViewWnd, SW_SHOW );
-				ShowWindow( currentInfoWnd, SW_SHOW );
-				ShowWindow( currentCategoryWnd, SW_SHOW );
 				ShowWindow( currentPropertiesWnd, SW_SHOW );
+
+				EnumChildWindows( FrameWnd(), ( WNDENUMPROC )SetFont, ( LPARAM )hf );
+				sbMain.SetText( 0, L"Welcome." );
 			}
 			break;
 		case WM_SIZE:
@@ -327,22 +332,22 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_TOOLS_MOVETOORIGIN: {} break;
 		case ID_TOOLS_SETGAMEVIEW: {} break;
 		case ID_TOOLS_TOGGLEACTIVE: {} break;
-		case ID_WINDOW_FLOAT: {} break;
-		case ID_WINDOW_FLOATALL: {} break;
-		case ID_WINDOW_DOCK: {} break;
-		case ID_WINDOW_AUTOHIDE: {} break;
-		case ID_WINDOW_HIDE: {} break;
-		case ID_WINDOW_LAYOUTS: {} break;
-		case ID_WINDOW_SAVEWINDOWLAYOUT: {} break;
-		case ID_WINDOW_APPLYWINDOWLAYOUT: {} break;
-		case ID_WINDOW_MANAGEWINDOWLAYOUT: {} break;
-		case ID_WINDOW_RESETWINDOWLAYOUT: {} break;
-		case ID_HELP_ABOUT: {} break;
+		case ID_HELP_ABOUT:
+			{
+				DialogBox( GetModuleHandle( nullptr ), MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ), FrameWnd(), AboutDlg );
+			} break;
 		case ID_HELP_VIEWHELP: {} break;
 		case ID_HELP_REPORTABUG: {} break;
+
 		default: return FALSE;
 	}
 	return TRUE;
+}
+
+BOOL CALLBACK MainWindow::SetFont( HWND hwnd, LPARAM font )
+{
+	SendMessage( hwnd, WM_SETFONT, font, true );
+	return true;
 }
 
 HWND MainWindow::ViewPanel( int index )
@@ -495,4 +500,24 @@ void MainWindow::CallSize()
 	// Bot-Right Panel
 	SetWindowPos( tabProperties.GetTabControl(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
 	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
+}
+
+BOOL CALLBACK MainWindow::AboutDlg( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+	switch( uMsg )
+	{
+		case WM_INITDIALOG:
+			return TRUE;
+		case WM_COMMAND:
+			switch( LOWORD( wParam ) )
+			{
+				case IDOK:
+					EndDialog( hwnd, IDOK );
+					break;
+			}
+			break;
+		default:
+			return FALSE;
+	}
+	return TRUE;
 }
