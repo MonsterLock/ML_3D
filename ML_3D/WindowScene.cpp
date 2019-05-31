@@ -1,6 +1,6 @@
-#include "SceneWindow.h"
+#include "WindowScene.h"
 
-LRESULT SceneWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowScene::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -14,5 +14,4 @@ LRESULT SceneWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPara
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-	return 0;
 }

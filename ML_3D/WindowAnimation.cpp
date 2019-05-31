@@ -1,9 +1,9 @@
-#include "HierarchyWindow.h"
+#include "WindowAnimation.h"
 #include "windowsx.h"
 #include <Commctrl.h>
 #include <string>
 
-LRESULT HierarchyWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowAnimation::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -27,7 +27,7 @@ LRESULT HierarchyWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM l
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Hierarchy" );
+				Edit_SetText( hEdit, L"Animation" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;
@@ -49,6 +49,5 @@ LRESULT HierarchyWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM l
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-
 	return 0;
 }

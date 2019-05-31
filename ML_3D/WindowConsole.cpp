@@ -1,22 +1,18 @@
-#include "GameWindow.h"
+#include "WindowConsole.h"
 #include "windowsx.h"
-#include <Commctrl.h>
-#include <string>
 
-LRESULT GameWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowConsole::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
 		case WM_CREATE:
 			{
 				// Create edit control.
-				HWND hEdit;
-
-				hEdit = CreateWindowEx(
+				HWND hEdit = CreateWindowEx(
 					0,
 					L"Edit",
 					L"",
-					WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
+					WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 					0, 0, 0, 0,
 					Wnd(),
 					reinterpret_cast< HMENU >( RID_MAIN_CLIENT ),
@@ -27,13 +23,8 @@ LRESULT GameWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Game" );
+				Edit_SetText( hEdit, L"Console" );
 				Edit_SetReadOnly( hEdit, TRUE );
-			}
-			break;
-		case WM_COMMAND:
-			{
-				break;
 			}
 			break;
 		case WM_SIZE:
@@ -49,6 +40,5 @@ LRESULT GameWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-
 	return 0;
 }

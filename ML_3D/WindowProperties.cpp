@@ -1,9 +1,9 @@
-#include "ProfilerWindow.h"
+#include "WindowProperties.h"
 #include "windowsx.h"
 #include <Commctrl.h>
 #include <string>
 
-LRESULT ProfilerWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowProperties::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -27,7 +27,7 @@ LRESULT ProfilerWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lP
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Profiler" );
+				Edit_SetText( hEdit, L"Information" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;
@@ -49,6 +49,5 @@ LRESULT ProfilerWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lP
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-
 	return 0;
 }

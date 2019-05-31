@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "D3DRenderer.h"
 #include "FILEIO.h"
 #include <fbxsdk.h>
 #include <string>
@@ -16,6 +17,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	//	_CrtSetBreakAlloc();
 
 	InitCommonControls();
+	std::unique_ptr<D3DRenderer> render = std::make_unique<D3DRenderer>();
 
 	MainWindow win;
 	if( !win.Create() )
@@ -23,6 +25,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
 		return 0;
 	}
+	RECT rc;
+	GetClientRect( win.RenderWnd(), &rc );
+	render->Inititalize( win.RenderWnd(), rc.right - rc.left, rc.bottom - rc.top );
 
 	bool isMsgObtained;
 	MSG msg = {};
@@ -41,6 +46,11 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 		{
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
+		}
+		else
+		{
+			render->Render();
+
 		}
 		//else
 		//{

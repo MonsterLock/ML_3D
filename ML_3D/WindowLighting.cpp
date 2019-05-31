@@ -1,9 +1,9 @@
-#include "InformationWindow.h"
+#include "WindowLighting.h"
 #include "windowsx.h"
 #include <Commctrl.h>
 #include <string>
 
-LRESULT InformationWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowLighting::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -27,7 +27,7 @@ LRESULT InformationWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Information" );
+				Edit_SetText( hEdit, L"Lighting" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;
@@ -49,6 +49,5 @@ LRESULT InformationWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-
 	return 0;
 }

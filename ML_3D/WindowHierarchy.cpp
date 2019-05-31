@@ -1,9 +1,9 @@
-#include "ProjectWindow.h"
+#include "WindowHierarchy.h"
 #include "windowsx.h"
 #include <Commctrl.h>
 #include <string>
 
-LRESULT ProjectWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowHierarchy::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -27,7 +27,7 @@ LRESULT ProjectWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 				{
 					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
 				}
-				Edit_SetText( hEdit, L"Project" );
+				Edit_SetText( hEdit, L"Hierarchy" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}
 			break;
@@ -49,6 +49,5 @@ LRESULT ProjectWindow::HandleSubWndMessage( UINT uMsg, WPARAM wParam, LPARAM lPa
 				return DefMDIChildProc( Wnd(), uMsg, wParam, lParam );
 			}
 	}
-
 	return 0;
 }

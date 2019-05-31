@@ -1,44 +1,42 @@
 #pragma once
 #include "MDIWindow.h"
-#include "AnimationWindow.h"
-#include "ConsoleWindow.h"
-#include "GameWindow.h"
-#include "HierarchyWindow.h"
-#include "InformationWindow.h"
-#include "LightingWindow.h"
-#include "ProfilerWindow.h"
-#include "ProjectWindow.h"
-#include "SceneWindow.h"
-#include "StatusBar.h"
-#include "TabControl.h"
-#include "ToolBar.h"
+#include "WindowAnimation.h"
+#include "WindowConsole.h"
+#include "WindowGame.h"
+#include "WindowHierarchy.h"
+#include "WindowLighting.h"
+#include "WindowProfiler.h"
+#include "WindowProject.h"
+#include "WindowProperties.h"
+#include "WindowScene.h"
+#include "ControlStatusBar.h"
+#include "ControlTab.h"
+#include "ControlToolBar.h"
 
 class MainWindow : public MDIWindow<MainWindow>
 {
 protected:
-	AnimationWindow animationWindow;
-	ConsoleWindow consoleWindow;
-	GameWindow gameWindow;
-	HierarchyWindow hierarchyWindow;
-	InformationWindow informationWindow;
-	LightingWindow lightingWindow;
-	ProfilerWindow profilerWindow;
-	ProjectWindow projectWindow;
-	SceneWindow sceneWindow;
-	StatusBar sbMain;
-	ToolBar tbMain;
-
-	TabControl
-		tabView,
-		tabProperties,
-		tabInfo;
-
+	WindowAnimation		animationWnd;
+	WindowConsole		consoleWnd;
+	WindowGame			gameWnd;
+	WindowHierarchy		hierarchyWnd;
+	WindowLighting		lightingWnd;
+	WindowProfiler		profilerWnd;
+	WindowProject		projectWnd;
+	WindowProperties	propertiesWnd;
+	WindowScene			sceneWnd;
+	Statusbar			sbMain;
+	Toolbar				tbMain;
+	Tab
+						tabView,
+						tabProperties,
+						tabInfo;
 	HWND
-		currentViewWnd = nullptr,
-		currentInfoWnd = nullptr,
-		currentCategoryWnd = nullptr,
-		currentPropertiesWnd = nullptr;
-	HFONT hf;
+						currentViewWnd,
+						currentInfoWnd,
+						currentCategoryWnd,
+						currentPropertiesWnd;
+	HFONT				hf;
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
 	static BOOL CALLBACK SetFont( HWND, LPARAM );
@@ -50,7 +48,9 @@ protected:
 	void CallSize();
 
 	static BOOL CALLBACK AboutDlg( HWND, UINT, WPARAM, LPARAM );
+
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
+	HWND RenderWnd() const { return currentViewWnd; }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
 };
