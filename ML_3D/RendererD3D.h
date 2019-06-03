@@ -35,7 +35,7 @@
 #include <memory>
 #include <stdexcept>
 
-class D3DRenderer
+class RendererD3D
 {
 	HWND												mHwnd;
 	int
@@ -56,7 +56,7 @@ class D3DRenderer
 	void Present();
 
 public:
-	D3DRenderer() noexcept;
+	RendererD3D() noexcept;
 
 	// Initialization and management.
 	void Inititalize( HWND window, int width, int height );

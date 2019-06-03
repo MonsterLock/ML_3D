@@ -13,62 +13,71 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{dab3f8ba-8b48-442a-b736-eb54e45a3b57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{1cac9912-a2cb-48fa-93c4-80b638fd67bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FILEIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsMessageMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D3DRenderer.cpp">
+    <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowAnimation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowConsole.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowGame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowHierarchy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowLighting.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowProfiler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowProject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowScene.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
     </ClCompile>
     <ClCompile Include="WindowProperties.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowScene.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsMessageMap.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererD3D.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererOGL.cpp">
+      <Filter>Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MDIWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FILEIO.h">
@@ -80,56 +89,68 @@
     <ClInclude Include="Element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SubWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsMessageMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D3DRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowHierarchy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowLighting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowProfiler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowProject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowConsole.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowProperties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ControlTab.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ControlToolbar.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Control.h">
+      <Filter>Windows</Filter>
     </ClInclude>
     <ClInclude Include="ControlStatusbar.h">
-      <Filter>Header Files</Filter>
+      <Filter>Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Control.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ControlTab.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlToolbar.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsMessageMap.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="SubWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowAnimation.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowConsole.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowGame.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowHierarchy.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowLighting.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowProfiler.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowProject.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowProperties.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowScene.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="MDIWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererD3D.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererOGL.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

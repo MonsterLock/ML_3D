@@ -1,12 +1,12 @@
-#include "D3DRenderer.h"
+#include "RendererD3D.h"
 
-D3DRenderer::D3DRenderer() noexcept
+RendererD3D::RendererD3D() noexcept
 	:
 	mHwnd( nullptr ),
 	m_featureLevel( D3D_FEATURE_LEVEL_9_1 )
 {}
 
-void D3DRenderer::Inititalize( HWND window, int width, int height )
+void RendererD3D::Inititalize( HWND window, int width, int height )
 {
 	mHwnd = window;
 	m_outputWidth = std::max( width, 1 );
@@ -16,7 +16,7 @@ void D3DRenderer::Inititalize( HWND window, int width, int height )
 	CreateResources();
 }
 
-void D3DRenderer::CreateDevice()
+void RendererD3D::CreateDevice()
 {
 	// Interface for D3D device and context.
 	D3D_FEATURE_LEVEL levels[] = {
@@ -66,7 +66,7 @@ void D3DRenderer::CreateDevice()
 	context.As( &m_d3dContext );
 }
 
-void D3DRenderer::CreateResources()
+void RendererD3D::CreateResources()
 {
 	// Clear the previous window size specific context.
 	ID3D11RenderTargetView* nullViews[] = { nullptr };
@@ -139,7 +139,7 @@ void D3DRenderer::CreateResources()
 			m_swapChain.ReleaseAndGetAddressOf()
 		);
 
-		// Obtain the backbuffer for thsi window which will be the final 3D render target.
+		// Obtain the backbuffer for this window which will be the final 3D render target.
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
 		m_swapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) );
 
@@ -158,7 +158,7 @@ void D3DRenderer::CreateResources()
 	}
 }
 
-void D3DRenderer::OnDeviceLost()
+void RendererD3D::OnDeviceLost()
 {
 	m_depthStencilView.Reset();
 	m_renderTargetView.Reset();
@@ -170,17 +170,15 @@ void D3DRenderer::OnDeviceLost()
 	CreateResources();
 }
 
-void D3DRenderer::Render()
+void RendererD3D::Render()
 {
 	Clear();
 	{
-
-
 	}
 	Present();
 }
 
-void D3DRenderer::Clear()
+void RendererD3D::Clear()
 {
 	// Clear the views.
 	m_d3dContext->ClearRenderTargetView( m_renderTargetView.Get(), DirectX::Colors::Coral );
@@ -191,7 +189,7 @@ void D3DRenderer::Clear()
 	m_d3dContext->RSSetViewports( 1, &viewport );
 }
 
-void D3DRenderer::Present()
+void RendererD3D::Present()
 {
 	// The first argument instructs DXGI to block until VSYNC, putting the application
 	// to sleep until the next VSYNC. This ensures we don't waste any cycles rendering

@@ -66,7 +66,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				propertiesWnd.RegSubWnd( 0, nullptr );
 				propertiesWnd.CreateSubWnd( ClientWnd(), 0 );
 
-				sceneWnd.RegSubWnd( 0, nullptr );
+				sceneWnd.RegSubWnd( CS_OWNDC, nullptr );
 				sceneWnd.CreateSubWnd( ClientWnd(), 0 );
 
 				// Create toolbar.
