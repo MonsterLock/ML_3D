@@ -6,9 +6,6 @@ template <class DERIVED_TYPE>
 class MDIWindow
 {
 protected:
-	virtual PCWSTR WindowText() const = 0;
-	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
-
 	const PCWSTR
 		mFrameClass = L"MDIFRAME",
 		mClientClass = L"MDICLIENT";
@@ -16,6 +13,9 @@ protected:
 		mMDIFrame,
 		mMDIClient;
 	HMENU mMenu;
+
+	virtual PCWSTR WindowText() const = 0;
+	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 
 public:
 	MDIWindow()

@@ -183,6 +183,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EngineDebugger.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererOGL.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="FILEIO.cpp" />
     <ClCompile Include="WindowGame.cpp" />
     <ClCompile Include="WindowHierarchy.cpp" />
+    <ClCompile Include="WindowMessenger.cpp" />
     <ClCompile Include="WindowProperties.cpp" />
     <ClCompile Include="WindowLighting.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -200,12 +202,13 @@
     <ClCompile Include="WindowProfiler.cpp" />
     <ClCompile Include="WindowProject.cpp" />
     <ClCompile Include="WindowScene.cpp" />
-    <ClCompile Include="WindowsMessageMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control.h" />
+    <ClInclude Include="EngineDebugger.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererOGL.h" />
+    <ClInclude Include="TranslateWinMsgs.h" />
     <ClInclude Include="WindowAnimation.h" />
     <ClInclude Include="WindowConsole.h" />
     <ClInclude Include="RendererD3D.h" />
@@ -215,6 +218,8 @@
     <ClInclude Include="FILEIO.h" />
     <ClInclude Include="WindowGame.h" />
     <ClInclude Include="WindowHierarchy.h" />
+    <ClInclude Include="WindowMessenger.h" />
+    <ClInclude Include="WindowMessengerBase.h" />
     <ClInclude Include="WindowProperties.h" />
     <ClInclude Include="WindowLighting.h" />
     <ClInclude Include="MDIWindow.h" />
@@ -227,7 +232,6 @@
     <ClInclude Include="SubWindow.h" />
     <ClInclude Include="ControlTab.h" />
     <ClInclude Include="ControlToolbar.h" />
-    <ClInclude Include="WindowsMessageMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc" />

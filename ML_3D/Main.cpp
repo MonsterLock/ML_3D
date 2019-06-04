@@ -1,16 +1,19 @@
 #include "MainWindow.h"
 #include "Renderer.h"
+#include "TranslateWinMsgs.h"
 #include "FILEIO.h"
 #include <fbxsdk.h>
 #include <string>
 #include <shobjidl.h>
 //#include <glad/glad.h>
 #include <iostream>
+#include "ErrorHandler.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 #define IDR_ACCEL1 151
+
 #if 1
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow )
 {
@@ -20,9 +23,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	InitCommonControls();
 
 	MainWindow win;
-	if( !win.Create() )
+	if( win.Create() )
 	{
-		MessageBox( nullptr, L"Creating GUI Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+		MSGLOG( win.Create(), Creating MainWindow failed. );
 		return 0;
 	}
 	std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>();
@@ -34,7 +37,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	MSG msg = {};
 	msg.message = WM_NULL;
 	PeekMessage( &msg, nullptr, 0u, 0u, PM_NOREMOVE );
-
 	HACCEL hAccel = LoadAccelerators( hInstance, MAKEINTRESOURCE( IDR_ACCEL1 ) );
 
 	while( msg.message != WM_QUIT )
@@ -45,6 +47,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 
 		if( isMsgObtained )
 		{
+			OutputDebugString( ConvertMessage( msg ).c_str() );
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
 		}
@@ -57,9 +60,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdSho
 	return static_cast< int >( msg.wParam );
 }
 #endif
-// #define _L(x)  __L(x)
-// #define __L(x)  L##x
- //#define RES_STATUS
+
+//#define RES_STATUS
 //
 // const COMDLG_FILTERSPEC c_rgSaveTypes[] =
 // {

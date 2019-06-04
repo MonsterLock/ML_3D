@@ -1,6 +1,7 @@
 #include "WindowConsole.h"
 #include "windowsx.h"
 
+/* Placeholder and was previously used for testing window panels */
 LRESULT WindowConsole::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )

@@ -1,37 +1,18 @@
 #pragma once
 #include <windows.h>
-#include <exception>
 #include <string>
+#include <sstream>
 
-class ErrorHandler : public std::exception
+#define _L(x)  __L(x)
+#define __L(x)  L##x
+#define MSGLOG(title, what) OutputDebugString( CatchError( L#title, L#what, __FILE__, __LINE__ ).c_str() )
+
+static std::wstring CatchError( LPCWSTR title, LPCWSTR what, LPCSTR file, int line )
 {
-	std::wstring
-		type,
-		file,
-		line,
-		what;
+	std::wstringstream oss;
 
-public:
-	ErrorHandler( const std::wstring& type, const std::wstring& file, const std::wstring& line, const std::wstring& what )
-		:
-		type( type ),
-		file( file ),
-		line( line ),
-		what( what )
-	{}
+	oss
+		<< L"'" << title << L"': Error '" << file << L"', Line '" << line << "'. " << what << std::endl;
 
-	std::wstring GetError()
-	{
-		return std::wstring(
-			L"[TYPE] " + type +
-			L"\n[FILE] " + file +
-			L"\n[LINE] " + line +
-			L"\n\n[ERROR]\n" + what
-		);
-	}
-
-	void PopUpError()
-	{
-		MessageBox( nullptr, GetError().c_str(), L"Error Encountered!", MB_OK | MB_ICONWARNING );
-	}
-};
+	return oss.str();
+}

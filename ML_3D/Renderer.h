@@ -10,6 +10,7 @@ protected:
 	HDC						mHDC;
 	HGLRC					mHRC;
 	PIXELFORMATDESCRIPTOR	mPFD;
+	HPALETTE				mHPALETTE;
 	int
 							mOutputWidth,
 							mOutputHeight;

@@ -1,7 +1,6 @@
 #include "MainWindow.h"
 #include <Commctrl.h>
 #include <string>
-#include "WindowsMessageMap.h"
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -14,8 +13,6 @@ rightHorizontalRatio = 0.33f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	static WindowsMessageMap mm;
-	OutputDebugStringA( mm( uMsg, lParam, wParam ).c_str() );
 
 	switch( uMsg )
 	{
@@ -176,9 +173,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			}
 			break;
 		default:
-			{
 				return DefFrameProc( FrameWnd(), ClientWnd(), uMsg, wParam, lParam );
-			}
 	}
 	return 0;
 }
