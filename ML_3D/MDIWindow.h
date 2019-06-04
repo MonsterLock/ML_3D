@@ -1,5 +1,6 @@
 #pragma once
-#include <Windows.h>
+//#include <Windows.h>
+#include "ReportMessage.h"
 #include "resource.h"
 
 template <class DERIVED_TYPE>
@@ -61,7 +62,7 @@ public:
 
 					if( !pThis->mMDIClient )
 					{
-						MessageBox( nullptr, L"Creating Client Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+						REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign pThis->mMDIClient a valid HWND. );
 						return FALSE;
 					}
 				}
@@ -97,7 +98,7 @@ public:
 
 		if( !RegisterClassEx( &wc ) )
 		{
-			MessageBox( nullptr, L"Registering Frame Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
 			return FALSE;
 		}
 
@@ -115,7 +116,7 @@ public:
 
 		if( !mMDIFrame )
 		{
-			MessageBox( nullptr, L"Creating Frame Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+			REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign mMDIFrame a valid HWND. );
 			return FALSE;
 		}
 
@@ -124,5 +125,3 @@ public:
 		return TRUE;
 	}
 };
-
-//CreateSolidBrush(RGB(0, 0, 0));

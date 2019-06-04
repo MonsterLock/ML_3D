@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "ReportMessage.h"
 #include <CommCtrl.h>
 
 class Control

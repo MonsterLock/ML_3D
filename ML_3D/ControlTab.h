@@ -21,7 +21,7 @@ public:
 
 			return TRUE;
 		}
-		MessageBox( nullptr, L"Could not create tab control.", L"ERROR", MB_OK | MB_ICONERROR );
+		REPORTMSG( Create(), nullptr, Create() failed to pass a valid HWND in parameters or tab has already been created. );
 		return FALSE;
 	}
 

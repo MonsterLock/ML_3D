@@ -1,26 +1,22 @@
 #pragma once
-#include <Windows.h>
+#include "Renderer.h"
 #include <GL/gl.h>			/* OpenGL header file */
 #include <GL/glu.h>			/* OpenGL utilities header file */
 
-class RendererOGL
+class RendererOGL : public Renderer
 {
-	HWND	mHwnd;
-	HDC		mhDC;
-	HGLRC	hRC;
-	int
-			m_outputWidth,
-			m_outputHeight;
+protected:
+	HDC						mHDC;
+	HGLRC					mHRC;
+	PIXELFORMATDESCRIPTOR	mPFD;
+	HPALETTE				mHPALETTE;
 
-	void CreateDevice();
-	void CreateResources();
-	void OnDeviceLost();
-
-	void Clear();
-	void Present();
 public:
 	RendererOGL() noexcept;
-	void Inititalize( HWND window, int width, int height );
+	BOOL Inititalize( HWND window, int width, int height );
 	void Render();
+	void Clear();
+	void Present();
+	void Terminate();
 };
 

@@ -20,8 +20,7 @@
 // WinHelp is deprecated
 #define NOHELP
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "Renderer.h"
 
 #include <wrl/client.h>
 
@@ -35,20 +34,16 @@
 #include <memory>
 #include <stdexcept>
 
-class RendererD3D
+class RendererD3D : public Renderer
 {
-	HWND												mHwnd;
-	int
-														m_outputWidth,
-														m_outputHeight;
-	D3D_FEATURE_LEVEL									m_featureLevel;
-	Microsoft::WRL::ComPtr<ID3D11Device1>				m_d3dDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext1>		m_d3dContext;
-	Microsoft::WRL::ComPtr<IDXGISwapChain1>				m_swapChain;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		m_renderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		m_depthStencilView;
+	D3D_FEATURE_LEVEL									mFeatureLevel;
+	Microsoft::WRL::ComPtr<ID3D11Device1>				mDevice;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext1>		mContext;
+	Microsoft::WRL::ComPtr<IDXGISwapChain1>				mSwapChain;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		mRenderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		mDepthStencilView;
 
-	void CreateDevice();
+	BOOL CreateDevice();
 	void CreateResources();
 	void OnDeviceLost();
 
@@ -59,7 +54,8 @@ public:
 	RendererD3D() noexcept;
 
 	// Initialization and management.
-	void Inititalize( HWND window, int width, int height );
+	BOOL Inititalize( HWND window, int width, int height );
 	void Render();
+	void Terminate();
 };
 

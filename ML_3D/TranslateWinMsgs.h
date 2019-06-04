@@ -6,7 +6,7 @@
 
 #define TRANSLATE_WM(msg) L#msg
 
-std::wstring GetWinMessage( UINT uMsg );
+inline std::wstring GetWinMessage( UINT uMsg );
 
 static std::wstring ConvertMessage( MSG msg )
 {

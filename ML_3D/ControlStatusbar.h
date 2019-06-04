@@ -28,7 +28,7 @@ public:
 			SendMessage( Wnd(), SB_SETPARTS, sizeof( sbWidths ) / sizeof( int ), reinterpret_cast< LPARAM >( sbWidths ) );
 			return TRUE;
 		}
-		MessageBox( nullptr, L"Could not create statusbar.", L"ERROR", MB_OK | MB_ICONERROR );
+		REPORTMSG( Create(), nullptr, Create() failed to pass a valid HWND in parameters or statusbar has already been created. );
 		return FALSE;
 	}
 

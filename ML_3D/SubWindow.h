@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "ReportMessage.h"
 #include "resource.h"
 
 template <class DERIVED_TYPE>
@@ -32,6 +32,12 @@ public:
 						reinterpret_cast< CREATESTRUCT* > ( lParam ) )->lpCreateParams ) )->lParam );
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 					pThis->mHwnd = hwnd;
+
+					if( !pThis->mHwnd )
+					{
+						REPORTMSG( SetWindowLongPtr(), nullptr, SetWindowLongPtr() failed to assign pThis->mHwnd a valid HWND. );
+						return FALSE;
+					}
 				}
 				break;
 			default:
@@ -63,7 +69,7 @@ public:
 
 		if( !RegisterClassEx( &wc ) )
 		{
-			MessageBox( nullptr, L"Registering Sub-window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
 			return FALSE;
 		}
 		return TRUE;
@@ -86,7 +92,7 @@ public:
 
 		if( !mHwnd )
 		{
-			MessageBox( hParent, L"Creating Sub-window failed.", L"ERROR", MB_ICONEXCLAMATION | MB_OK );
+			REPORTMSG( SendMessage(), nullptr, SendMessage() failed to assign mHwnd a valid HWND. );
 		}
 
 		return Wnd();

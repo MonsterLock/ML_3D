@@ -1,25 +1,23 @@
 #pragma once
-#include <Windows.h>
-#include <GL/gl.h>			/* OpenGL header file */
-#include <GL/glu.h>			/* OpenGL utilities header file */
+#include "ReportMessage.h"
 
 class Renderer
 {
 protected:
-	HWND					mHwnd;
-	HDC						mHDC;
-	HGLRC					mHRC;
-	PIXELFORMATDESCRIPTOR	mPFD;
-	HPALETTE				mHPALETTE;
+	HWND		mHwnd;
 	int
-							mOutputWidth,
-							mOutputHeight;
+				mOutputWidth,
+				mOutputHeight;
+
+	virtual void Clear() = 0;
+	virtual void Present() = 0;
 
 public:
-	Renderer() noexcept;
-	void Inititalize( HWND window, int width, int height );
-	void Render();
-	void Clear();
-	void Present();
-	void Terminate();
+	Renderer() noexcept
+		:
+		mHwnd( nullptr )
+	{}
+	virtual BOOL Inititalize( HWND window, int width, int height ) = 0;
+	virtual void Render() = 0;
+	virtual void Terminate() = 0;
 };

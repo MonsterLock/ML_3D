@@ -24,7 +24,7 @@ public:
 
 			return TRUE;
 		}
-		MessageBox( nullptr, L"Could not create toolbar.", L"ERROR", MB_OK | MB_ICONERROR );
+		REPORTMSG( Create(), nullptr, Create() failed to pass a valid HWND in parameters or toolbar has already been created. );
 		return FALSE;
 	}
 

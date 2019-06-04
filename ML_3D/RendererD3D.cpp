@@ -2,21 +2,22 @@
 
 RendererD3D::RendererD3D() noexcept
 	:
-	mHwnd( nullptr ),
-	m_featureLevel( D3D_FEATURE_LEVEL_9_1 )
+	mFeatureLevel( D3D_FEATURE_LEVEL_9_1 )
 {}
 
-void RendererD3D::Inititalize( HWND window, int width, int height )
+BOOL RendererD3D::Inititalize( HWND window, int width, int height )
 {
 	mHwnd = window;
-	m_outputWidth = std::max( width, 1 );
-	m_outputHeight = std::max( height, 1 );
+	mOutputWidth = std::max( width, 1 );
+	mOutputHeight = std::max( height, 1 );
 
 	CreateDevice();
 	CreateResources();
+
+	return TRUE;
 }
 
-void RendererD3D::CreateDevice()
+BOOL RendererD3D::CreateDevice()
 {
 	// Interface for D3D device and context.
 	D3D_FEATURE_LEVEL levels[] = {
@@ -50,7 +51,7 @@ void RendererD3D::CreateDevice()
 		ARRAYSIZE( levels ),				// Size of the list above.
 		D3D11_SDK_VERSION,					// Always set this to D3D11_SDK_VERSION for Windows Store Apps.
 		device.ReleaseAndGetAddressOf(),	// Returns the Direct3D device created.
-		&m_featureLevel,					// Returns feature level of device created.
+		&mFeatureLevel,					// Returns feature level of device created.
 		context.ReleaseAndGetAddressOf()	// Returns the device immediate context.
 	);
 
@@ -59,34 +60,38 @@ void RendererD3D::CreateDevice()
 		// Handle device interface create failure if it occurs.
 		// For example, reduce the feature level requirement, or fail over
 		// to WARP rendering.
+		REPORTMSG( D3D11CreateDevice(), 0, D3D11CreateDevice() failed to create device. );
+		return FALSE;
 	}
 
 	// Store pointers to the Direct3D 11.1 API device and immediate context.
-	device.As( &m_d3dDevice );
-	context.As( &m_d3dContext );
+	device.As( &mDevice );
+	context.As( &mContext );
+
+	return TRUE;
 }
 
 void RendererD3D::CreateResources()
 {
 	// Clear the previous window size specific context.
 	ID3D11RenderTargetView* nullViews[] = { nullptr };
-	m_d3dContext->OMSetRenderTargets( _countof( nullViews ), nullViews, nullptr );
-	m_renderTargetView.Reset();
-	m_depthStencilView.Reset();
-	m_d3dContext->Flush();
+	mContext->OMSetRenderTargets( _countof( nullViews ), nullViews, nullptr );
+	mRenderTargetView.Reset();
+	mDepthStencilView.Reset();
+	mContext->Flush();
 
 	UINT
-		backBufferWidth = static_cast< UINT >( m_outputWidth ),
-		backBufferHeight = static_cast< UINT >( m_outputHeight );
+		backBufferWidth = static_cast< UINT >( mOutputWidth ),
+		backBufferHeight = static_cast< UINT >( mOutputHeight );
 	DXGI_FORMAT
 		backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM,
 		depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	UINT backBufferCount = 2;
 
 	// If the swap chain already exists, resize it, otherwise create one.
-	if( m_swapChain )
+	if( mSwapChain )
 	{
-		HRESULT hr = m_swapChain->ResizeBuffers( backBufferCount, backBufferWidth, backBufferHeight, backBufferFormat, 0 );
+		HRESULT hr = mSwapChain->ResizeBuffers( backBufferCount, backBufferWidth, backBufferHeight, backBufferFormat, 0 );
 
 		if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
 		{
@@ -106,7 +111,7 @@ void RendererD3D::CreateResources()
 	{
 		// First, retrieve the underlying DXGI Device from the D3D Device.
 		Microsoft::WRL::ComPtr<IDXGIDevice1> dxgiDevice;
-		m_d3dDevice.As( &dxgiDevice );
+		mDevice.As( &dxgiDevice );
 
 		// Identify the physical adapter this device is running on.
 		Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
@@ -131,40 +136,40 @@ void RendererD3D::CreateResources()
 
 		// Create a SwapChain from a Win32 window.
 		dxgiFactory->CreateSwapChainForHwnd(
-			m_d3dDevice.Get(),
+			mDevice.Get(),
 			mHwnd,
 			&swapChainDesc,
 			&fsSwapChainDesc,
 			nullptr,
-			m_swapChain.ReleaseAndGetAddressOf()
+			mSwapChain.ReleaseAndGetAddressOf()
 		);
 
 		// Obtain the backbuffer for this window which will be the final 3D render target.
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-		m_swapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) );
+		mSwapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) );
 
 		// Create a view interface on the render target to use on bind.
-		m_d3dDevice->CreateRenderTargetView( backBuffer.Get(), nullptr, m_renderTargetView.ReleaseAndGetAddressOf() );
+		mDevice->CreateRenderTargetView( backBuffer.Get(), nullptr, mRenderTargetView.ReleaseAndGetAddressOf() );
 
 		// Allocate a 2-D surgace as the depth/stencil buffer and
 		// create a DepthStencil view on this surfce to use on bind.
 		CD3D11_TEXTURE2D_DESC depthStencilDesc( depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL );
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-		m_d3dDevice->CreateTexture2D( &depthStencilDesc, nullptr, depthStencil.GetAddressOf() );
+		mDevice->CreateTexture2D( &depthStencilDesc, nullptr, depthStencil.GetAddressOf() );
 
 		CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc( D3D11_DSV_DIMENSION_TEXTURE2D );
-		m_d3dDevice->CreateDepthStencilView( depthStencil.Get(), &depthStencilViewDesc, m_depthStencilView.ReleaseAndGetAddressOf() );
+		mDevice->CreateDepthStencilView( depthStencil.Get(), &depthStencilViewDesc, mDepthStencilView.ReleaseAndGetAddressOf() );
 	}
 }
 
 void RendererD3D::OnDeviceLost()
 {
-	m_depthStencilView.Reset();
-	m_renderTargetView.Reset();
-	m_swapChain.Reset();
-	m_d3dContext.Reset();
-	m_d3dDevice.Reset();
+	mDepthStencilView.Reset();
+	mRenderTargetView.Reset();
+	mSwapChain.Reset();
+	mContext.Reset();
+	mDevice.Reset();
 
 	CreateDevice();
 	CreateResources();
@@ -178,15 +183,18 @@ void RendererD3D::Render()
 	Present();
 }
 
+void RendererD3D::Terminate()
+{ return; }
+
 void RendererD3D::Clear()
 {
 	// Clear the views.
-	m_d3dContext->ClearRenderTargetView( m_renderTargetView.Get(), DirectX::Colors::Coral );
-	m_d3dContext->ClearDepthStencilView( m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
+	mContext->ClearRenderTargetView( mRenderTargetView.Get(), DirectX::Colors::Coral );
+	mContext->ClearDepthStencilView( mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	// Set the viewport.
-	CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( m_outputWidth ), static_cast< float >( m_outputHeight ) );
-	m_d3dContext->RSSetViewports( 1, &viewport );
+	CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ) );
+	mContext->RSSetViewports( 1, &viewport );
 }
 
 void RendererD3D::Present()
@@ -194,7 +202,7 @@ void RendererD3D::Present()
 	// The first argument instructs DXGI to block until VSYNC, putting the application
 	// to sleep until the next VSYNC. This ensures we don't waste any cycles rendering
 	// frames that will never be displayed to the screen.
-	HRESULT hr = m_swapChain->Present( 1, 0 );
+	HRESULT hr = mSwapChain->Present( 1, 0 );
 
 	// If the device was reset we must completely reinitialize the renderer.
 	if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
@@ -203,6 +211,6 @@ void RendererD3D::Present()
 	}
 	else
 	{
-		// ERROR
+		REPORTMSG( Present(), 0, Present() failed to swap mSwapChain. );
 	}
 }

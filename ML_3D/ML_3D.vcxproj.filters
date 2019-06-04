@@ -19,21 +19,15 @@
     <Filter Include="Renderers">
       <UniqueIdentifier>{1cac9912-a2cb-48fa-93c4-80b638fd67bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug">
-      <UniqueIdentifier>{c5b797d5-f58b-461b-a4ab-edf4809b834f}</UniqueIdentifier>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{359129ea-53a3-4fbc-b855-e931b179f80e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FILEIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainWindow.cpp">
@@ -69,27 +63,21 @@
     <ClCompile Include="RendererD3D.cpp">
       <Filter>Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Renderers</Filter>
-    </ClCompile>
     <ClCompile Include="RendererOGL.cpp">
       <Filter>Renderers</Filter>
     </ClCompile>
     <ClCompile Include="WindowMessenger.cpp">
       <Filter>Windows</Filter>
     </ClCompile>
-    <ClCompile Include="EngineDebugger.cpp">
-      <Filter>Debug</Filter>
+    <ClCompile Include="glad.c">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="FILEIO.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FILEIO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
@@ -158,14 +146,17 @@
     <ClInclude Include="WindowMessenger.h">
       <Filter>Windows</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorHandler.h">
-      <Filter>Debug</Filter>
+    <ClInclude Include="FILEIO.h">
+      <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="EngineDebugger.h">
-      <Filter>Debug</Filter>
+    <ClInclude Include="Element.h">
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="TranslateWinMsgs.h">
-      <Filter>Debug</Filter>
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportMessage.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
