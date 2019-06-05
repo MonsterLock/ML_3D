@@ -44,7 +44,7 @@ class RendererD3D : public Renderer
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		mDepthStencilView;
 
 	BOOL CreateDevice();
-	void CreateResources();
+	BOOL CreateResources();
 	void OnDeviceLost();
 
 	void Clear();

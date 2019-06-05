@@ -42,36 +42,39 @@ BOOL RendererD3D::CreateDevice()
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
-	HRESULT hr = D3D11CreateDevice(
-		nullptr,							// Specify nullptr to use the default adapter.
-		D3D_DRIVER_TYPE_HARDWARE,			// Create a deice using the hardware graphics driver.
-		0,									// Should be 0 unless the driver is D3D_DRIVER_TYPE_SOFTWARE.
-		deviceFlags,						// Set debug and Direct2d compatibility flags.
-		levels,								// List of feature levels this app can support.
-		ARRAYSIZE( levels ),				// Size of the list above.
-		D3D11_SDK_VERSION,					// Always set this to D3D11_SDK_VERSION for Windows Store Apps.
-		device.ReleaseAndGetAddressOf(),	// Returns the Direct3D device created.
-		&mFeatureLevel,					// Returns feature level of device created.
-		context.ReleaseAndGetAddressOf()	// Returns the device immediate context.
-	);
-
-	if( FAILED( hr ) )
+	if( FAILED( D3D11CreateDevice(
+		nullptr,								// Specify nullptr to use the default adapter.
+		D3D_DRIVER_TYPE_HARDWARE,				// Create a deice using the hardware graphics driver.
+		0,										// Should be 0 unless the driver is D3D_DRIVER_TYPE_SOFTWARE.
+		deviceFlags,							// Set debug and Direct2d compatibility flags.
+		levels,									// List of feature levels this APP can support.
+		ARRAYSIZE( levels ),					// Size of the list above.
+		D3D11_SDK_VERSION,						// Always set this to D3D11_SDK_VERSION for Windows Store Apps.
+		device.ReleaseAndGetAddressOf(),		// Returns the Direct3D device created.
+		&mFeatureLevel,							// Returns feature level of device created.
+		context.ReleaseAndGetAddressOf() ) ) )	// Returns the device immediate context.)
 	{
-		// Handle device interface create failure if it occurs.
-		// For example, reduce the feature level requirement, or fail over
-		// to WARP rendering.
-		REPORTMSG( D3D11CreateDevice(), 0, D3D11CreateDevice() failed to create device. );
+		REPORTMSG( D3D11CreateDevice(), FAILED, D3D11CreateDevice() failed to create device. );
 		return FALSE;
 	}
 
 	// Store pointers to the Direct3D 11.1 API device and immediate context.
-	device.As( &mDevice );
-	context.As( &mContext );
+	if( FAILED( device.As( &mDevice ) ) )
+	{
+		REPORTMSG( device.As(), FAILED, device.As() failed to assign mDevice a ID3D11Device. );
+		return FALSE;
+	}
+
+	if( FAILED( context.As( &mContext ) ) )
+	{
+		REPORTMSG( context.As(), FAILED, context.As() failed to assign mContext a ID3D11DeviceContext. );
+		return FALSE;
+	}
 
 	return TRUE;
 }
 
-void RendererD3D::CreateResources()
+BOOL RendererD3D::CreateResources()
 {
 	// Clear the previous window size specific context.
 	ID3D11RenderTargetView* nullViews[] = { nullptr };
@@ -100,26 +103,42 @@ void RendererD3D::CreateResources()
 
 			// Everything is set up now. Do not continue execution of this method. OnDeviceLost will re-enter this method
 			// and correctly set up the new device.
-			return;
+			return TRUE;
 		}
 		else
 		{
-			//
+			if( FAILED( hr ) )
+			{
+				REPORTMSG( ResizeBuffers(), FAILED, ResizeBuffers() failed to resize mSwapChain buffers. );
+				return FALSE;
+			}
 		}
 	}
 	else
 	{
 		// First, retrieve the underlying DXGI Device from the D3D Device.
 		Microsoft::WRL::ComPtr<IDXGIDevice1> dxgiDevice;
-		mDevice.As( &dxgiDevice );
+		if( FAILED( mDevice.As( &dxgiDevice ) ) )
+		{
+			REPORTMSG( mDevice.As(), FAILED, mDevice.As() failed to retrieve IDXGIDevice1 from dxgiDevice. );
+			return FALSE;
+		}
 
 		// Identify the physical adapter this device is running on.
 		Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
-		dxgiDevice->GetAdapter( dxgiAdapter.GetAddressOf() );
+		if( FAILED( dxgiDevice->GetAdapter( dxgiAdapter.GetAddressOf() ) ) )
+		{
+			REPORTMSG( GetAdapter(), FAILED, GetAdapter() failed to identify the physical adapter from dxgiDevice. );
+			return FALSE;
+		}
 
 		// And obtain the factory object that created it.
 		Microsoft::WRL::ComPtr<IDXGIFactory2> dxgiFactory;
-		dxgiAdapter->GetParent( IID_PPV_ARGS( dxgiFactory.GetAddressOf() ) );
+		if( FAILED( dxgiAdapter->GetParent( IID_PPV_ARGS( dxgiFactory.GetAddressOf() ) ) ) )
+		{
+			REPORTMSG( GetParent(), FAILED, GetParent() failed to obtain the factory object that created it. );
+			return FALSE;
+		}
 
 		// Create the descriptor for the swap chain.
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -135,32 +154,53 @@ void RendererD3D::CreateResources()
 		fsSwapChainDesc.Windowed = TRUE;
 
 		// Create a SwapChain from a Win32 window.
-		dxgiFactory->CreateSwapChainForHwnd(
+		;
+		if( FAILED( dxgiFactory->CreateSwapChainForHwnd(
 			mDevice.Get(),
 			mHwnd,
 			&swapChainDesc,
 			&fsSwapChainDesc,
 			nullptr,
-			mSwapChain.ReleaseAndGetAddressOf()
-		);
-
-		// Obtain the backbuffer for this window which will be the final 3D render target.
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-		mSwapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) );
-
-		// Create a view interface on the render target to use on bind.
-		mDevice->CreateRenderTargetView( backBuffer.Get(), nullptr, mRenderTargetView.ReleaseAndGetAddressOf() );
-
-		// Allocate a 2-D surgace as the depth/stencil buffer and
-		// create a DepthStencil view on this surfce to use on bind.
-		CD3D11_TEXTURE2D_DESC depthStencilDesc( depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL );
-
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-		mDevice->CreateTexture2D( &depthStencilDesc, nullptr, depthStencil.GetAddressOf() );
-
-		CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc( D3D11_DSV_DIMENSION_TEXTURE2D );
-		mDevice->CreateDepthStencilView( depthStencil.Get(), &depthStencilViewDesc, mDepthStencilView.ReleaseAndGetAddressOf() );
+			mSwapChain.ReleaseAndGetAddressOf() ) ) )
+		{
+			REPORTMSG( CreateSwapChainForHwnd(), FAILED, CreateSwapChainForHwnd() failed to create a swap chain from a window. );
+			return FALSE;
+		}
 	}
+	// Obtain the back-buffer for this window which will be the final 3D render target.
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
+	if( FAILED( mSwapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) ) ) )
+	{
+		REPORTMSG( GetBuffer(), FAILED, GetBuffer() failed to obtain the back-buffer for final render target. );
+		return FALSE;
+	}
+
+	// Create a view interface on the render target to use on bind.
+	if( FAILED( mDevice->CreateRenderTargetView( backBuffer.Get(), nullptr, mRenderTargetView.ReleaseAndGetAddressOf() ) ) )
+	{
+		REPORTMSG( CreateRenderTargetView(), FAILED, CreateRenderTargetView() failed to create a view interface on the render target. );
+		return FALSE;
+	}
+
+	// Allocate a 2-D surface as the depth/stencil buffer and
+	// create a DepthStencil view on this surface to use on bind.
+	CD3D11_TEXTURE2D_DESC depthStencilDesc( depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL );
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
+	if( FAILED( mDevice->CreateTexture2D( &depthStencilDesc, nullptr, depthStencil.GetAddressOf() ) ) )
+	{
+		REPORTMSG( CreateTexture2D(), FAILED, CreateTexture2D() failed to allocate a 2-D surface ID3D11Texture2D. );
+		return FALSE;
+	}
+
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc( D3D11_DSV_DIMENSION_TEXTURE2D );
+	if( FAILED( mDevice->CreateDepthStencilView( depthStencil.Get(), &depthStencilViewDesc, mDepthStencilView.ReleaseAndGetAddressOf() ) ) )
+	{
+		REPORTMSG( CreateDepthStencilView(), FAILED, CreateDepthStencilView() failed to to create a depth stencil on the surface. );
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 void RendererD3D::OnDeviceLost()
@@ -184,7 +224,13 @@ void RendererD3D::Render()
 }
 
 void RendererD3D::Terminate()
-{ return; }
+{
+	if( mDepthStencilView ) mDepthStencilView->Release();
+	if( mRenderTargetView ) mRenderTargetView->Release();
+	if( mSwapChain ) mSwapChain->Release();
+	if( mContext ) mContext->Release();
+	if( mDevice ) mDevice->Release();
+}
 
 void RendererD3D::Clear()
 {
@@ -192,7 +238,7 @@ void RendererD3D::Clear()
 	mContext->ClearRenderTargetView( mRenderTargetView.Get(), DirectX::Colors::Coral );
 	mContext->ClearDepthStencilView( mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
-	// Set the viewport.
+	// Set the view-port.
 	CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ) );
 	mContext->RSSetViewports( 1, &viewport );
 }
@@ -211,6 +257,7 @@ void RendererD3D::Present()
 	}
 	else
 	{
-		REPORTMSG( Present(), 0, Present() failed to swap mSwapChain. );
+		if( FAILED( hr ) )
+			REPORTMSG( Present(), FAILED, Present() failed to display mSwapChain. );
 	}
 }
