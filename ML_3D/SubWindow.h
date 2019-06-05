@@ -1,5 +1,6 @@
 #pragma once
 #include "ReportMessage.h"
+#include <stdlib.h>
 #include "resource.h"
 
 template <class DERIVED_TYPE>

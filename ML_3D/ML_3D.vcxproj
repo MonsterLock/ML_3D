@@ -76,12 +76,12 @@
     <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\ryanb\Documents\Libraries\Lib\src\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ryanb\Documents\Libraries\glfw-3.3.bin.WIN32\include;C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\ryanb\Documents\Libraries\Lib\src\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ryanb\Documents\Libraries\glfw-3.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -127,7 +127,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-mt.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>

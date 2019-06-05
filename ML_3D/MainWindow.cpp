@@ -12,7 +12,6 @@ rightHorizontalRatio = 0.33f;
 
 LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-
 	switch( uMsg )
 	{
 		case WM_CLOSE:

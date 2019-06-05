@@ -7,7 +7,7 @@
 #include <shobjidl.h>
 //#include <glad/glad.h>
 
-#define ISD3DRENDERER 1
+#define ISD3DRENDERER 0
 
 class Engine
 {
