@@ -1,5 +1,5 @@
 # ML_3D
-![alt text](https://github.com/MonsterLock/ML_3D/tree/master/Documentation/ML_3Dgui.JPG, "June 5, 2019 ML_3D GUI")
+![alt text](https://github.com/MonsterLock/ML_3D/tree/master/Documentation/ML_3Dgui.JPG "June 5, 2019 ML_3D GUI")
 
 ## About
 **ML_3D** is ~~the memest engine alive~~ my latest project created for learning purposes by [MonsterLock](https://github.com/MonsterLock). The intention of this project is to further development and knowledge in:
