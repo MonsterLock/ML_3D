@@ -8,7 +8,6 @@
 //#include <glad/glad.h>
 
 #define ISD3DRENDERER 1
-#define IDR_ACCEL1 151
 
 class Engine
 {

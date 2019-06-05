@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by ML_3D.rc
 //
+#define IDR_ACCEL1 151
 #define IDR_MAIN_MENU                   101
 #define IDD_HELP_ABOUT_PAGE             103
 #define IDI_ML_LOGO                     122
@@ -107,7 +108,7 @@
 #define ID_MDI_FIRSTCHILD               50000
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
