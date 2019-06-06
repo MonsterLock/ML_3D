@@ -1,13 +1,10 @@
 #pragma once
-#include "WindowMessenger.h"
+//#include "Global.h"
 #include "MainWindow.h"
 #include "RendererOGL.h"
 #include "RendererD3D.h"
-#include <fbxsdk.h>
-#include <shobjidl.h>
-//#include <glad/glad.h>
 
-#define ISD3DRENDERER 0
+#define ISD3DRENDERER 1
 
 class Engine
 {

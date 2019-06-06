@@ -23,7 +23,10 @@
 [SIGGRAPH](https://www.siggraph.org)
 - Computer graphic communitty.
 
-[Microsoft](https://docs.microsoft.com/en-us/windows/)
+[SIGGRAPH](https://www.siggraph.org)
+- Computer graphic communitty.
+
+[DirectX Game Engine Programming](https://www.3dgep.com/introduction-to-directx-11/)
 - DirectX and Win32 API docs.
 
 [OpenGL](https://www.opengl.org/)
@@ -50,7 +53,7 @@
 - DirectX, OpenGL 4.0, and Oracle tutorials.
 
 [Molecular Matters](https://www.molecular-matters.com/)
-- Good blog posts.
+- Good engine dev blog posts.
 
 [GraphicsProgramming Github](https://github.com/GraphicsProgramming/resources)
 - Currently in progress.

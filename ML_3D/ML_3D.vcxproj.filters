@@ -75,6 +75,9 @@
     <ClCompile Include="FILEIO.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -156,6 +159,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="ReportMessage.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>

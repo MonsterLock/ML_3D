@@ -1,7 +1,5 @@
+#include "Global.h"
 #include "WindowHierarchy.h"
-#include "windowsx.h"
-#include <Commctrl.h>
-#include <string>
 
 /* Placeholder and was previously used for testing window panels */
 LRESULT WindowHierarchy::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )

@@ -1,5 +1,5 @@
+#include "Global.h"
 #include "FILEIO.h"
-#include <strsafe.h>
 
 FILEIO::FILEIO()
 {}

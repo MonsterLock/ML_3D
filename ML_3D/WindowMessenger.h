@@ -4,7 +4,8 @@
 class WindowMessenger : public WindowMessengerBase< WindowMessenger>
 {
 public:
-	WindowMessenger();
-	~WindowMessenger();
+	PCWSTR ClassName() const { return L"WindowMessenger"; }
+	PCWSTR WindowText() const { return L"Messenger"; }
+	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
 };
 

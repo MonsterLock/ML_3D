@@ -1,7 +1,5 @@
 #pragma once
-#include "ReportMessage.h"
-#include <stdlib.h>
-#include "resource.h"
+#include "Global.h"
 
 template <class DERIVED_TYPE>
 class SubWindow

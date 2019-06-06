@@ -1,2 +1,7 @@
+#include "Global.h"
 #include "WindowMessenger.h"
-#include "TranslateWinMsgs.h"
+
+LRESULT WindowMessenger::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+	return DefWindowProc( Wnd(), uMsg, wParam, lParam );
+}

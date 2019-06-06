@@ -1,3 +1,4 @@
+#include "Global.h"
 #include "WindowScene.h"
 
 LRESULT WindowScene::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )

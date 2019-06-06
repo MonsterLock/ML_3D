@@ -1,8 +1,5 @@
 #pragma once
-#include <windows.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
+#include "Global.h"
 
 #define TRANSLATE_WM(msg) L#msg
 

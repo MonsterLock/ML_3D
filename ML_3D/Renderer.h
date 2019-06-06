@@ -1,5 +1,5 @@
 #pragma once
-#include "ReportMessage.h"
+#include "Global.h"
 
 class Renderer
 {

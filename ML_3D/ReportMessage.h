@@ -1,8 +1,5 @@
 #pragma once
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <string>
-#include <sstream>
+#include "Global.h"
 
 #define REPORTMSG(title, type, what) OutputDebugString( ReportMessage( L#title, L#type, L#what, __FILE__, __LINE__ ).c_str() )
 

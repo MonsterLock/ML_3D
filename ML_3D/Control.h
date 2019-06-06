@@ -1,6 +1,5 @@
 #pragma once
-#include "ReportMessage.h"
-#include <CommCtrl.h>
+#include "Global.h"
 
 class Control
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "Global.h"
 
 template <class T>
 class IElement

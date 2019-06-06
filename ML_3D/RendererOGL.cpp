@@ -1,3 +1,4 @@
+#include "Global.h"
 #include "RendererOGL.h"
 
 RendererOGL::RendererOGL() noexcept

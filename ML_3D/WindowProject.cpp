@@ -1,7 +1,5 @@
+#include "Global.h"
 #include "WindowProject.h"
-#include "windowsx.h"
-#include <Commctrl.h>
-#include <string>
 
 /* Placeholder and was previously used for testing window panels */
 LRESULT WindowProject::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )

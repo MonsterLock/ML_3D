@@ -1,6 +1,5 @@
 #pragma once
-#include <Windows.h>
-#include "resource.h"
+#include "Global.h"
 
 template <class DERIVED_TYPE>
 class WindowMessengerBase
@@ -32,6 +31,12 @@ public:
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 
 					pThis->mHwnd = hwnd;
+
+					if( !pThis->mHwnd )
+					{
+						REPORTMSG( SetWindowLongPtr(), nullptr, SetWindowLongPtr() failed to assign pThis->mHwnd a valid HWND. );
+						return FALSE;
+					}
 				}
 				break;
 			default:
@@ -58,7 +63,7 @@ public:
 
 		if( !RegisterClassEx( &wc ) )
 		{
-			MessageBox( nullptr, L"Registering Message Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
 			return FALSE;
 		}
 
@@ -76,7 +81,7 @@ public:
 
 		if( !mHwnd )
 		{
-			MessageBox( nullptr, L"Creating Message Window Failed.", L"ERROR", MB_OK | MB_ICONEXCLAMATION );
+			REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign mHwnd a valid HWND. );
 			return FALSE;
 		}
 

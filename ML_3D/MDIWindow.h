@@ -1,7 +1,5 @@
 #pragma once
-//#include <Windows.h>
-#include "ReportMessage.h"
-#include "resource.h"
+#include "Global.h"
 
 template <class DERIVED_TYPE>
 class MDIWindow

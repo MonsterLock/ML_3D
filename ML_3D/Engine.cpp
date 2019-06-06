@@ -1,3 +1,4 @@
+#include "Global.h"
 #include "Engine.h"
 
 Engine::Engine() noexcept

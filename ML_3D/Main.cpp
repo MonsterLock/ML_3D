@@ -1,3 +1,4 @@
+#include "Global.h"
 #include "Engine.h"
 
 #define _CRTDBG_MAP_ALLOC
