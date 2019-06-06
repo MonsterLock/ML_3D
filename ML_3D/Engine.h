@@ -1,5 +1,4 @@
 #pragma once
-//#include "Global.h"
 #include "MainWindow.h"
 #include "RendererOGL.h"
 #include "RendererD3D.h"
@@ -20,4 +19,3 @@ public:
 	void Terminate();
 	int Run();
 };
-

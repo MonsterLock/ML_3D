@@ -87,7 +87,7 @@ public:
 		mcs.style = MDIS_ALLCHILDSTYLES | dwStyle;
 		mcs.lParam = reinterpret_cast< LPARAM >( this );
 
-		mHwnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LONG >( &mcs ) ) );
+		mHwnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LPARAM >( &mcs ) ) );
 
 		if( !mHwnd )
 		{

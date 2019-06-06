@@ -8,6 +8,7 @@ class RendererD3D : public Renderer
 	Microsoft::WRL::ComPtr<ID3D11Device1>				mDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext1>		mContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain1>				mSwapChain;
+
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		mRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		mDepthStencilView;
 

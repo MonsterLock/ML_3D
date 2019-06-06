@@ -171,7 +171,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			}
 			break;
 		default:
-				return DefFrameProc( FrameWnd(), ClientWnd(), uMsg, wParam, lParam );
+			return DefFrameProc( FrameWnd(), ClientWnd(), uMsg, wParam, lParam );
 	}
 	return 0;
 }
@@ -329,7 +329,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_TOOLS_TOGGLEACTIVE: {} break;
 		case ID_HELP_ABOUT:
 			{
-				DialogBox( GetModuleHandle( nullptr ), MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ), FrameWnd(), AboutDlg );
+				DialogBox( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDD_HELP_ABOUT_PAGE ), FrameWnd(), reinterpret_cast< DLGPROC >( AboutDlg ) );
 			} break;
 		case ID_HELP_VIEWHELP: {} break;
 		case ID_HELP_REPORTABUG: {} break;
