@@ -17,7 +17,7 @@ public:
 		:
 		mHwnd( nullptr )
 	{}
-	virtual BOOL Inititalize( HWND window, int width, int height ) = 0;
+	virtual BOOL Initialize( HWND window, int width, int height ) = 0;
 	virtual void Render() = 0;
 	virtual void Terminate() = 0;
 };

@@ -89,7 +89,7 @@ public:
 
 		mHwnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LPARAM >( &mcs ) ) );
 
-		if( !mHwnd )
+		if( !Wnd() )
 		{
 			REPORTMSG( SendMessage(), nullptr, SendMessage() failed to assign mHwnd a valid HWND. );
 		}

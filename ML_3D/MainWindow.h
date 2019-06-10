@@ -16,6 +16,9 @@
 class MainWindow : public MDIWindow<MainWindow>
 {
 protected:
+	enum UIWindows { Scene, Game, Anim, Proj, Console, Prof, Prop, Light, Hier, NumberOfWindows };
+	enum UITabControls { ViewTab, InfoTab, PropTab, NumberOfTabControls };
+
 	WindowAnimation		animationWnd;
 	WindowConsole		consoleWnd;
 	WindowGame			gameWnd;
@@ -27,30 +30,19 @@ protected:
 	WindowScene			sceneWnd;
 	Statusbar			sbMain;
 	Toolbar				tbMain;
-	Tab
-						tabView,
-						tabProperties,
-						tabInfo;
-	HWND
-						currentViewWnd,
-						currentInfoWnd,
-						currentCategoryWnd,
-						currentPropertiesWnd;
+	Tab					tabMain[NumberOfTabControls];
 	HFONT				hf;
+	int					currentTab[NumberOfTabControls];
 
 	BOOL GlobalCommands( UINT, WPARAM, LPARAM );
 	static BOOL CALLBACK SetFont( HWND, LPARAM );
-	HWND ViewPanel( int );
-	HWND InfoPanel( int );
-	HWND PropertiesPanel( int );
-	HWND CategoryPanel( int );
-	void ChangeTabs( HWND&, HWND& );
+	HWND WindowIndex( int );
 	void CallSize();
-
+	void TogglePanel( int index );
 	static BOOL CALLBACK AboutDlg( HWND, UINT, WPARAM, LPARAM );
 
 public:
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
-	HWND RenderWnd() const { return currentViewWnd; }
+	HWND RenderWnd() { return WindowIndex( currentTab[ViewTab] ); }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );
 };

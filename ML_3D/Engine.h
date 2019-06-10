@@ -3,8 +3,6 @@
 #include "RendererOGL.h"
 #include "RendererD3D.h"
 
-#define ISD3DRENDERER 1
-
 class Engine
 {
 	int mRet;

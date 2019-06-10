@@ -11,6 +11,11 @@ class RendererD3D : public Renderer
 
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>		mRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>		mDepthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				mDepthStencilBuffer;
+
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	mDepthStencilState;
+	Microsoft::WRL::ComPtr< ID3D11RasterizerState> mRasterizerState;
+
 
 	BOOL CreateDevice();
 	BOOL CreateResources();
@@ -23,7 +28,7 @@ public:
 	RendererD3D() noexcept;
 
 	// Initialization and management.
-	BOOL Inititalize( HWND window, int width, int height );
+	BOOL Initialize( HWND window, int width, int height );
 	void Render();
 	void Terminate();
 };

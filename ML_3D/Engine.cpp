@@ -1,6 +1,9 @@
 #include "Global.h"
 #include "Engine.h"
 
+#define ISD3DRENDERER 1
+#define ISWMMSGSHOW 0
+
 Engine::Engine() noexcept
 	:
 	mHAccel( nullptr )
@@ -23,8 +26,8 @@ void Engine::Initialize()
 	mRenderer = new RendererOGL;
 #endif
 
-	if( !mRenderer->Inititalize( mMainWindow->RenderWnd(), rc.right - rc.left, rc.bottom - rc.top ) )
-		REPORTMSG( Inititalize(), 0, Inititalize() failed to create mRenderer. );
+	if( !mRenderer->Initialize( mMainWindow->RenderWnd(), rc.right - rc.left, rc.bottom - rc.top ) )
+		REPORTMSG( Initialize(), 0, Initialize() failed to create mRenderer. );
 
 	mHAccel = LoadAccelerators( GetModuleHandle( nullptr ), MAKEINTRESOURCE( IDR_ACCEL1 ) );
 	if( !mHAccel )
@@ -48,7 +51,9 @@ void Engine::Update()
 
 		if( isMsgObtained )
 		{
-			//OutputDebugString( ConvertMessage( msg ).c_str() );
+#if ISWMMSGSHOW
+			OutputDebugString( ConvertMessage( msg ).c_str() );
+#endif
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
 		}

@@ -12,7 +12,7 @@ protected:
 
 public:
 	RendererOGL() noexcept;
-	BOOL Inititalize( HWND window, int width, int height );
+	BOOL Initialize( HWND window, int width, int height );
 	void Render();
 	void Clear();
 	void Present();

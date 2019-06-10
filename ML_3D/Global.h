@@ -54,6 +54,7 @@
 // User
 #include "ReportMessage.h"
 #include "WindowMessenger.h"
+#include "TranslateWinMsgs.h"
 
 // Safely release a COM object.
 template <typename T>

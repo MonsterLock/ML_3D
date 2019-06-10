@@ -7,7 +7,7 @@ RendererD3D::RendererD3D() noexcept
 	mFeatureLevel( D3D_FEATURE_LEVEL_9_1 )
 {}
 
-BOOL RendererD3D::Inititalize( HWND window, int width, int height )
+BOOL RendererD3D::Initialize( HWND window, int width, int height )
 {
 	mHwnd = window;
 	mOutputWidth = std::max( width, 1 );

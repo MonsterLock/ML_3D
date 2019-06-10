@@ -4,6 +4,7 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
+
 constexpr static float
 tabRatio = 0.03f,
 verticalRatio = 0.8f,
@@ -87,19 +88,19 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				TCITEM tab;
 				tab.mask = TCIF_TEXT;
 
-				tabView.Create( FrameWnd(), L"TABMAIN", 0, nullptr );
-				tabView.AddTab( 0, tab, L"Scene" );
-				tabView.AddTab( 1, tab, L"Game" );
-				tabView.AddTab( 2, tab, L"Animation" );
+				tabMain[ViewTab].Create( FrameWnd(), L"TABMAIN", 0, nullptr );
+				tabMain[ViewTab].AddTab( Scene, tab, L"Scene" );
+				tabMain[ViewTab].AddTab( Game, tab, L"Game" );
+				tabMain[ViewTab].AddTab( Anim, tab, L"Animation" );
 
-				tabInfo.Create( FrameWnd(), L"TABINFO", TCS_BOTTOM, nullptr );
-				tabInfo.AddTab( 0, tab, L"Project" );
-				tabInfo.AddTab( 1, tab, L"Console" );
-				tabInfo.AddTab( 2, tab, L"Profiler" );
+				tabMain[InfoTab].Create( FrameWnd(), L"TABINFO", TCS_BOTTOM, nullptr );
+				tabMain[InfoTab].AddTab( Proj, tab, L"Project" );
+				tabMain[InfoTab].AddTab( Console, tab, L"Console" );
+				tabMain[InfoTab].AddTab( Prof, tab, L"Profiler" );
 
-				tabProperties.Create( FrameWnd(), L"TABPROPERTIES", TCS_BOTTOM, nullptr );
-				tabProperties.AddTab( 0, tab, L"Properties" );
-				tabProperties.AddTab( 1, tab, L"Lighting" );
+				tabMain[PropTab].Create( FrameWnd(), L"TABPROPERTIES", TCS_BOTTOM, nullptr );
+				tabMain[PropTab].AddTab( Prop, tab, L"Properties" );
+				tabMain[PropTab].AddTab( Light, tab, L"Lighting" );
 
 				// Create font.
 				HDC hdc;
@@ -113,17 +114,16 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				EnumChildWindows( FrameWnd(), reinterpret_cast< WNDENUMPROC >( SetFont ), reinterpret_cast< LPARAM >( hf ) );
 
 				// Set and show current windows.
-				currentViewWnd = sceneWnd.Wnd();
-				ShowWindow( currentViewWnd, SW_SHOW );
+				currentTab[ViewTab] = Scene;
+				ShowWindow( WindowIndex( currentTab[ViewTab] ), SW_SHOW );
 
-				currentInfoWnd = projectWnd.Wnd();
-				ShowWindow( currentInfoWnd, SW_SHOW );
+				currentTab[InfoTab] = Proj;
+				ShowWindow( WindowIndex( currentTab[InfoTab] ), SW_SHOW );
 
-				currentCategoryWnd = hierarchyWnd.Wnd();
-				ShowWindow( currentCategoryWnd, SW_SHOW );
+				currentTab[PropTab] = Prop;
+				ShowWindow( WindowIndex( currentTab[PropTab] ), SW_SHOW );
 
-				currentPropertiesWnd = propertiesWnd.Wnd();
-				ShowWindow( currentPropertiesWnd, SW_SHOW );
+				ShowWindow( WindowIndex( Hier ), SW_SHOW );
 			}
 			break;
 		case WM_SIZE:
@@ -133,22 +133,35 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case WM_NOTIFY:
 			{
-				int
-					tabViewIndex = TabCtrl_GetCurSel( tabView.Wnd() ),
-					tabInfoIndex = TabCtrl_GetCurSel( tabInfo.Wnd() ),
-					tabCategoryIndex = 0,
-					tabPropertiesIndex = TabCtrl_GetCurSel( tabProperties.Wnd() );
+				if( reinterpret_cast< LPNMHDR >( lParam )->code == TCN_SELCHANGE )
+				{
+					HWND selectedTabControl = reinterpret_cast< LPNMHDR >( lParam )->hwndFrom;
 
-				HWND
-					tabViewSelect = ViewPanel( tabViewIndex ),
-					tabInfoSelect = InfoPanel( tabInfoIndex ),
-					tabCategorySelect = CategoryPanel( tabCategoryIndex ),
-					tabPropertiesSelect = PropertiesPanel( tabPropertiesIndex );
+					int
+						i = 0,
+						tabIndex = TabCtrl_GetCurSel( selectedTabControl );
 
-				ChangeTabs( currentViewWnd, tabViewSelect );
-				ChangeTabs( currentInfoWnd, tabInfoSelect );
-				ChangeTabs( currentCategoryWnd, tabCategorySelect );
-				ChangeTabs( currentPropertiesWnd, tabPropertiesSelect );
+					for( ; i < 3; ++i )
+					{
+						if( tabMain[i].Wnd() == selectedTabControl )
+						{
+							tabIndex = i * NumberOfTabControls + tabIndex;
+							break;
+						}
+					}
+
+					HWND
+						currentWnd = WindowIndex( currentTab[i] ),
+						selectedWnd = WindowIndex( tabIndex );
+
+					if( currentWnd != selectedWnd )
+					{
+						ShowWindow( currentWnd, SW_HIDE );
+						currentTab[i] = tabIndex;
+						CallSize();
+						ShowWindow( selectedWnd, SW_SHOW );
+					}
+				}
 			}
 			break;
 		case WM_COMMAND:
@@ -156,16 +169,12 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				if( !GlobalCommands( uMsg, wParam, lParam ) )
 				{
 					if( LOWORD( wParam ) >= ID_MDI_FIRSTCHILD )
-					{
 						return DefFrameProc( FrameWnd(), ClientWnd(), WM_COMMAND, wParam, lParam );
-					}
 					else
 					{
 						HWND hChild = reinterpret_cast< HWND >( SendMessage( ClientWnd(), WM_MDIGETACTIVE, 0, 0 ) );
 						if( hChild )
-						{
 							SendMessage( hChild, WM_COMMAND, wParam, lParam );
-						}
 					}
 				}
 			}
@@ -222,65 +231,29 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			} break;
 		case ID_VIEW_VIEWPANEL:
 			{
-				if( IsWindowVisible( tabView.Wnd() ) )
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
-					ShowWindow( tabView.Wnd(), SW_HIDE );
-					ShowWindow( currentViewWnd, SW_HIDE );
-				}
-				else
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
-					ShowWindow( tabView.Wnd(), SW_SHOW );
-					ShowWindow( currentViewWnd, SW_SHOW );
-				}
-				CallSize();
+				TogglePanel( ViewTab );
 			} break;
 		case ID_VIEW_CATEGORYPANEL:
 			{
 				if( IsWindowVisible( hierarchyWnd.Wnd() ) )
 				{
 					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_CATEGORYPANEL, MF_BYCOMMAND | MF_UNCHECKED );
-					ShowWindow( currentCategoryWnd, SW_HIDE );
+					ShowWindow( WindowIndex( Hier ), SW_HIDE );
 				}
 				else
 				{
 					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_CATEGORYPANEL, MF_BYCOMMAND | MF_CHECKED );
-					ShowWindow( currentCategoryWnd, SW_SHOW );
+					ShowWindow( WindowIndex( Hier ), SW_SHOW );
 				}
 				CallSize();
 			} break;
 		case ID_VIEW_PROPERTIESPANEL:
 			{
-				if( IsWindowVisible( tabProperties.Wnd() ) )
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_PROPERTIESPANEL, MF_BYCOMMAND | MF_UNCHECKED );
-					ShowWindow( tabProperties.Wnd(), SW_HIDE );
-					ShowWindow( currentPropertiesWnd, SW_HIDE );
-				}
-				else
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_PROPERTIESPANEL, MF_BYCOMMAND | MF_CHECKED );
-					ShowWindow( tabProperties.Wnd(), SW_SHOW );
-					ShowWindow( currentPropertiesWnd, SW_SHOW );
-				}
-				CallSize();
+				TogglePanel( PropTab );
 			} break;
 		case ID_VIEW_SYSTEMPANEL:
 			{
-				if( IsWindowVisible( tabInfo.Wnd() ) )
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_SYSTEMPANEL, MF_BYCOMMAND | MF_UNCHECKED );
-					ShowWindow( tabInfo.Wnd(), SW_HIDE );
-					ShowWindow( currentInfoWnd, SW_HIDE );
-				}
-				else
-				{
-					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_SYSTEMPANEL, MF_BYCOMMAND | MF_CHECKED );
-					ShowWindow( tabInfo.Wnd(), SW_SHOW );
-					ShowWindow( currentInfoWnd, SW_SHOW );
-				}
-				CallSize();
+				TogglePanel( InfoTab );
 			} break;
 		case ID_VIEW_WIREFRAME: {} break;
 		case ID_VIEW_ORTHOGRAPHIC: {} break;
@@ -345,55 +318,24 @@ BOOL CALLBACK MainWindow::SetFont( HWND hwnd, LPARAM font )
 	return true;
 }
 
-HWND MainWindow::ViewPanel( int index )
+HWND MainWindow::WindowIndex( int index )
 {
 	switch( index )
 	{
-		case 0: { return sceneWnd.Wnd(); } break;
-		case 1: { return gameWnd.Wnd(); }break;
-		case 2: { return animationWnd.Wnd(); }break;
-		default: return nullptr;
-	}
-}
+		case Scene: { return sceneWnd.Wnd(); } break;
+		case Game: { return gameWnd.Wnd(); }break;
+		case Anim: { return animationWnd.Wnd(); }break;
 
-HWND MainWindow::InfoPanel( int index )
-{
-	switch( index )
-	{
-		case 0: { return projectWnd.Wnd(); } break;
-		case 1: { return consoleWnd.Wnd(); }break;
-		case 2: { return profilerWnd.Wnd(); }break;
-		default: return nullptr;
-	}
-}
+		case Proj: { return projectWnd.Wnd(); } break;
+		case Console: { return consoleWnd.Wnd(); }break;
+		case Prof: { return profilerWnd.Wnd(); }break;
 
-HWND MainWindow::CategoryPanel( int index )
-{
-	switch( index )
-	{
-		case 0: { return hierarchyWnd.Wnd(); } break;
-		default: return nullptr;
-	}
-}
+		case Prop: { return propertiesWnd.Wnd(); } break;
+		case Light: { return lightingWnd.Wnd(); }break;
 
-HWND MainWindow::PropertiesPanel( int index )
-{
-	switch( index )
-	{
-		case 0: { return propertiesWnd.Wnd(); } break;
-		case 1: { return lightingWnd.Wnd(); }break;
-		default: return nullptr;
-	}
-}
+		case Hier: { return hierarchyWnd.Wnd(); } break;
 
-void MainWindow::ChangeTabs( HWND& currentTab, HWND& newTab )
-{
-	if( currentTab != newTab )
-	{
-		ShowWindow( currentTab, SW_HIDE );
-		currentTab = newTab;
-		CallSize();
-		ShowWindow( currentTab, SW_SHOW );
+		default: return nullptr;
 	}
 }
 
@@ -452,10 +394,10 @@ void MainWindow::CallSize()
 
 	unsigned int clientState = 0x0;
 
-	if( IsWindowVisible( tabView.Wnd() ) ) { clientState = 0xF; }
-	if( IsWindowVisible( tabInfo.Wnd() ) ) { clientState = ( clientState | 0xF0 ); }
+	if( IsWindowVisible( tabMain[ViewTab].Wnd() ) ) { clientState = 0xF; }
+	if( IsWindowVisible( tabMain[InfoTab].Wnd() ) ) { clientState = ( clientState | 0xF0 ); }
 	if( IsWindowVisible( hierarchyWnd.Wnd() ) ) { clientState = ( clientState | 0xF00 ); }
-	if( IsWindowVisible( tabProperties.Wnd() ) ) { clientState = ( clientState | 0xF000 ); }
+	if( IsWindowVisible( tabMain[PropTab].Wnd() ) ) { clientState = ( clientState | 0xF000 ); }
 
 	if( !clientState ) return;
 
@@ -482,19 +424,36 @@ void MainWindow::CallSize()
 	rightWidth = rcClient.right - verticalDivide;
 
 	// Top-Left Panel
-	SetWindowPos( tabView.Wnd(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( currentViewWnd, nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabMain[ViewTab].Wnd(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( currentTab[ViewTab] ), nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Bot-Left Panel
-	SetWindowPos( tabInfo.Wnd(), HWND_TOP, 0, rcClient.bottom - tabHeight + iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( currentInfoWnd, nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabMain[InfoTab].Wnd(), HWND_TOP, 0, rcClient.bottom - tabHeight + iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( currentTab[InfoTab] ), nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Top-Right Panel
-	SetWindowPos( currentCategoryWnd, nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
+	SetWindowPos( WindowIndex( Hier ), nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
 
 	// Bot-Right Panel
-	SetWindowPos( tabProperties.Wnd(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( currentPropertiesWnd, nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( tabMain[PropTab].Wnd(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( currentTab[PropTab] ), nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
+}
+
+void MainWindow::TogglePanel( int index )
+{
+	if( IsWindowVisible( tabMain[index].Wnd() ) )
+	{
+		CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
+		ShowWindow( tabMain[index].Wnd(), SW_HIDE );
+		ShowWindow( WindowIndex( currentTab[index] ), SW_HIDE );
+	}
+	else
+	{
+		CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
+		ShowWindow( tabMain[index].Wnd(), SW_SHOW );
+		ShowWindow( WindowIndex( currentTab[index] ), SW_SHOW );
+	}
+	CallSize();
 }
 
 BOOL CALLBACK MainWindow::AboutDlg( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )

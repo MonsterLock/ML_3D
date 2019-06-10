@@ -8,7 +8,7 @@ RendererOGL::RendererOGL() noexcept
 	mHPALETTE( nullptr )
 {}
 
-BOOL RendererOGL::Inititalize( HWND window, int width, int height )
+BOOL RendererOGL::Initialize( HWND window, int width, int height )
 {
 	mHwnd = window;
 	mHDC = GetDC( mHwnd );
