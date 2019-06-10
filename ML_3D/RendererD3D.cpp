@@ -1,7 +1,5 @@
 #include "Global.h"
-
 #include "RendererD3D.h"
-
 RendererD3D::RendererD3D() noexcept
 	:
 	mFeatureLevel( D3D_FEATURE_LEVEL_9_1 )

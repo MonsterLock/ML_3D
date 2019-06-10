@@ -56,6 +56,11 @@
 #include "WindowMessenger.h"
 #include "TranslateWinMsgs.h"
 
+// Temp Settings
+#define ISD3DRENDERER 1
+#define ISEDITORMODE 1
+#define ISWMMSGSHOW 0
+
 // Safely release a COM object.
 template <typename T>
 inline void SafeRelease( T &ptr )

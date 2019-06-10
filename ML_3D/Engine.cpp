@@ -1,62 +1,41 @@
 #include "Global.h"
 #include "Engine.h"
 
-#define ISD3DRENDERER 1
-#define ISWMMSGSHOW 0
-
 Engine::Engine() noexcept
-	:
-	mHAccel( nullptr )
 {}
 
 void Engine::Initialize()
 {
-	InitCommonControls();
-
-	mMainWindow = std::make_unique<MainWindow>();
-	if( !mMainWindow->Create() )
-		REPORTMSG( Create(), 0, Create() failed to create mMainWindow. );
+	mEditor = std::make_unique<Editor>();
+	mEditor->Initialize();
 
 	RECT rc;
-	GetClientRect( mMainWindow->RenderWnd(), &rc );
+	GetClientRect( mEditor->mMainWindow->RenderWnd(), &rc );
 
 #if ISD3DRENDERER
 	mRenderer = new RendererD3D;
 #else
 	mRenderer = new RendererOGL;
-#endif
+#endif // ISD3DRENDERER
 
-	if( !mRenderer->Initialize( mMainWindow->RenderWnd(), rc.right - rc.left, rc.bottom - rc.top ) )
+	if( !mRenderer->Initialize( mEditor->mMainWindow->RenderWnd(), rc.right - rc.left, rc.bottom - rc.top ) )
 		REPORTMSG( Initialize(), 0, Initialize() failed to create mRenderer. );
-
-	mHAccel = LoadAccelerators( GetModuleHandle( nullptr ), MAKEINTRESOURCE( IDR_ACCEL1 ) );
-	if( !mHAccel )
-		REPORTMSG( LoadAccelerators(), nullptr, LoadAccelerators() failed to assign mHAccel a valid HACCEL. );
 }
 
 void Engine::Update()
 {
-	bool isMsgObtained;
-
-	MSG msg = {};
+	MSG msg = { 0 };
 	ZeroMemory( &msg, sizeof( MSG ) );
-
 	PeekMessage( &msg, nullptr, 0u, 0u, PM_NOREMOVE );
+
+	mEditor->mMSG = &msg;
 
 	while( msg.message != WM_QUIT )
 	{
-		isMsgObtained = PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE )
-			&& !TranslateMDISysAccel( mMainWindow->ClientWnd(), &msg )
-			&& !TranslateAccelerator( mMainWindow->FrameWnd(), mHAccel, &msg );
+#if ISEDITORMODE
+		mEditor->Update();
+#endif // ISEDITORMODE
 
-		if( isMsgObtained )
-		{
-#if ISWMMSGSHOW
-			OutputDebugString( ConvertMessage( msg ).c_str() );
-#endif
-			TranslateMessage( &msg );
-			DispatchMessage( &msg );
-		}
 		mRenderer->Render();
 	}
 
@@ -67,6 +46,7 @@ void Engine::Terminate()
 {
 	mRenderer->Terminate();
 	delete mRenderer;
+	mEditor->Terminate();
 }
 
 int Engine::Run()

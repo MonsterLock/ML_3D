@@ -2,13 +2,13 @@
 #include "MainWindow.h"
 #include "RendererOGL.h"
 #include "RendererD3D.h"
+#include "Editor.h"
 
 class Engine
 {
 	int mRet;
-	std::unique_ptr<MainWindow> mMainWindow;
+	std::unique_ptr<Editor> mEditor;
 	Renderer* mRenderer;
-	HACCEL mHAccel;
 
 public:
 	Engine() noexcept;
