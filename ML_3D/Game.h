@@ -1,16 +1,16 @@
 #pragma once
-#include "WindowEditor.h"
+#include "WindowMain.h"
 #include "Mode.h"
 
-class Editor : public Mode
+class Game : public Mode
 {
 	friend class Engine;
-	std::unique_ptr<WindowEditor> mWindowEditor;
-	HACCEL mHAccel;
+	std::unique_ptr<WindowMain> mWindowMain;
+	HWND mWindow;
 
 public:
-	Editor() noexcept;
 	void Initialize();
 	int Update( std::shared_ptr<Renderer> );
 	void Terminate();
 };
+

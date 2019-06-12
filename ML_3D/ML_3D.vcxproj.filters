@@ -28,11 +28,17 @@
     <Filter Include="Renderers">
       <UniqueIdentifier>{1cac9912-a2cb-48fa-93c4-80b638fd67bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{e44f8881-bfe6-413e-b35b-9cb52904d31c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{74f53247-696e-4d39-96c1-525ebf026647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Windows">
+      <UniqueIdentifier>{e652a8f6-6cd2-439c-b966-6e29a7ef2620}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainWindow.cpp">
-      <Filter>Editor\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="WindowAnimation.cpp">
       <Filter>Editor\Windows</Filter>
     </ClCompile>
@@ -63,9 +69,6 @@
     <ClCompile Include="RendererD3D.cpp">
       <Filter>Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="RendererOGL.cpp">
-      <Filter>Renderers</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Renderers</Filter>
     </ClCompile>
@@ -86,6 +89,18 @@
     </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererOpenGL.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowEditor.cpp">
+      <Filter>Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMain.cpp">
+      <Filter>Game\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,13 +140,7 @@
     <ClInclude Include="MDIWindow.h">
       <Filter>Editor\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
-      <Filter>Editor\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="RendererD3D.h">
-      <Filter>Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="RendererOGL.h">
       <Filter>Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
@@ -173,11 +182,29 @@
     <ClInclude Include="WindowMessenger.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Manager.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Editor.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="StepTimer.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererOpenGL.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEditor.h">
+      <Filter>Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowBase.h">
+      <Filter>Game\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMain.h">
+      <Filter>Game\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

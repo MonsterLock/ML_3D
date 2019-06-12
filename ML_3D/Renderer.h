@@ -6,8 +6,8 @@ class Renderer
 protected:
 	HWND		mHwnd;
 	int
-				mOutputWidth,
-				mOutputHeight;
+		mOutputWidth,
+		mOutputHeight;
 
 	virtual void Clear() = 0;
 	virtual void Present() = 0;
@@ -17,7 +17,7 @@ public:
 		:
 		mHwnd( nullptr )
 	{}
-	virtual BOOL Initialize( HWND window, int width, int height ) = 0;
+	virtual void Initialize( HWND window ) = 0;
 	virtual void Render() = 0;
 	virtual void Terminate() = 0;
 };

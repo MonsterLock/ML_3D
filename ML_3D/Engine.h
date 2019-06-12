@@ -1,14 +1,19 @@
 #pragma once
-#include "MainWindow.h"
-#include "RendererOGL.h"
-#include "RendererD3D.h"
 #include "Editor.h"
+#include "Game.h"
+#include "RendererOpenGL.h"
+#include "RendererD3D.h"
+#include "StepTimer.h"
 
 class Engine
 {
 	int mRet;
-	std::unique_ptr<Editor> mEditor;
-	Renderer* mRenderer;
+	bool
+		mIsEditor,
+		mIsDirectX,
+		mIsRunning;
+	std::shared_ptr<Mode> mMode;
+	std::shared_ptr<Renderer> mRenderer;
 
 public:
 	Engine() noexcept;

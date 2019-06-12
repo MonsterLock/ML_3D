@@ -72,18 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
+    <OutDir>bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
+    <OutDir>bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectName)d\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;C:\Users\ryanb\Documents\glad\include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectName)d\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -105,9 +109,9 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;winmm.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -133,9 +137,9 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;winmm.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -161,8 +165,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-md.lib;winmm.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -189,13 +193,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-md.lib;winmm.lib;wininet.lib;comctl32.lib;d3d11.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;odbc32.lib;odbccp32.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Default</CompileAs>
@@ -212,7 +217,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RendererOGL.cpp" />
+    <ClCompile Include="RendererOpenGL.cpp" />
     <ClCompile Include="WindowAnimation.cpp" />
     <ClCompile Include="WindowConsole.cpp" />
     <ClCompile Include="RendererD3D.cpp" />
@@ -220,23 +225,27 @@
     <ClCompile Include="FILEIO.cpp" />
     <ClCompile Include="WindowGame.cpp" />
     <ClCompile Include="WindowHierarchy.cpp" />
+    <ClCompile Include="WindowMain.cpp" />
     <ClCompile Include="WindowMessenger.cpp" />
     <ClCompile Include="WindowProperties.cpp" />
     <ClCompile Include="WindowLighting.cpp" />
     <ClCompile Include="Src.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="WindowEditor.cpp" />
     <ClCompile Include="WindowProfiler.cpp" />
     <ClCompile Include="WindowProject.cpp" />
     <ClCompile Include="WindowScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="WindowBase.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Global.h" />
-    <ClInclude Include="Manager.h" />
+    <ClInclude Include="Mode.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RendererOGL.h" />
+    <ClInclude Include="RendererOpenGL.h" />
     <ClInclude Include="ReportMessage.h" />
+    <ClInclude Include="StepTimer.h" />
     <ClInclude Include="TranslateWinMsgs.h" />
     <ClInclude Include="WindowAnimation.h" />
     <ClInclude Include="WindowConsole.h" />
@@ -246,12 +255,13 @@
     <ClInclude Include="FILEIO.h" />
     <ClInclude Include="WindowGame.h" />
     <ClInclude Include="WindowHierarchy.h" />
+    <ClInclude Include="WindowMain.h" />
     <ClInclude Include="WindowMessenger.h" />
     <ClInclude Include="WindowMessengerBase.h" />
     <ClInclude Include="WindowProperties.h" />
     <ClInclude Include="WindowLighting.h" />
     <ClInclude Include="MDIWindow.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="WindowEditor.h" />
     <ClInclude Include="WindowProfiler.h" />
     <ClInclude Include="WindowProject.h" />
     <ClInclude Include="resource.h" />
@@ -273,12 +283,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\directxtk12_desktop_2015.2019.5.31.1\build\native\directxtk12_desktop_2015.targets" Condition="Exists('..\packages\directxtk12_desktop_2015.2019.5.31.1\build\native\directxtk12_desktop_2015.targets')" />
+    <Import Project="..\packages\directxtk_desktop_2015.2019.5.31.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('..\packages\directxtk_desktop_2015.2019.5.31.1\build\native\directxtk_desktop_2015.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\directxtk12_desktop_2015.2019.5.31.1\build\native\directxtk12_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk12_desktop_2015.2019.5.31.1\build\native\directxtk12_desktop_2015.targets'))" />
+    <Error Condition="!Exists('..\packages\directxtk_desktop_2015.2019.5.31.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_desktop_2015.2019.5.31.1\build\native\directxtk_desktop_2015.targets'))" />
   </Target>
 </Project>

@@ -1,22 +1,141 @@
 #include "Global.h"
 #include "RendererD3D.h"
+
+extern StepTimer stepTimer;
+
 RendererD3D::RendererD3D() noexcept
 	:
 	mFeatureLevel( D3D_FEATURE_LEVEL_9_1 )
 {}
 
-BOOL RendererD3D::Initialize( HWND window, int width, int height )
+void RendererD3D::Initialize( HWND window )
 {
+	RECT rc;
+	GetClientRect( window, &rc );
+
 	mHwnd = window;
-	mOutputWidth = std::max( width, 1 );
-	mOutputHeight = std::max( height, 1 );
+	mOutputWidth = std::max( static_cast< int >( rc.right - rc.left ), 1 );
+	mOutputHeight = std::max( static_cast< int >( rc.bottom - rc.top ), 1 );
 
 	CreateDevice();
 	CreateResources();
-
-	return TRUE;
 }
 
+void RendererD3D::Render()
+{
+	m_world = DirectX::SimpleMath::Matrix::CreateRotationY( cosf( static_cast< float >( stepTimer.GetTotalSeconds() ) ) );
+
+	// Don't try to render anything before the first Update.
+	if( stepTimer.GetFrameCount() == 0 )
+	{
+		return;
+	}
+
+	Clear();
+
+	// Render Code.
+	mContext->OMSetBlendState( m_states->Opaque(), nullptr, 0xFFFFFFFF );
+	mContext->OMSetDepthStencilState( m_states->DepthNone(), 0 );
+	mContext->RSSetState( m_states->CullCounterClockwise() );
+
+	m_effect->SetWorld( m_world );
+
+	m_effect->Apply( mContext.Get() );
+
+	mContext->IASetInputLayout( m_inputLayout.Get() );
+
+	m_batch->Begin();
+
+	DirectX::SimpleMath::Vector3 xaxis( 2.f, 0.f, 0.f );
+	DirectX::SimpleMath::Vector3 yaxis( 0.f, 0.f, 2.f );
+	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3::Zero;
+
+	size_t divisions = 20;
+
+	for( size_t i = 0; i <= divisions; ++i )
+	{
+		float fPercent = float( i ) / float( divisions );
+		fPercent = ( fPercent * 2.0f ) - 1.0f;
+
+		DirectX::SimpleMath::Vector3 scale = xaxis * fPercent + origin;
+
+		DirectX::VertexPositionColor v1( scale - yaxis, DirectX::Colors::White );
+		DirectX::VertexPositionColor v2( scale + yaxis, DirectX::Colors::White );
+		m_batch->DrawLine( v1, v2 );
+	}
+
+	for( size_t i = 0; i <= divisions; i++ )
+	{
+		float fPercent = float( i ) / float( divisions );
+		fPercent = ( fPercent * 2.0f ) - 1.0f;
+
+		DirectX::SimpleMath::Vector3 scale = yaxis * fPercent + origin;
+
+		DirectX::VertexPositionColor v1( scale - xaxis, DirectX::Colors::White );
+		DirectX::VertexPositionColor v2( scale + xaxis, DirectX::Colors::White );
+		m_batch->DrawLine( v1, v2 );
+	}
+
+	DirectX::VertexPositionColor v1( DirectX::SimpleMath::Vector3( 0.f, 0.5f, 0.5f ), DirectX::Colors::Cyan );
+	DirectX::VertexPositionColor v2( DirectX::SimpleMath::Vector3( 0.5f, -0.5f, 0.5f ), DirectX::Colors::Fuchsia );
+	DirectX::VertexPositionColor v3( DirectX::SimpleMath::Vector3( -0.5f, -0.5f, 0.5f ), DirectX::Colors::Coral );
+
+	m_batch->DrawTriangle( v1, v2, v3 );
+
+	m_batch->End();
+
+	Present();
+}
+
+void RendererD3D::Terminate()
+{
+	// TODO: Add D3D resource clean-up here.
+	m_states.reset();
+	m_effect.reset();
+	m_batch.reset();
+	m_inputLayout.Reset();
+
+	// Release application's D3D objects.
+	mDepthStencilView.Reset();
+	mRenderTargetView.Reset();
+	mSwapChain.Reset();
+	mContext.Reset();
+	mDevice.Reset();
+}
+
+void RendererD3D::Clear()
+{
+	// Clear the views.
+	mContext->ClearRenderTargetView( mRenderTargetView.Get(), DirectX::Colors::LightSteelBlue );
+	mContext->ClearDepthStencilView( mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
+
+	mContext->OMSetRenderTargets( 1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get() );
+
+	// Set the view-port.
+	CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ) );
+	mContext->RSSetViewports( 1, &viewport );
+}
+
+void RendererD3D::Present()
+{
+	// The first argument instructs DXGI to block until VSYNC, putting the application
+	// to sleep until the next VSYNC. This ensures we don't waste any cycles rendering
+	// frames that will never be displayed to the screen.
+	HRESULT hr = mSwapChain->Present( 1, 0 );
+
+	// If the device was reset we must completely reinitialize the renderer.
+	if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
+	{
+		OnDeviceLost();
+	}
+	else
+	{
+		if( FAILED( hr ) )
+			REPORTMSG( Present(), FAILED, Present() failed to display mSwapChain. );
+	}
+}
+
+// Device dependent resources.
 BOOL RendererD3D::CreateDevice()
 {
 	// Interface for D3D device and context.
@@ -71,9 +190,36 @@ BOOL RendererD3D::CreateDevice()
 		return FALSE;
 	}
 
+	// TODO: Initialize device independent objects here (independent of window size).
+	m_states = std::make_unique<DirectX::CommonStates>( mDevice.Get() );
+
+	m_effect = std::make_unique<DirectX::BasicEffect>( mDevice.Get() );
+	m_effect->SetVertexColorEnabled( true );
+
+	void const* shaderByteCode;
+	size_t byteCodeLength;
+
+	m_effect->GetVertexShaderBytecode( &shaderByteCode, &byteCodeLength );
+
+	if( FAILED( mDevice->CreateInputLayout(
+		DirectX::VertexPositionColor::InputElements,
+		DirectX::VertexPositionColor::InputElementCount,
+		shaderByteCode,
+		byteCodeLength,
+		m_inputLayout.ReleaseAndGetAddressOf() ) ) )
+	{
+		REPORTMSG( CreateInputLayout(), FAILED, CreateInputLayout() failed to create input layout. );
+		return FALSE;
+	}
+
+	m_batch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>( mContext.Get() );
+
+	m_world = DirectX::SimpleMath::Matrix::Identity;
+
 	return TRUE;
 }
 
+// Allocate all memory resources that change on a window resize event.
 BOOL RendererD3D::CreateResources()
 {
 	// Clear the previous window size specific context.
@@ -140,7 +286,7 @@ BOOL RendererD3D::CreateResources()
 			return FALSE;
 		}
 
-		// Create the descriptor for the swap chain.
+		// Create a descriptor for the swap chain.
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
 		swapChainDesc.Width = backBufferWidth;
 		swapChainDesc.Height = backBufferHeight;
@@ -166,12 +312,13 @@ BOOL RendererD3D::CreateResources()
 			REPORTMSG( CreateSwapChainForHwnd(), FAILED, CreateSwapChainForHwnd() failed to create a swap chain from a window. );
 			return FALSE;
 		}
+		dxgiFactory->MakeWindowAssociation( mHwnd, DXGI_MWA_NO_ALT_ENTER );
 	}
 	// Obtain the back-buffer for this window which will be the final 3D render target.
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
 	if( FAILED( mSwapChain->GetBuffer( 0, IID_PPV_ARGS( backBuffer.GetAddressOf() ) ) ) )
 	{
-		REPORTMSG( GetBuffer(), FAILED, GetBuffer() failed to obtain the back-buffer for final render target. );
+		REPORTMSG( GetBuffer(), FAILED, GetBuffer() failed to obtain the back - buffer for final render target. );
 		return FALSE;
 	}
 
@@ -189,7 +336,7 @@ BOOL RendererD3D::CreateResources()
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
 	if( FAILED( mDevice->CreateTexture2D( &depthStencilDesc, nullptr, depthStencil.GetAddressOf() ) ) )
 	{
-		REPORTMSG( CreateTexture2D(), FAILED, CreateTexture2D() failed to allocate a 2-D surface ID3D11Texture2D. );
+		REPORTMSG( CreateTexture2D(), FAILED, CreateTexture2D() failed to allocate a 2 - D surface ID3D11Texture2D. );
 		return FALSE;
 	}
 
@@ -200,11 +347,32 @@ BOOL RendererD3D::CreateResources()
 		return FALSE;
 	}
 
+	// TODO: Initialize windows-size dependent objects here.
+	m_view = DirectX::SimpleMath::Matrix::CreateLookAt(
+		DirectX::SimpleMath::Vector3( 2.f, 2.f, 2.f ),
+		DirectX::SimpleMath::Vector3::Zero,
+		DirectX::SimpleMath::Vector3::UnitY );
+	m_proj = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
+		DirectX::XM_PI / 4.f,
+		float( backBufferWidth ) / float( backBufferHeight ),
+		0.1f,
+		10.f );
+
+	m_effect->SetView( m_view );
+	m_effect->SetProjection( m_proj );
+
 	return TRUE;
 }
 
 void RendererD3D::OnDeviceLost()
 {
+	// TODO: Add D3D resource clean-up here.
+	m_states.reset();
+	m_effect.reset();
+	m_batch.reset();
+	m_inputLayout.Reset();
+
+	// Release application's D3D objects.
 	mDepthStencilView.Reset();
 	mRenderTargetView.Reset();
 	mSwapChain.Reset();
@@ -213,51 +381,4 @@ void RendererD3D::OnDeviceLost()
 
 	CreateDevice();
 	CreateResources();
-}
-
-void RendererD3D::Render()
-{
-	Clear();
-	{
-	}
-	Present();
-}
-
-void RendererD3D::Terminate()
-{
-	if( mDepthStencilView ) mDepthStencilView->Release();
-	if( mRenderTargetView ) mRenderTargetView->Release();
-	if( mSwapChain ) mSwapChain->Release();
-	if( mContext ) mContext->Release();
-	if( mDevice ) mDevice->Release();
-}
-
-void RendererD3D::Clear()
-{
-	// Clear the views.
-	mContext->ClearRenderTargetView( mRenderTargetView.Get(), DirectX::Colors::Coral );
-	mContext->ClearDepthStencilView( mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
-
-	// Set the view-port.
-	CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ) );
-	mContext->RSSetViewports( 1, &viewport );
-}
-
-void RendererD3D::Present()
-{
-	// The first argument instructs DXGI to block until VSYNC, putting the application
-	// to sleep until the next VSYNC. This ensures we don't waste any cycles rendering
-	// frames that will never be displayed to the screen.
-	HRESULT hr = mSwapChain->Present( 1, 0 );
-
-	// If the device was reset we must completely reinitialize the renderer.
-	if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
-	{
-		OnDeviceLost();
-	}
-	else
-	{
-		if( FAILED( hr ) )
-			REPORTMSG( Present(), FAILED, Present() failed to display mSwapChain. );
-	}
 }

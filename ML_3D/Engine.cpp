@@ -2,51 +2,33 @@
 #include "Engine.h"
 
 Engine::Engine() noexcept
+	:
+	mIsEditor( false ),
+	mIsDirectX( true ),
+	mIsRunning( true )
 {}
 
 void Engine::Initialize()
 {
-	mEditor = std::make_unique<Editor>();
-	mEditor->Initialize();
+	mMode = mIsEditor ?
+		std::shared_ptr<Mode>( new Editor() ) : std::shared_ptr<Mode>( new Game() );
+	mMode->Initialize();
 
-	RECT rc;
-	GetClientRect( mEditor->mMainWindow->RenderWnd(), &rc );
-
-#if ISD3DRENDERER
-	mRenderer = new RendererD3D;
-#else
-	mRenderer = new RendererOGL;
-#endif // ISD3DRENDERER
-
-	if( !mRenderer->Initialize( mEditor->mMainWindow->RenderWnd(), rc.right - rc.left, rc.bottom - rc.top ) )
-		REPORTMSG( Initialize(), 0, Initialize() failed to create mRenderer. );
+	mRenderer = mIsDirectX ?
+		std::shared_ptr<Renderer>( new RendererD3D() ) : std::shared_ptr<Renderer>( new RendererOpenGL() );
+	mRenderer->Initialize( mMode->GetRenderWnd() );
 }
 
 void Engine::Update()
 {
-	MSG msg = { 0 };
-	ZeroMemory( &msg, sizeof( MSG ) );
-	PeekMessage( &msg, nullptr, 0u, 0u, PM_NOREMOVE );
-
-	mEditor->mMSG = &msg;
-
-	while( msg.message != WM_QUIT )
-	{
-#if ISEDITORMODE
-		mEditor->Update();
-#endif // ISEDITORMODE
-
-		mRenderer->Render();
-	}
-
-	mRet = static_cast< int >( msg.wParam );
+	// TODO: Add switch modes.
+	mRet = mMode->Update( mRenderer );
 }
 
 void Engine::Terminate()
 {
 	mRenderer->Terminate();
-	delete mRenderer;
-	mEditor->Terminate();
+	mMode->Terminate();
 }
 
 int Engine::Run()

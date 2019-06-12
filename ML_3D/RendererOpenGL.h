@@ -1,8 +1,7 @@
 #pragma once
-//#include "Global.h"
 #include "Renderer.h"
 
-class RendererOGL : public Renderer
+class RendererOpenGL : public Renderer
 {
 protected:
 	HDC						mHDC;
@@ -11,8 +10,8 @@ protected:
 	HPALETTE				mHPALETTE;
 
 public:
-	RendererOGL() noexcept;
-	BOOL Initialize( HWND window, int width, int height );
+	RendererOpenGL() noexcept;
+	void Initialize( HWND );
 	void Render();
 	void Clear();
 	void Present();

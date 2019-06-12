@@ -44,6 +44,7 @@
 #include <iomanip>
 #include <CommCtrl.h>
 #include <shobjidl.h>
+#include <timeapi.h>
 
 // Resource
 #include "resource.h"
@@ -51,14 +52,19 @@
 // FBX
 #include <fbxsdk.h>
 
+// Link library dependencies
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "winmm.lib")
+
 // User
 #include "ReportMessage.h"
 #include "WindowMessenger.h"
 #include "TranslateWinMsgs.h"
+#include "StepTimer.h"
 
 // Temp Settings
-#define ISD3DRENDERER 1
-#define ISEDITORMODE 1
 #define ISWMMSGSHOW 0
 
 // Safely release a COM object.

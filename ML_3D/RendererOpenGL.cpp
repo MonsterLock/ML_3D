@@ -1,19 +1,23 @@
 #include "Global.h"
-#include "RendererOGL.h"
+#include "RendererOpenGL.h"
 
-RendererOGL::RendererOGL() noexcept
+RendererOpenGL::RendererOpenGL() noexcept
 	:
 	mHDC( nullptr ),
 	mHRC( nullptr ),
 	mHPALETTE( nullptr )
 {}
 
-BOOL RendererOGL::Initialize( HWND window, int width, int height )
+void RendererOpenGL::Initialize( HWND window )
 {
+	RECT rc;
+	GetClientRect( window, &rc );
+
 	mHwnd = window;
 	mHDC = GetDC( mHwnd );
-	mOutputWidth = width;
-	mOutputHeight = height;
+	mOutputWidth = std::max( static_cast< int >( rc.right - rc.left ), 1 );
+	mOutputHeight = std::max( static_cast< int >( rc.bottom - rc.top ), 1 );
+
 	int
 		pf,
 		n;
@@ -33,13 +37,11 @@ BOOL RendererOGL::Initialize( HWND window, int width, int height )
 	if( pf == 0 )
 	{
 		REPORTMSG( ChoosePixelFormat(), 0, ChoosePixelFormat() failed to assign a suitable pixel format to pf. );
-		return FALSE;
 	}
 
 	if( SetPixelFormat( mHDC, pf, &mPFD ) == FALSE )
 	{
 		REPORTMSG( SetPixelFormat(), 0, SetPixelFormat() failed to set specified format to mHDC. );
-		return FALSE;
 	}
 
 	DescribePixelFormat( mHDC, pf, sizeof( PIXELFORMATDESCRIPTOR ), &mPFD );
@@ -107,11 +109,9 @@ BOOL RendererOGL::Initialize( HWND window, int width, int height )
 
 	mHRC = wglCreateContext( mHDC );
 	wglMakeCurrent( mHDC, mHRC );
-
-	return TRUE;
 }
 
-void RendererOGL::Render()
+void RendererOpenGL::Render()
 {
 	Clear();
 	glRotatef( 0.2f, 0.0f, 0.0f, 1.0f );
@@ -129,18 +129,18 @@ void RendererOGL::Render()
 	Present();
 }
 
-void RendererOGL::Clear()
+void RendererOpenGL::Clear()
 {
 	glClear( GL_COLOR_BUFFER_BIT );
 }
 
-void RendererOGL::Present()
+void RendererOpenGL::Present()
 {
 	glFlush();
 	SwapBuffers( mHDC );
 }
 
-void RendererOGL::Terminate()
+void RendererOpenGL::Terminate()
 {
 	wglMakeCurrent( nullptr, nullptr );
 	ReleaseDC( mHwnd, mHDC );

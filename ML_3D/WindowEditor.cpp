@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "MainWindow.h"
+#include "WindowEditor.h"
 
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' "\
 "version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -11,7 +11,7 @@ verticalRatio = 0.8f,
 leftHorizontalRatio = 0.85f,
 rightHorizontalRatio = 0.33f;
 
-LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT WindowEditor::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
@@ -38,69 +38,69 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case WM_CREATE:
 			{
 				// Create windows.
-				animationWnd.RegSubWnd( 0, nullptr );
-				animationWnd.CreateSubWnd( ClientWnd(), 0 );
+				mAnimation.RegSubWnd( 0, nullptr );
+				mAnimation.CreateSubWnd( ClientWnd(), 0 );
 
-				consoleWnd.RegSubWnd( 0, nullptr );
-				consoleWnd.CreateSubWnd( ClientWnd(), 0 );
+				mConsole.RegSubWnd( 0, nullptr );
+				mConsole.CreateSubWnd( ClientWnd(), 0 );
 
-				gameWnd.RegSubWnd( 0, nullptr );
-				gameWnd.CreateSubWnd( ClientWnd(), 0 );
+				mGame.RegSubWnd( 0, nullptr );
+				mGame.CreateSubWnd( ClientWnd(), 0 );
 
-				hierarchyWnd.RegSubWnd( 0, nullptr );
-				hierarchyWnd.CreateSubWnd( ClientWnd(), 0 );
+				mHierarchy.RegSubWnd( 0, nullptr );
+				mHierarchy.CreateSubWnd( ClientWnd(), 0 );
 
-				lightingWnd.RegSubWnd( 0, nullptr );
-				lightingWnd.CreateSubWnd( ClientWnd(), 0 );
+				mLighting.RegSubWnd( 0, nullptr );
+				mLighting.CreateSubWnd( ClientWnd(), 0 );
 
-				profilerWnd.RegSubWnd( 0, nullptr );
-				profilerWnd.CreateSubWnd( ClientWnd(), 0 );
+				mProfiler.RegSubWnd( 0, nullptr );
+				mProfiler.CreateSubWnd( ClientWnd(), 0 );
 
-				projectWnd.RegSubWnd( 0, nullptr );
-				projectWnd.CreateSubWnd( ClientWnd(), 0 );
+				mProject.RegSubWnd( 0, nullptr );
+				mProject.CreateSubWnd( ClientWnd(), 0 );
 
-				propertiesWnd.RegSubWnd( 0, nullptr );
-				propertiesWnd.CreateSubWnd( ClientWnd(), 0 );
+				mProperties.RegSubWnd( 0, nullptr );
+				mProperties.CreateSubWnd( ClientWnd(), 0 );
 
-				sceneWnd.RegSubWnd( CS_OWNDC, nullptr );
-				sceneWnd.CreateSubWnd( ClientWnd(), 0 );
+				mScene.RegSubWnd( CS_OWNDC, nullptr );
+				mScene.CreateSubWnd( ClientWnd(), 0 );
 
 				// Create toolbar.
-				tbMain.Create( FrameWnd(), nullptr, 0, reinterpret_cast< HMENU >( RID_MAIN_TB ) );
+				mToolbar.Create( FrameWnd(), nullptr, 0, reinterpret_cast< HMENU >( RID_MAIN_TB ) );
 
 				TBADDBITMAP tbab; // Toolbar images
 				tbab.hInst = HINST_COMMCTRL;
 				tbab.nID = IDB_STD_SMALL_COLOR;
-				SendMessage( tbMain.Wnd(), TB_ADDBITMAP, 0, reinterpret_cast< LPARAM >( &tbab ) );
+				SendMessage( mToolbar.Wnd(), TB_ADDBITMAP, 0, reinterpret_cast< LPARAM >( &tbab ) );
 
 				TBBUTTON tbb[3]; // Toolbar buttons
 				ZeroMemory( tbb, sizeof( tbb ) );
 				Toolbar::SetToolButton( tbb, 0, ID_FILE_NEW, STD_FILENEW, BTNS_BUTTON, TBSTATE_ENABLED );
 				Toolbar::SetToolButton( tbb, 1, ID_FILE_OPEN, STD_FILEOPEN, BTNS_BUTTON, TBSTATE_ENABLED );
 				Toolbar::SetToolButton( tbb, 2, ID_FILE_SAVEAS, STD_FILESAVE, BTNS_BUTTON, TBSTATE_ENABLED );
-				SendMessage( tbMain.Wnd(), TB_ADDBUTTONS, sizeof( tbb ) / sizeof( TBBUTTON ), reinterpret_cast< LPARAM >( &tbb ) );
+				SendMessage( mToolbar.Wnd(), TB_ADDBUTTONS, sizeof( tbb ) / sizeof( TBBUTTON ), reinterpret_cast< LPARAM >( &tbb ) );
 
 				// Create statusbar.
-				sbMain.Create( FrameWnd(), nullptr, 0, reinterpret_cast< HMENU >( RID_MAIN_STATUS ) );
-				sbMain.SetText( 0, L"Welcome." );
+				mStatusbar.Create( FrameWnd(), nullptr, 0, reinterpret_cast< HMENU >( RID_MAIN_STATUS ) );
+				mStatusbar.SetText( 0, L"Welcome." );
 
 				// Create tabs controls.
 				TCITEM tab;
 				tab.mask = TCIF_TEXT;
 
-				tabMain[ViewTab].Create( FrameWnd(), L"TABMAIN", 0, nullptr );
-				tabMain[ViewTab].AddTab( Scene, tab, L"Scene" );
-				tabMain[ViewTab].AddTab( Game, tab, L"Game" );
-				tabMain[ViewTab].AddTab( Anim, tab, L"Animation" );
+				mTabs[ViewTab].Create( FrameWnd(), L"mTabs", 0, nullptr );
+				mTabs[ViewTab].AddTab( Scene, tab, L"Scene" );
+				mTabs[ViewTab].AddTab( Game, tab, L"Game" );
+				mTabs[ViewTab].AddTab( Anim, tab, L"Animation" );
 
-				tabMain[InfoTab].Create( FrameWnd(), L"TABINFO", TCS_BOTTOM, nullptr );
-				tabMain[InfoTab].AddTab( Proj, tab, L"Project" );
-				tabMain[InfoTab].AddTab( Console, tab, L"Console" );
-				tabMain[InfoTab].AddTab( Prof, tab, L"Profiler" );
+				mTabs[InfoTab].Create( FrameWnd(), L"TABINFO", TCS_BOTTOM, nullptr );
+				mTabs[InfoTab].AddTab( Proj, tab, L"Project" );
+				mTabs[InfoTab].AddTab( Console, tab, L"Console" );
+				mTabs[InfoTab].AddTab( Prof, tab, L"Profiler" );
 
-				tabMain[PropTab].Create( FrameWnd(), L"TABPROPERTIES", TCS_BOTTOM, nullptr );
-				tabMain[PropTab].AddTab( Prop, tab, L"Properties" );
-				tabMain[PropTab].AddTab( Light, tab, L"Lighting" );
+				mTabs[PropTab].Create( FrameWnd(), L"TABPROPERTIES", TCS_BOTTOM, nullptr );
+				mTabs[PropTab].AddTab( Prop, tab, L"Properties" );
+				mTabs[PropTab].AddTab( Light, tab, L"Lighting" );
 
 				// Create font.
 				HDC hdc;
@@ -109,19 +109,19 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 				lfHeight = -MulDiv( 12, GetDeviceCaps( hdc, LOGPIXELSY ), 72 );
 				ReleaseDC( nullptr, hdc );
 
-				hf = CreateFont( lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, const_cast< LPCWSTR >( L"Consolas" ) );
+				mHFONT = CreateFont( lfHeight, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, const_cast< LPCWSTR >( L"Consolas" ) );
 
-				EnumChildWindows( FrameWnd(), reinterpret_cast< WNDENUMPROC >( SetFont ), reinterpret_cast< LPARAM >( hf ) );
+				EnumChildWindows( FrameWnd(), reinterpret_cast< WNDENUMPROC >( SetFont ), reinterpret_cast< LPARAM >( mHFONT ) );
 
 				// Set and show current windows.
-				currentTab[ViewTab] = Scene;
-				ShowWindow( WindowIndex( currentTab[ViewTab] ), SW_SHOW );
+				mCurrentTab[ViewTab] = Scene;
+				ShowWindow( WindowIndex( mCurrentTab[ViewTab] ), SW_SHOW );
 
-				currentTab[InfoTab] = Proj;
-				ShowWindow( WindowIndex( currentTab[InfoTab] ), SW_SHOW );
+				mCurrentTab[InfoTab] = Proj;
+				ShowWindow( WindowIndex( mCurrentTab[InfoTab] ), SW_SHOW );
 
-				currentTab[PropTab] = Prop;
-				ShowWindow( WindowIndex( currentTab[PropTab] ), SW_SHOW );
+				mCurrentTab[PropTab] = Prop;
+				ShowWindow( WindowIndex( mCurrentTab[PropTab] ), SW_SHOW );
 
 				ShowWindow( WindowIndex( Hier ), SW_SHOW );
 			}
@@ -129,6 +129,13 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case WM_SIZE:
 			{
 				CallSize();
+			}
+			break;
+		case WM_PAINT:
+			{
+				PAINTSTRUCT ps;
+				HDC hdc = BeginPaint( FrameWnd(), &ps );
+				EndPaint( FrameWnd(), &ps );
 			}
 			break;
 		case WM_NOTIFY:
@@ -143,21 +150,21 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 					for( ; i < 3; ++i )
 					{
-						if( tabMain[i].Wnd() == selectedTabControl )
+						if( mTabs[i].Wnd() == selectedTabControl )
 						{
-							tabIndex = i * NumberOfTabControls + tabIndex;
+							tabIndex = i * NumTabControls + tabIndex;
 							break;
 						}
 					}
 
 					HWND
-						currentWnd = WindowIndex( currentTab[i] ),
+						currentWnd = WindowIndex( mCurrentTab[i] ),
 						selectedWnd = WindowIndex( tabIndex );
 
 					if( currentWnd != selectedWnd )
 					{
 						ShowWindow( currentWnd, SW_HIDE );
-						currentTab[i] = tabIndex;
+						mCurrentTab[i] = tabIndex;
 						CallSize();
 						ShowWindow( selectedWnd, SW_SHOW );
 					}
@@ -185,7 +192,7 @@ LRESULT MainWindow::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	return 0;
 }
 
-BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
+BOOL WindowEditor::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( LOWORD( wParam ) )
 	{
@@ -217,15 +224,15 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_EDIT_SELECTIONGROUP: {} break;
 		case ID_VIEW_TOOLBAR:
 			{
-				if( IsWindowVisible( tbMain.Wnd() ) )
+				if( IsWindowVisible( mToolbar.Wnd() ) )
 				{
 					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_TOOLBAR, MF_BYCOMMAND | MF_UNCHECKED );
-					ShowWindow( tbMain.Wnd(), SW_HIDE );
+					ShowWindow( mToolbar.Wnd(), SW_HIDE );
 				}
 				else
 				{
 					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_TOOLBAR, MF_BYCOMMAND | MF_CHECKED );
-					ShowWindow( tbMain.Wnd(), SW_SHOW );
+					ShowWindow( mToolbar.Wnd(), SW_SHOW );
 				}
 				CallSize();
 			} break;
@@ -235,7 +242,7 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 			} break;
 		case ID_VIEW_CATEGORYPANEL:
 			{
-				if( IsWindowVisible( hierarchyWnd.Wnd() ) )
+				if( IsWindowVisible( mHierarchy.Wnd() ) )
 				{
 					CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_CATEGORYPANEL, MF_BYCOMMAND | MF_UNCHECKED );
 					ShowWindow( WindowIndex( Hier ), SW_HIDE );
@@ -312,35 +319,35 @@ BOOL MainWindow::GlobalCommands( UINT uMsg, WPARAM wParam, LPARAM lParam )
 	return TRUE;
 }
 
-BOOL CALLBACK MainWindow::SetFont( HWND hwnd, LPARAM font )
+BOOL CALLBACK WindowEditor::SetFont( HWND hwnd, LPARAM font )
 {
 	SendMessage( hwnd, WM_SETFONT, font, true );
 	return true;
 }
 
-HWND MainWindow::WindowIndex( int index )
+HWND WindowEditor::WindowIndex( int index )
 {
 	switch( index )
 	{
-		case Scene: { return sceneWnd.Wnd(); } break;
-		case Game: { return gameWnd.Wnd(); }break;
-		case Anim: { return animationWnd.Wnd(); }break;
+		case Scene: { return mScene.Wnd(); } break;
+		case Game: { return mGame.Wnd(); }break;
+		case Anim: { return mAnimation.Wnd(); }break;
 
-		case Proj: { return projectWnd.Wnd(); } break;
-		case Console: { return consoleWnd.Wnd(); }break;
-		case Prof: { return profilerWnd.Wnd(); }break;
+		case Proj: { return mProject.Wnd(); } break;
+		case Console: { return mConsole.Wnd(); }break;
+		case Prof: { return mProfiler.Wnd(); }break;
 
-		case Prop: { return propertiesWnd.Wnd(); } break;
-		case Light: { return lightingWnd.Wnd(); }break;
+		case Prop: { return mProperties.Wnd(); } break;
+		case Light: { return mLighting.Wnd(); }break;
 
-		case Hier: { return hierarchyWnd.Wnd(); } break;
+		case Hier: { return mHierarchy.Wnd(); } break;
 
 		default: return nullptr;
 	}
 }
 
 // TODO: Clean this
-void MainWindow::CallSize()
+void WindowEditor::CallSize()
 {
 	HWND
 		hClient,
@@ -358,7 +365,7 @@ void MainWindow::CallSize()
 		iStatusHeight;
 
 	// Size toolbar window.
-	hTool = tbMain.Wnd();
+	hTool = mToolbar.Wnd();
 	SendMessage( hTool, TB_AUTOSIZE, 0, 0 );
 
 	if( IsWindowVisible( hTool ) )
@@ -369,7 +376,7 @@ void MainWindow::CallSize()
 	else iToolHeight = 0;
 
 	// Size status bar window.
-	hStatus = sbMain.Wnd();
+	hStatus = mStatusbar.Wnd();
 	SendMessage( hStatus, WM_SIZE, 0, 0 );
 
 	GetWindowRect( hStatus, &rcStatus );
@@ -394,10 +401,10 @@ void MainWindow::CallSize()
 
 	unsigned int clientState = 0x0;
 
-	if( IsWindowVisible( tabMain[ViewTab].Wnd() ) ) { clientState = 0xF; }
-	if( IsWindowVisible( tabMain[InfoTab].Wnd() ) ) { clientState = ( clientState | 0xF0 ); }
-	if( IsWindowVisible( hierarchyWnd.Wnd() ) ) { clientState = ( clientState | 0xF00 ); }
-	if( IsWindowVisible( tabMain[PropTab].Wnd() ) ) { clientState = ( clientState | 0xF000 ); }
+	if( IsWindowVisible( mTabs[ViewTab].Wnd() ) ) { clientState = 0xF; }
+	if( IsWindowVisible( mTabs[InfoTab].Wnd() ) ) { clientState = ( clientState | 0xF0 ); }
+	if( IsWindowVisible( mHierarchy.Wnd() ) ) { clientState = ( clientState | 0xF00 ); }
+	if( IsWindowVisible( mTabs[PropTab].Wnd() ) ) { clientState = ( clientState | 0xF000 ); }
 
 	if( !clientState ) return;
 
@@ -424,39 +431,39 @@ void MainWindow::CallSize()
 	rightWidth = rcClient.right - verticalDivide;
 
 	// Top-Left Panel
-	SetWindowPos( tabMain[ViewTab].Wnd(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( WindowIndex( currentTab[ViewTab] ), nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( mTabs[ViewTab].Wnd(), HWND_TOP, 0, iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( mCurrentTab[ViewTab] ), nullptr, 0, tabHeight, verticalDivide, leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Bot-Left Panel
-	SetWindowPos( tabMain[InfoTab].Wnd(), HWND_TOP, 0, rcClient.bottom - tabHeight + iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( WindowIndex( currentTab[InfoTab] ), nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( mTabs[InfoTab].Wnd(), HWND_TOP, 0, rcClient.bottom - tabHeight + iToolHeight, verticalDivide, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( mCurrentTab[InfoTab] ), nullptr, 0, leftHorizontalDivide, verticalDivide, rcClient.bottom - leftHorizontalDivide - tabHeight, SWP_NOZORDER );
 
 	// Top-Right Panel
 	SetWindowPos( WindowIndex( Hier ), nullptr, verticalDivide, 0, rightWidth, rightHorizontalDivide, SWP_NOZORDER );
 
 	// Bot-Right Panel
-	SetWindowPos( tabMain[PropTab].Wnd(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
-	SetWindowPos( WindowIndex( currentTab[PropTab] ), nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
+	SetWindowPos( mTabs[PropTab].Wnd(), HWND_TOP, verticalDivide, rcClient.bottom - tabHeight + iToolHeight, rightWidth, tabHeight, SWP_NOOWNERZORDER );
+	SetWindowPos( WindowIndex( mCurrentTab[PropTab] ), nullptr, verticalDivide, rightHorizontalDivide, rightWidth, rcClient.bottom - rightHorizontalDivide - tabHeight, SWP_NOZORDER );
 }
 
-void MainWindow::TogglePanel( int index )
+void WindowEditor::TogglePanel( int index )
 {
-	if( IsWindowVisible( tabMain[index].Wnd() ) )
+	if( IsWindowVisible( mTabs[index].Wnd() ) )
 	{
 		CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_UNCHECKED );
-		ShowWindow( tabMain[index].Wnd(), SW_HIDE );
-		ShowWindow( WindowIndex( currentTab[index] ), SW_HIDE );
+		ShowWindow( mTabs[index].Wnd(), SW_HIDE );
+		ShowWindow( WindowIndex( mCurrentTab[index] ), SW_HIDE );
 	}
 	else
 	{
 		CheckMenuItem( GetSubMenu( mMenu, 2 ), ID_VIEW_VIEWPANEL, MF_BYCOMMAND | MF_CHECKED );
-		ShowWindow( tabMain[index].Wnd(), SW_SHOW );
-		ShowWindow( WindowIndex( currentTab[index] ), SW_SHOW );
+		ShowWindow( mTabs[index].Wnd(), SW_SHOW );
+		ShowWindow( WindowIndex( mCurrentTab[index] ), SW_SHOW );
 	}
 	CallSize();
 }
 
-BOOL CALLBACK MainWindow::AboutDlg( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+BOOL CALLBACK WindowEditor::AboutDlg( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch( uMsg )
 	{
