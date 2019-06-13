@@ -3,32 +3,26 @@
 
 Engine::Engine() noexcept
 	:
-	mIsEditor( false ),
-	mIsDirectX( true ),
-	mIsRunning( true )
+	mIsEditor( 0 ),
+	mIsRunning( 1 )
 {}
 
 void Engine::Initialize()
 {
-	mMode = mIsEditor ?
-		std::shared_ptr<Mode>( new Editor() ) : std::shared_ptr<Mode>( new Game() );
-	mMode->Initialize();
-
-	mRenderer = mIsDirectX ?
-		std::shared_ptr<Renderer>( new RendererD3D() ) : std::shared_ptr<Renderer>( new RendererOpenGL() );
-	mRenderer->Initialize( mMode->GetRenderWnd() );
+	mApp = mIsEditor ?
+		std::shared_ptr<AppMode>( new Editor() ) : std::shared_ptr<AppMode>( new Game() );
+	mApp->Initialize();
 }
 
 void Engine::Update()
 {
 	// TODO: Add switch modes.
-	mRet = mMode->Update( mRenderer );
+	mRet = mApp->Update();
 }
 
 void Engine::Terminate()
 {
-	mRenderer->Terminate();
-	mMode->Terminate();
+	mApp->Terminate();
 }
 
 int Engine::Run()

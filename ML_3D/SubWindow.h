@@ -32,11 +32,7 @@ public:
 					SetWindowLongPtr( hwnd, GWLP_USERDATA, reinterpret_cast< LONG_PTR >( pThis ) );
 					pThis->mHwnd = hwnd;
 
-					if( !pThis->mHwnd )
-					{
-						REPORTMSG( SetWindowLongPtr(), nullptr, SetWindowLongPtr() failed to assign pThis->mHwnd a valid HWND. );
-						return FALSE;
-					}
+					TESTRESULT( !pThis->mHwnd );
 				}
 				break;
 			default:
@@ -51,7 +47,7 @@ public:
 		return  DefMDIChildProc( hwnd, uMsg, wParam, lParam );
 	}
 
-	BOOL RegSubWnd(
+	void RegSubWnd(
 		DWORD dwStyle,
 		HICON rIcon )
 	{
@@ -66,12 +62,7 @@ public:
 		wc.style = CS_VREDRAW | CS_HREDRAW | dwStyle;
 		wc.hIconSm = rIcon;
 
-		if( !RegisterClassEx( &wc ) )
-		{
-			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
-			return FALSE;
-		}
-		return TRUE;
+		TESTRESULT( !RegisterClassEx( &wc ) );
 	}
 
 	HWND CreateSubWnd(
@@ -89,10 +80,7 @@ public:
 
 		mHwnd = reinterpret_cast< HWND >( SendMessage( hParent, WM_MDICREATE, 0, reinterpret_cast< LPARAM >( &mcs ) ) );
 
-		if( !Wnd() )
-		{
-			REPORTMSG( SendMessage(), nullptr, SendMessage() failed to assign mHwnd a valid HWND. );
-		}
+		TESTRESULT( !Wnd() );
 
 		return Wnd();
 	}

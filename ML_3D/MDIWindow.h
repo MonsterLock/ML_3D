@@ -58,11 +58,7 @@ public:
 						GetModuleHandle( nullptr ),
 						&ccs );
 
-					if( !pThis->mMDIClient )
-					{
-						REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign pThis->mMDIClient a valid HWND. );
-						return FALSE;
-					}
+					TESTRESULT( !pThis->mMDIClient );
 				}
 				break;
 			default:
@@ -75,7 +71,7 @@ public:
 			return DefFrameProc( hwnd, nullptr, uMsg, wParam, lParam );
 	}
 
-	virtual BOOL Create()
+	virtual void Create()
 	{
 		// Register the frame window class.
 		WNDCLASSEX wc = { 0 };
@@ -94,11 +90,7 @@ public:
 		wc.hIconSm = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
 
-		if( !RegisterClassEx( &wc ) )
-		{
-			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
-			return FALSE;
-		}
+		TESTRESULT( !RegisterClassEx( &wc ) );
 
 		// Create the frame window.
 		mMDIFrame = CreateWindowEx(
@@ -112,14 +104,8 @@ public:
 			GetModuleHandle( nullptr ),										// Instance handle
 			this );															// Additional application data
 
-		if( !mMDIFrame )
-		{
-			REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign mMDIFrame a valid HWND. );
-			return FALSE;
-		}
+		TESTRESULT( !mMDIFrame );
 
 		ShowWindow( mMDIFrame, SW_SHOWNORMAL | SW_MAXIMIZE );
-
-		return TRUE;
 	}
 };

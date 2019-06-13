@@ -25,6 +25,8 @@ public:
 			SetWindowLongPtr( hwnd, GWLP_USERDATA, ( LONG_PTR )pThis );
 
 			pThis->mHwnd = hwnd;
+
+			TESTRESULT( !pThis->mHwnd );
 		}
 		else
 		{
@@ -40,7 +42,7 @@ public:
 		}
 	}
 
-	virtual BOOL Create()
+	virtual void Create()
 	{
 		// Register the main window class.
 		WNDCLASSEX wc = { 0 };
@@ -59,11 +61,7 @@ public:
 		wc.hIconSm = static_cast< HICON >(
 			LoadImage( wc.hInstance, MAKEINTRESOURCE( IDI_ML_LOGO ), IMAGE_ICON, 16, 16, 0 ) );
 
-		if( !RegisterClassEx( &wc ) )
-		{
-			REPORTMSG( RegisterClassEx(), false, RegisterClassEx() failed to register WNDCLASSEX wc. );
-			return FALSE;
-		}
+		TESTRESULT( !RegisterClassEx( &wc ) );
 
 		// Create the frame window.
 		mHwnd = CreateWindowEx(
@@ -77,14 +75,8 @@ public:
 			GetModuleHandle( nullptr ),										// Instance handle
 			this );															// Additional application data
 
-		if( !mHwnd )
-		{
-			REPORTMSG( CreateWindowEx(), nullptr, CreateWindowEx() failed to assign mHwnd a valid HWND. );
-			return FALSE;
-		}
+		TESTRESULT( !mHwnd );
 
 		ShowWindow( mHwnd, SW_SHOWNORMAL | SW_MAXIMIZE );
-
-		return TRUE;
 	}
 };

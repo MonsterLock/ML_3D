@@ -1,18 +1,17 @@
 #include "Global.h"
 #include "Game.h"
 
-extern StepTimer stepTimer;
+StepTimer stepTimer;
 
 void Game::Initialize()
 {
-	mWindowMain = std::make_unique<WindowMain>();
-	if( !mWindowMain->Create() )
-		REPORTMSG( Create(), 0, Create() failed to create mWindowMain. );
+	mWindowMain = std::shared_ptr<WindowMain>( new WindowMain );
+	mWindowMain->Create();
 
-	mRender = mWindowMain->Wnd();
+	mRenderWindow = mWindowMain->Wnd();
 }
 
-int Game::Update( std::shared_ptr<Renderer> renderer )
+void Game::Update()
 {
 	MSG msg = { 0 };
 	ZeroMemory( &msg, sizeof( MSG ) );
@@ -20,9 +19,7 @@ int Game::Update( std::shared_ptr<Renderer> renderer )
 
 	while( msg.message != WM_QUIT )
 	{
-		mIsMsgReceived = PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE );
-
-		if( IsMsgReceived() )
+		if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
 		{
 #if ISWMMSGSHOW
 			OutputDebugString( ConvertMessage( msg ).c_str() );
@@ -33,11 +30,12 @@ int Game::Update( std::shared_ptr<Renderer> renderer )
 		else
 		{
 			stepTimer.Tick();
-			renderer->Render();
+			if( stepTimer.GetFrameCount() > 0 )
+				mRenderEngine->Render();
 		}
 	}
 
-	return static_cast< int >( msg.wParam );
+	mMsg = static_cast< int >( msg.wParam );
 }
 
 void Game::Terminate()

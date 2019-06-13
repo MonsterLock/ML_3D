@@ -14,5 +14,5 @@ public:
 
 	HWND Wnd() { return mHwnd; };
 
-	virtual BOOL Create( HWND hwnd, LPCWSTR name, DWORD dwStyle, HMENU hmenu ) = 0;
+	virtual void Create( HWND hwnd, LPCWSTR name, DWORD dwStyle, HMENU hmenu ) = 0;
 };

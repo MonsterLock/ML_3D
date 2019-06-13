@@ -1,16 +1,13 @@
 #pragma once
+#include "AppMode.h"
 #include "WindowMain.h"
-#include "Mode.h"
 
-class Game : public Mode
+class Game : public AppMode
 {
-	friend class Engine;
-	std::unique_ptr<WindowMain> mWindowMain;
-	HWND mWindow;
+	std::shared_ptr<WindowMain> mWindowMain;
 
 public:
 	void Initialize();
-	int Update( std::shared_ptr<Renderer> );
+	void Update();
 	void Terminate();
 };
-

@@ -60,7 +60,6 @@
 
 // User
 #include "ReportMessage.h"
-#include "WindowMessenger.h"
 #include "TranslateWinMsgs.h"
 #include "StepTimer.h"
 

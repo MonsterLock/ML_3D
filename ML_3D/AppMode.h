@@ -1,0 +1,25 @@
+#pragma once
+#include "Global.h"
+#include "RenderEngine.h"
+#include "Input.h"
+
+class AppMode
+{
+protected:
+	std::unique_ptr<RenderEngine> mRenderEngine;
+	std::unique_ptr<Input> mInput;
+
+	HWND mRenderWindow;
+	bool mIsMsgReceived;
+	int mMsg;
+
+public:
+	AppMode() : mRenderWindow( nullptr ){}
+	virtual ~AppMode() { if( mRenderWindow ) mRenderWindow = nullptr; }
+	virtual void Initialize() = 0;
+	virtual void Update() = 0;
+	virtual void Terminate() = 0;
+	HWND GetRenderWnd() { return mRenderWindow; }
+	int GetMsg() { return mMsg; }
+};
+
