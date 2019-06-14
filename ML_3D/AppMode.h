@@ -10,11 +10,10 @@ protected:
 	std::unique_ptr<Input> mInput;
 
 	HWND mRenderWindow;
-	bool mIsMsgReceived;
 	int mMsg;
 
 public:
-	AppMode() : mRenderWindow( nullptr ){}
+	AppMode() noexcept : mRenderWindow( nullptr ){}
 	virtual ~AppMode() { if( mRenderWindow ) mRenderWindow = nullptr; }
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;

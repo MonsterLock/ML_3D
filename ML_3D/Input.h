@@ -6,7 +6,7 @@ class Input
 
 public:
 	Input() noexcept;
-	Input( const Input& );
+	Input( const Input& ) noexcept;
 	~Input();
 	void Initialize();
 

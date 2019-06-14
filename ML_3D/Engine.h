@@ -4,11 +4,10 @@
 
 class Engine
 {
-	int mRet;
+	std::shared_ptr<AppMode> mApp;
 	bool
 		mIsEditor,
 		mIsRunning;
-	std::shared_ptr<AppMode> mApp;
 
 public:
 	Engine() noexcept;

@@ -17,7 +17,7 @@ void Engine::Initialize()
 void Engine::Update()
 {
 	// TODO: Add switch modes.
-	mRet = mApp->Update();
+	mApp->Update();
 }
 
 void Engine::Terminate()
@@ -29,6 +29,7 @@ int Engine::Run()
 {
 	Initialize();
 	Update();
+	int ret = mApp->GetMsg();
 	Terminate();
-	return mRet;
+	return ret;
 }

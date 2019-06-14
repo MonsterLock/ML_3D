@@ -17,7 +17,7 @@ protected:
 	virtual LRESULT HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam ) = 0;
 
 public:
-	MDIWindow()
+	MDIWindow() noexcept
 		:
 		mMDIFrame( nullptr ),
 		mMDIClient( nullptr )

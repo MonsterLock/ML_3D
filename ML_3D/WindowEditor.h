@@ -42,6 +42,7 @@ protected:
 	static BOOL CALLBACK AboutDlg( HWND, UINT, WPARAM, LPARAM );
 
 public:
+	WindowEditor() noexcept;
 	PCWSTR WindowText() const { return L"ML 3D Engine"; }
 	HWND RenderWnd() { return WindowIndex( mCurrentTab[ViewTab] ); }
 	LRESULT HandleMessage( UINT, WPARAM, LPARAM );

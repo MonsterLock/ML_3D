@@ -22,10 +22,7 @@ LRESULT WindowProfiler::HandleMessage( UINT uMsg, WPARAM wParam, LPARAM lParam )
 					GetModuleHandle( nullptr ),
 					nullptr );
 
-				if( !hEdit )
-				{
-					MessageBox( Wnd(), L"Could not create edit box.", L"ERROR", MB_OK | MB_ICONERROR );
-				}
+				TESTRESULT( !hEdit );
 				Edit_SetText( hEdit, L"Profiler" );
 				Edit_SetReadOnly( hEdit, TRUE );
 			}

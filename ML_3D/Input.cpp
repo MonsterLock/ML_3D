@@ -5,7 +5,7 @@
 Input::Input() noexcept
 {}
 
-Input::Input( const Input & )
+Input::Input( const Input & ) noexcept
 {}
 
 Input::~Input()

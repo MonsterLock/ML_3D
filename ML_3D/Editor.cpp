@@ -7,13 +7,18 @@ void Editor::Initialize()
 {
 	InitCommonControls();
 
-	mWindowEditor = std::shared_ptr<WindowEditor>( new WindowEditor() );
-	mWindowEditor->Create();
-
 	mHAccel = LoadAccelerators( GetModuleHandle( nullptr ), MAKEINTRESOURCE( IDR_ACCEL1 ) );
 	TESTRESULT( !mHAccel );
 
+	mWindowEditor = std::shared_ptr<WindowEditor>( new WindowEditor() );
+	mWindowEditor->Create();
 	mRenderWindow = mWindowEditor->RenderWnd();
+
+	mRenderEngine = std::make_unique<RenderEngine>();
+	mRenderEngine->Initialize( mWindowEditor->RenderWnd() );
+
+	mInput = std::make_unique<Input>();
+	mInput->Initialize();
 }
 
 void Editor::Update()

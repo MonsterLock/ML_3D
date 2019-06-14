@@ -482,3 +482,5 @@ BOOL CALLBACK WindowEditor::AboutDlg( HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 	}
 	return TRUE;
 }
+
+WindowEditor::WindowEditor() noexcept : mHFONT(nullptr){}

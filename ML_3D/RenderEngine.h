@@ -1,5 +1,4 @@
 #pragma once
-#include "Global.h"
 #include "GraphicsD3D.h"
 #include "GraphicsOpenGL.h"
 
@@ -9,17 +8,14 @@ class RenderEngine
 		mIsDirectX,
 		mIsFullScreen,
 		mIsVsyncEnabled;
-	float
-		mScreenDepth,
-		mScreenNear;
 
 	std::shared_ptr<GraphicsAPI> mGraphics;
 public:
 	RenderEngine() noexcept;
-	RenderEngine( const RenderEngine& );
+	RenderEngine( const RenderEngine& ) noexcept;
 	~RenderEngine();
 
-	void Initialize();
+	void Initialize( HWND targetWindow );
 	void Terminate();
 	void Frame();
 	void Render();
