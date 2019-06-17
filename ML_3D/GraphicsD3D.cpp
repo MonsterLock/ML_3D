@@ -62,17 +62,17 @@ ID3D11DeviceContext * GraphicsD3D::GetContext()
 	return mContext.Get();
 }
 
-void GraphicsD3D::GetWorldMatrix( DirectX::XMMATRIX & worldMaxtix )
+void GraphicsD3D::GetWorldMatrix( XMMATRIX & worldMaxtix )
 {
 	worldMaxtix = mWorld;
 }
 
-void GraphicsD3D::GetProjectionMatrix( DirectX::XMMATRIX & projMatrix )
+void GraphicsD3D::GetProjectionMatrix( XMMATRIX & projMatrix )
 {
 	projMatrix = mProj;
 }
 
-void GraphicsD3D::GetOrthoMatrix( DirectX::XMMATRIX & orthoMatrix )
+void GraphicsD3D::GetOrthoMatrix( XMMATRIX & orthoMatrix )
 {
 	orthoMatrix = mOrtho;
 }
@@ -89,12 +89,11 @@ void GraphicsD3D::GetGraphicsCardDesc()
 void GraphicsD3D::Clear()
 {
 	// Clear the views.
-	mContext->ClearRenderTargetView( mRenderTargetView.Get(), DirectX::Colors::LightSteelBlue );
+	mContext->ClearRenderTargetView( mRenderTargetView.Get(), Colors::LightSteelBlue );
 	mContext->ClearDepthStencilView( mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	//mContext->OMSetRenderTargets( 1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get() );
-
-	//// Set the view-port.
+	// Set the view-port.
 	//CD3D11_VIEWPORT viewport( 0.0f, 0.0f, static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ) );
 	//mContext->RSSetViewports( 1, &viewport );
 }
@@ -172,6 +171,7 @@ void GraphicsD3D::CreateResources()
 	mRasterState.Reset();
 	mContext->Flush();
 
+
 	UINT
 		backBufferWidth = static_cast< UINT >( mOutputWidth ),
 		backBufferHeight = static_cast< UINT >( mOutputHeight );
@@ -239,7 +239,6 @@ void GraphicsD3D::CreateResources()
 
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC fsSwapChainDesc = {};
 		fsSwapChainDesc.Windowed = TRUE;
-
 		// Create a SwapChain from a Win32 window.
 		TESTRESULT( FAILED( dxgiFactory->CreateSwapChain(
 			mDevice.Get(),
@@ -341,17 +340,17 @@ void GraphicsD3D::CreateResources()
 	matrix so that we can pass it to our shaders that will
 	be used to render our scenes.*/
 	float
-		fieldOfView = static_cast< float >( DirectX::XM_PI ) / 4.0f,
+		fieldOfView = static_cast< float >( XM_PI ) / 4.0f,
 		screenAspect = static_cast< float >( mOutputWidth ) / static_cast< float >( mOutputHeight );
-	mProj = DirectX::XMMatrixPerspectiveFovLH( fieldOfView, screenAspect, mScreenNear, mScreenDepth );
+	mProj = XMMatrixPerspectiveFovLH( fieldOfView, screenAspect, mScreenNear, mScreenDepth );
 
 	/* Initialize the world matrix to the identity matrix and
 	keep a copy of it in this object. The copy will be needed
 	to be passed to the shaders for rendering*/
-	mWorld = DirectX::XMMatrixIdentity();
+	mWorld = XMMatrixIdentity();
 
 	// Initialize an orthographic projection matrix.
-	mOrtho = DirectX::XMMatrixOrthographicLH( static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ), mScreenNear, mScreenDepth );
+	mOrtho = XMMatrixOrthographicLH( static_cast< float >( mOutputWidth ), static_cast< float >( mOutputHeight ), mScreenNear, mScreenDepth );
 }
 
 void GraphicsD3D::OnDeviceLost()

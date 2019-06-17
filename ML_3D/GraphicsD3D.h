@@ -15,7 +15,7 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				mDepthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>		mRasterState;
 
-	DirectX::XMMATRIX
+	XMMATRIX
 		mWorld,
 		mProj,
 		mOrtho;
@@ -24,6 +24,7 @@ protected:
 	int mVideoCardMemory;
 
 	void Clear();
+
 	void Present();
 
 	void CreateDevice();
@@ -41,9 +42,9 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 
-	void GetWorldMatrix( DirectX::XMMATRIX& );
-	void GetProjectionMatrix( DirectX::XMMATRIX& );
-	void GetOrthoMatrix( DirectX::XMMATRIX& );
+	void GetWorldMatrix( XMMATRIX& );
+	void GetProjectionMatrix( XMMATRIX& );
+	void GetOrthoMatrix( XMMATRIX& );
 
 	void GetGraphicsCardDesc();
 };

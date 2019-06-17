@@ -76,3 +76,5 @@ inline void SafeRelease( T &ptr )
 		ptr = nullptr;
 	}
 }
+
+using namespace DirectX;

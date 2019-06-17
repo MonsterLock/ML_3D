@@ -203,6 +203,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c">
@@ -240,6 +241,7 @@
     <ClCompile Include="WindowScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="RenderEngine.h" />
     <ClInclude Include="WindowBase.h" />
@@ -280,9 +282,6 @@
     <Image Include="earth.bmp" />
     <Image Include="Images\ml_3d.ico" />
     <Image Include="Images\ML_3D.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
