@@ -1,5 +1,11 @@
 # Updates
 
+## June 21, 2019
+
+I decided the [Rastertek](http://www.rastertek.com) tutorial was a great start and provided the best productivity over time in learning to implement rendering with directX into my engine. I started following the series and bringing it into the existing codebase nearly as is from the tutorial for the time being because I'm genuinely interested in following the tutorials as fast as possible for the next couple weeks and then adjusting it as I see fit after I understand the concepts better. 
+
+In addition, it is greatly documented and commented consistently throughout the tutorial and I figured in comparison to other tutorials such as [DirectX Game Engine Programming](https://www.3dgep.com/introduction-to-directx-11/) and [DirectXTK Intro](https://github.com/microsoft/DirectXTK/wiki/Getting-Started), it provides more information, but not too much to bog me down for the time being until I can get a better foundation and tackle heavier reads on rendering such as [Real-Time Rendering](http://www.realtimerendering.com/).
+
 ## June 5, 2019
 
 Took some time to finally write the first update and organize other docuements as well. Here's a short summary:
