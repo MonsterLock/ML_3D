@@ -1,10 +1,6 @@
 #include "Global.h"
 #include "LoadOBJ.h"
 
-
-LoadOBJ::LoadOBJ( )
-{ }
-
 void LoadOBJ::GetModelFilename( char * filename )
 {
 	std::ifstream fin;

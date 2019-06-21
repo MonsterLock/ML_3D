@@ -27,8 +27,11 @@ void RenderEngine::Initialize( HWND targetWindow )
 	mShader->Initialize( mGraphics->GetDevice( ), targetWindow );
 
 	mLight = std::shared_ptr<Light>( new Light( ) );
-	mLight->SetDiffuseColor( 1.0f, 0.0f, 1.0f, 1.0f );
-	mLight->SetDirection( 0.0f, 0.0f, 1.0f );
+	mLight->SetAmbientColor( 0.15f, 0.15f, 0.15f, 1.0f );
+	mLight->SetDiffuseColor( 0.98f, 0.83f, 0.83f, 1.0f );
+	mLight->SetDirection( 0.5f, 0.0f, 0.5f );
+	mLight->SetSpecularColor( 1.0f, 1.0f, 1.0f, 1.0f );
+	mLight->SetSpecularPower( 32.0f );
 }
 
 void RenderEngine::Terminate()
@@ -40,7 +43,7 @@ void RenderEngine::Frame( )
 {
 	static float rotation = 0.0f;
 	// Update the rotation variable each frame.
-	rotation += XM_PI * 0.01f;
+	rotation += XM_PI * 0.002f;
 	if( rotation > 360.0f )
 	{
 		rotation -= 360.0f;
@@ -73,7 +76,9 @@ void RenderEngine::Render( float rotation )
 	mModel->Render( mGraphics->GetContext( ) );
 
 	// Render the model using the shader.
-	mShader->Render( mGraphics->GetContext( ), mModel->GetIndexCount( ), worldMatrix, viewMatrix, projectionMatrix, mModel->GetTexture( ), mLight->GetDirection(), mLight->GetDiffuseColor() );
+	mShader->Render( mGraphics->GetContext( ), mModel->GetIndexCount( ), worldMatrix, viewMatrix, projectionMatrix,
+					 mModel->GetTexture( ), mLight->GetDirection(), mLight->GetAmbientColor( ), mLight->GetDiffuseColor(),
+					 mCamera->GetPosition( ), mLight->GetSpecularColor( ), mLight->GetSpecularPower( ) );
 
 	// Present the rendered scene to the screen.
 	mGraphics->Present( );

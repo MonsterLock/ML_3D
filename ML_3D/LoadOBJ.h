@@ -18,7 +18,6 @@ class LoadOBJ
 	}FaceType;
 
 public:
-	LoadOBJ( );
 	void GetModelFilename( char* );
 	void ReadFileCounts( char*, int&, int&, int&, int& );
 	void LoadDataStructures( char*, int, int, int, int );
