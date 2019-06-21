@@ -11,7 +11,7 @@ public:
 	void SetPosition( float, float, float );
 	void SetRotation( float, float, float );
 
-	DirectX::XMFLOAT3 GetPosition();
+	XMFLOAT3 GetPosition();
 	DirectX::XMFLOAT3 GetRotation();
 
 	void Render();

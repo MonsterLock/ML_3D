@@ -25,6 +25,7 @@
 #include <dxgi1_2.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
+#include <d3dcompiler.h>
 
 // OpenGL
 #include <GL/gl.h>			/* OpenGL header file */
@@ -57,7 +58,7 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "winmm.lib")
-
+#pragma comment(lib, "D3DCompiler.lib")
 // User
 #include "ReportMessage.h"
 #include "TranslateWinMsgs.h"

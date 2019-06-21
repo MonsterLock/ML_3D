@@ -37,7 +37,7 @@ void Game::Update()
 		{
 			stepTimer.Tick();
 			if( stepTimer.GetFrameCount() > 0 )
-				mRenderEngine->Render();
+				mRenderEngine->Frame();
 		}
 	}
 
@@ -45,4 +45,5 @@ void Game::Update()
 }
 
 void Game::Terminate()
-{ return; }
+{
+	mRenderEngine->Terminate( ); }

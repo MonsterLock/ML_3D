@@ -40,7 +40,7 @@ void Editor::Update()
 			DispatchMessage( &msg );
 		}
 		else
-			mRenderEngine->Render();
+			mRenderEngine->Frame();
 	}
 
 	mMsg = static_cast<int>(msg.wParam);

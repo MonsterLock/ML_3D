@@ -224,7 +224,12 @@
     </ClCompile>
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="GraphicsOpenGL.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LoadOBJ.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="WindowAnimation.cpp" />
     <ClCompile Include="WindowConsole.cpp" />
     <ClCompile Include="GraphicsD3D.cpp" />
@@ -243,7 +248,12 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LoadOBJ.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="RenderEngine.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="WindowBase.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Editor.h" />
@@ -282,6 +292,22 @@
     <Image Include="earth.bmp" />
     <Image Include="Images\ml_3d.ico" />
     <Image Include="Images\ML_3D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.fs">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="shader.vs">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

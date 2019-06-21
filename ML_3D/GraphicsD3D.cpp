@@ -121,13 +121,13 @@ void GraphicsD3D::CreateDevice()
 {
 	// Interface for D3D device and context.
 	D3D_FEATURE_LEVEL levels[] = {
-	D3D_FEATURE_LEVEL_9_1,
-	D3D_FEATURE_LEVEL_9_2,
-	D3D_FEATURE_LEVEL_9_3,
-	D3D_FEATURE_LEVEL_10_0,
-	D3D_FEATURE_LEVEL_10_1,
+	D3D_FEATURE_LEVEL_11_1,
 	D3D_FEATURE_LEVEL_11_0,
-	D3D_FEATURE_LEVEL_11_1
+	D3D_FEATURE_LEVEL_10_1,
+	D3D_FEATURE_LEVEL_10_0,
+	D3D_FEATURE_LEVEL_9_3,
+	D3D_FEATURE_LEVEL_9_2,
+	D3D_FEATURE_LEVEL_9_1
 	};
 
 	// This flag adds support for surfaces with a color-channel ordering different
@@ -170,7 +170,6 @@ void GraphicsD3D::CreateResources()
 	mDepthStencilView.Reset();
 	mRasterState.Reset();
 	mContext->Flush();
-
 
 	UINT
 		backBufferWidth = static_cast< UINT >( mOutputWidth ),

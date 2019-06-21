@@ -101,6 +101,17 @@
       <Filter>Engine\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Src.cpp" />
+    <ClCompile Include="Shader.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Light.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadOBJ.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SubWindow.h">
@@ -202,6 +213,17 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Light.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadOBJ.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc">
@@ -218,5 +240,13 @@
     <Image Include="earth.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="shader.fs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

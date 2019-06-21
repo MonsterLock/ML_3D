@@ -14,18 +14,12 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>		mDepthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>				mDepthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>		mRasterState;
-
 	XMMATRIX
 		mWorld,
 		mProj,
 		mOrtho;
-
 	std::wstring mVideoCardDescription;
 	int mVideoCardMemory;
-
-	void Clear();
-
-	void Present();
 
 	void CreateDevice();
 	void CreateResources();
@@ -38,6 +32,8 @@ public:
 	void Initialize( HWND );
 	void Render();
 	void Terminate();
+	void Clear( );
+	void Present( );
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
@@ -48,4 +44,3 @@ public:
 
 	void GetGraphicsCardDesc();
 };
-
