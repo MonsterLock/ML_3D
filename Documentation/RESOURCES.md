@@ -23,8 +23,8 @@
 [SIGGRAPH](https://www.siggraph.org)
 - Computer graphic communitty.
 
-[SIGGRAPH](https://www.siggraph.org)
-- Computer graphic communitty.
+[DirectXTK Intro](https://github.com/microsoft/DirectXTK/wiki/Getting-Started)
+- DirectXTK written by Chuck Walbourn.
 
 [DirectX Game Engine Programming](https://www.3dgep.com/introduction-to-directx-11/)
 - DirectX and Win32 API docs.
