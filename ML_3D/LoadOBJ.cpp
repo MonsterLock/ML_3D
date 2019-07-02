@@ -80,7 +80,6 @@ void LoadOBJ::LoadDataStructures( char* filename, int vertexCount, int textureCo
 	char input, input2;
 	std::ofstream fout;
 
-
 	// Initialize the four data structures.
 	vertices = new VertexType[vertexCount];
 	TESTRESULT( !vertices );

@@ -17,8 +17,8 @@ void Editor::Initialize()
 	mRenderEngine = std::make_unique<RenderEngine>();
 	mRenderEngine->Initialize( mWindowEditor->RenderWnd() );
 
-	mInput = std::make_unique<Input>();
-	mInput->Initialize();
+	//mInput = std::make_unique<Input>();
+	//mInput->Initialize();
 }
 
 void Editor::Update()

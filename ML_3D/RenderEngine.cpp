@@ -7,10 +7,8 @@ RenderEngine::RenderEngine( ) noexcept
 	mIsFullScreen( true ),
 	mIsVsyncEnabled( true ),
 	mCamera( nullptr ),
-	mModel( nullptr ),
-	mShader( nullptr ),
-	mLight( nullptr )
-{}
+	mText( nullptr )
+{ }
 
 void RenderEngine::Initialize( HWND targetWindow )
 {
@@ -18,36 +16,34 @@ void RenderEngine::Initialize( HWND targetWindow )
 	mGraphics->Initialize( targetWindow );
 
 	mCamera = std::shared_ptr<Camera>( new Camera( ) );
-	mCamera->SetPosition( 0.0f, 0.0f, -5.0f );
+	mCamera->SetPosition( 0.0f, 0.0f, -1.0f );
+	mCamera->Render( );
+	XMMATRIX baseViewMatrix;
+	mCamera->GetViewMatrix( baseViewMatrix );
 
-	mModel = std::shared_ptr<Model>( new Model( ) );
-	mModel->Initialize( mGraphics->GetDevice( ), mGraphics->GetContext( ), const_cast< char* >( "C:../cube.txt" ), const_cast<char*>("C:../stone01.tga" ));
+	// Create the text object.
+	mText = std::shared_ptr<Text>( new Text( ) );
 
-	mShader = std::shared_ptr<Shader>( new Shader( ) );
-	mShader->Initialize( mGraphics->GetDevice( ), targetWindow );
-
-	mLight = std::shared_ptr<Light>( new Light( ) );
-	mLight->SetAmbientColor( 0.15f, 0.15f, 0.15f, 1.0f );
-	mLight->SetDiffuseColor( 0.98f, 0.83f, 0.83f, 1.0f );
-	mLight->SetDirection( 0.5f, 0.0f, 0.5f );
-	mLight->SetSpecularColor( 1.0f, 1.0f, 1.0f, 1.0f );
-	mLight->SetSpecularPower( 32.0f );
+	// Initialize the text object.
+	RECT rc;
+	GetClientRect( targetWindow, &rc );
+	mText->Initialize( mGraphics->GetDevice( ), mGraphics->GetContext( ), targetWindow, rc.right - rc.left, rc.bottom - rc.top, baseViewMatrix );
 }
 
-void RenderEngine::Terminate()
+void RenderEngine::Terminate( )
 {
-	mModel->Shutdown( );
+	mText->Shutdown( );
 }
 
 void RenderEngine::Frame( )
 {
 	static float rotation = 0.0f;
 	// Update the rotation variable each frame.
-	rotation += XM_PI * 0.002f;
-	if( rotation > 360.0f )
-	{
-		rotation -= 360.0f;
-	}
+	//rotation += XM_PI * 0.002f;
+	//if( rotation > 360.0f )
+	//{
+	//	rotation -= 360.0f;
+	//}
 
 	// Render the graphics scene.
 	Render( rotation );
@@ -58,7 +54,8 @@ void RenderEngine::Render( float rotation )
 	XMMATRIX
 		worldMatrix,
 		viewMatrix,
-		projectionMatrix;
+		projectionMatrix,
+		orthoMatrix;
 
 	// Clear the buffers to begin the scene.
 	mGraphics->Clear( );
@@ -70,15 +67,22 @@ void RenderEngine::Render( float rotation )
 	mGraphics->GetWorldMatrix( worldMatrix );
 	mCamera->GetViewMatrix( viewMatrix );
 	mGraphics->GetProjectionMatrix( projectionMatrix );
+	mGraphics->GetOrthoMatrix( orthoMatrix );
 
-	worldMatrix = XMMatrixRotationY( rotation );
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	mModel->Render( mGraphics->GetContext( ) );
+	// Turn off the Z buffer to begin all 2D rendering.
+	mGraphics->TurnZBufferOff( );
 
-	// Render the model using the shader.
-	mShader->Render( mGraphics->GetContext( ), mModel->GetIndexCount( ), worldMatrix, viewMatrix, projectionMatrix,
-					 mModel->GetTexture( ), mLight->GetDirection(), mLight->GetAmbientColor( ), mLight->GetDiffuseColor(),
-					 mCamera->GetPosition( ), mLight->GetSpecularColor( ), mLight->GetSpecularPower( ) );
+	// Turn on the alpha blending before rendering the text.
+	mGraphics->TurnOnAlphaBlending( );
+
+	// Render the text strings.
+	mText->Render( mGraphics->GetContext( ), worldMatrix, orthoMatrix );
+
+	// Turn off alpha blending after rendering the text.
+	mGraphics->TurnOffAlphaBlending( );
+
+	// Turn the Z buffer back on now that all 2D rendering has completed.
+	mGraphics->TurnZBufferOn( );
 
 	// Present the rendered scene to the screen.
 	mGraphics->Present( );

@@ -8,7 +8,13 @@ Model::Model( ) noexcept
 	mModel(nullptr)
 { }
 
-void Model::Initialize( ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename )
+void Model::Initialize( ID3D11Device* device )
+{
+	// Initialize the vertex and index buffers.
+	InitializeBuffers( device );
+}
+
+void Model::Initialize( ID3D11Device* device, char* modelFilename, const wchar_t* textureFilename )
 {
 	// Load the model data.
 	LoadModel( modelFilename );
@@ -17,7 +23,7 @@ void Model::Initialize( ID3D11Device* device, ID3D11DeviceContext* deviceContext
 	InitializeBuffers( device );
 
 	// Load the texture for this model.
-	LoadTexture( device, deviceContext, textureFilename );
+	LoadTexture( device, textureFilename );
 }
 
 void Model::Shutdown( )
@@ -107,10 +113,10 @@ void Model::InitializeBuffers( ID3D11Device * device)
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
-	vertices = 0;
+	vertices = nullptr;
 
 	delete[] indices;
-	indices = 0;
+	indices = nullptr;
 }
 
 void Model::ShutdownBuffers( )
@@ -121,8 +127,9 @@ void Model::ShutdownBuffers( )
 
 void Model::RenderBuffers( ID3D11DeviceContext * deviceContext)
 {
-	unsigned int stride;
-	unsigned int offset;
+	unsigned int
+		stride,
+		offset;
 
 	// Set vertex buffer stride and offset.
 	stride = sizeof( VertexType );
@@ -138,18 +145,21 @@ void Model::RenderBuffers( ID3D11DeviceContext * deviceContext)
 	deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 }
 
-void Model::LoadTexture( ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename )
+void Model::LoadTexture( ID3D11Device* device, const wchar_t* filename )
 {
 	// Create the texture object.
 	mTexture = std::shared_ptr<Texture>( new Texture( ) );
 
 	// Initialize the texture object.
-	mTexture->Initialize( device, deviceContext, filename );
+	mTexture->Initialize( device, filename );
 }
 
 void Model::ReleaseTexture( )
 {
-	mTexture->Shutdown( );
+	if( mTexture )
+	{
+		mTexture->Shutdown( );
+	}
 }
 
 void Model::LoadModel( char * filename)

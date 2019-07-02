@@ -203,8 +203,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ColorShader.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontShader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="glad.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
@@ -224,12 +234,22 @@
     </ClCompile>
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="GraphicsOpenGL.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LoadOBJ.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="LightShader.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="WindowAnimation.cpp" />
     <ClCompile Include="WindowConsole.cpp" />
     <ClCompile Include="GraphicsD3D.cpp" />
@@ -239,21 +259,32 @@
     <ClCompile Include="WindowMain.cpp" />
     <ClCompile Include="WindowProperties.cpp" />
     <ClCompile Include="WindowLighting.cpp" />
-    <ClCompile Include="Src.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="WindowEditor.cpp" />
     <ClCompile Include="WindowProfiler.cpp" />
     <ClCompile Include="WindowProject.cpp" />
     <ClCompile Include="WindowScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitManipulation.h" />
+    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColorShader.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontShader.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LoadOBJ.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="RenderEngine.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="WindowBase.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Editor.h" />
@@ -292,22 +323,17 @@
     <Image Include="earth.bmp" />
     <Image Include="Images\ml_3d.ico" />
     <Image Include="Images\ML_3D.png" />
+    <Image Include="seafloor.dds" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fs">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <FileType>Document</FileType>
-    </None>
-    <None Include="shader.vs">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <FileType>Document</FileType>
-    </None>
+    <None Include="color.fs" />
+    <None Include="color.vs" />
+    <None Include="font.fs" />
+    <None Include="font.vs" />
+    <None Include="light.fs" />
+    <None Include="light.vs" />
+    <None Include="texture.fs" />
+    <None Include="texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

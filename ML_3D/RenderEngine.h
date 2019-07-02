@@ -3,8 +3,10 @@
 #include "GraphicsOpenGL.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Shader.h"
+#include "TextureShader.h"
 #include "Light.h"
+#include "Bitmap.h"
+#include "Text.h"
 
 class RenderEngine
 {
@@ -15,9 +17,7 @@ class RenderEngine
 
 	std::shared_ptr<GraphicsD3D> mGraphics;
 	std::shared_ptr<Camera> mCamera;
-	std::shared_ptr<Model> mModel;
-	std::shared_ptr<Shader> mShader;
-	std::shared_ptr<Light> mLight;
+	std::shared_ptr<Text> mText;
 
 public:
 	RenderEngine() noexcept;

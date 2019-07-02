@@ -12,9 +12,6 @@ void Game::Initialize()
 
 	mRenderEngine = std::make_unique<RenderEngine>();
 	mRenderEngine->Initialize( mWindowMain->Wnd() );
-
-	mInput = std::make_unique<Input>();
-	mInput->Initialize();
 }
 
 void Game::Update()
@@ -46,4 +43,5 @@ void Game::Update()
 
 void Game::Terminate()
 {
-	mRenderEngine->Terminate( ); }
+	mRenderEngine->Terminate( );
+}

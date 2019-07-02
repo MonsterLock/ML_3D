@@ -14,7 +14,7 @@ static std::wstring ReportMessage( LPCWSTR title, LPCWSTR type, LPCWSTR what, LP
 	return oss.str();
 }
 
-static void TestResult( BOOL condition, LPCWSTR title, LPCSTR file, int line )
+static bool TestResult( BOOL condition, LPCWSTR title, LPCSTR file, int line )
 {
 	if( condition )
 	{
@@ -27,7 +27,8 @@ static void TestResult( BOOL condition, LPCWSTR title, LPCSTR file, int line )
 			dw,
 			MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
 			( LPTSTR )&lpMsgBuf,
-			0, nullptr );
+			0,
+			nullptr );
 
 		std::wstringstream oss;
 
@@ -39,5 +40,12 @@ static void TestResult( BOOL condition, LPCWSTR title, LPCSTR file, int line )
 
 		LocalFree( lpMsgBuf );
 		MessageBox( NULL, oss.str().c_str(), L"Error", MB_OK | MB_ICONERROR );
+
+		return true;
 	}
+	return false;
 }
+
+//std::string textureName = _fullpath( nullptr, ".\\", _MAX_PATH );
+//textureName += texture->GetRelativeFileName( );
+// _wgetcwd

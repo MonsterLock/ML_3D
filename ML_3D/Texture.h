@@ -1,4 +1,6 @@
 #pragma once
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
 
 class Texture
 {
@@ -11,16 +13,13 @@ class Texture
 		unsigned char data2;
 	};
 
-	unsigned char* m_targaData;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_texture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureView;
-
-	bool LoadTarga( char*, int&, int& );
+	unsigned char* mTargaData;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> mTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTextureView;
 
 public:
 	Texture( );
-	void Initialize( ID3D11Device*, ID3D11DeviceContext*, char* );
+	void Initialize( ID3D11Device*, const wchar_t* );
 	void Shutdown( );
 	ID3D11ShaderResourceView* GetTexture( );
 };
-

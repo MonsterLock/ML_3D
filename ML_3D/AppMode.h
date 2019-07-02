@@ -7,7 +7,6 @@ class AppMode
 {
 protected:
 	std::unique_ptr<RenderEngine> mRenderEngine;
-	std::unique_ptr<Input> mInput;
 
 	HWND mRenderWindow;
 	int mMsg;

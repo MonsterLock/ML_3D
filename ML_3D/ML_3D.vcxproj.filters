@@ -35,6 +35,9 @@
     <Filter Include="Engine\RenderEngine\Shaders">
       <UniqueIdentifier>{e44f8881-bfe6-413e-b35b-9cb52904d31c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Utility\Input">
+      <UniqueIdentifier>{48c9362c-931e-4312-8bfc-aa9de508ed36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WindowAnimation.cpp">
@@ -79,9 +82,6 @@
     <ClCompile Include="WindowMain.cpp">
       <Filter>Engine\AppMode\Game\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Engine\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsD3D.cpp">
       <Filter>Engine\RenderEngine</Filter>
     </ClCompile>
@@ -100,18 +100,55 @@
     <ClCompile Include="Global.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Src.cpp" />
-    <ClCompile Include="Shader.cpp">
-      <Filter>Engine\RenderEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Engine\RenderEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Light.cpp">
       <Filter>Engine\RenderEngine</Filter>
     </ClCompile>
-    <ClCompile Include="LoadOBJ.cpp" />
+    <ClCompile Include="Texture.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadOBJ.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorShader.cpp">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShader.cpp">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="FontShader.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SubWindow.h">
@@ -186,9 +223,6 @@
     <ClInclude Include="RenderEngine.h">
       <Filter>Engine\RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Engine\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsAPI.h">
       <Filter>Engine\RenderEngine</Filter>
     </ClInclude>
@@ -213,17 +247,57 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Engine\RenderEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Engine\RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="Light.h">
       <Filter>Engine\RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="LoadOBJ.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadOBJ.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorShader.h">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShader.h">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShader.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
+      <Filter>Engine\RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Engine\Utility\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="BitManipulation.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ML_3D.rc">
@@ -240,12 +314,33 @@
     <Image Include="earth.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="seafloor.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vs">
+    <None Include="color.vs">
       <Filter>Engine\RenderEngine\Shaders</Filter>
     </None>
-    <None Include="shader.fs">
+    <None Include="texture.vs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="texture.fs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="light.fs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="color.fs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="font.vs">
+      <Filter>Engine\RenderEngine\Shaders</Filter>
+    </None>
+    <None Include="font.fs">
       <Filter>Engine\RenderEngine\Shaders</Filter>
     </None>
   </ItemGroup>

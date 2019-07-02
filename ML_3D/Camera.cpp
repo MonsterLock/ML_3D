@@ -33,11 +33,19 @@ DirectX::XMFLOAT3 Camera::GetRotation()
 
 void Camera::Render()
 {
-	XMFLOAT3 up, position, lookAt;
-	XMVECTOR upVector, positionVector, lookAtVector;
-	float yaw, pitch, roll;
+	XMFLOAT3
+		up,
+		position,
+		lookAt;
+	XMVECTOR
+		upVector,
+		positionVector,
+		lookAtVector;
+	float
+		yaw,
+		pitch,
+		roll;
 	XMMATRIX rotationMatrix;
-
 
 	// Setup the vector that points upwards.
 	up.x = 0.0f;
@@ -80,12 +88,9 @@ void Camera::Render()
 
 	// Finally create the view matrix from the three updated vectors.
 	mView = XMMatrixLookAtLH( positionVector, lookAtVector, upVector );
-
-	return;
 }
 
 void Camera::GetViewMatrix( DirectX::XMMATRIX & viewMatrix)
 {
 	viewMatrix = mView;
-	return;
 }

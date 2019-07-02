@@ -59,13 +59,15 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "D3DCompiler.lib")
+
 // User
+#include "BitManipulation.h"
 #include "ReportMessage.h"
 #include "TranslateWinMsgs.h"
 #include "StepTimer.h"
 
 // Temp Settings
-#define ISWMMSGSHOW 0
+#define ISWMMSGSHOW 1
 
 // Safely release a COM object.
 template <typename T>
@@ -78,4 +80,5 @@ inline void SafeRelease( T &ptr )
 	}
 }
 
+#define GETARRAYSIZE( var ) sizeof( var ) / sizeof( var[0] )
 using namespace DirectX;

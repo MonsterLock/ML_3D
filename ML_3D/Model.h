@@ -29,14 +29,15 @@ class Model
 	void InitializeBuffers( ID3D11Device* );
 	void ShutdownBuffers( );
 	void RenderBuffers( ID3D11DeviceContext* );
-	void LoadTexture( ID3D11Device*, ID3D11DeviceContext*, char* );
+	void LoadTexture( ID3D11Device*, const wchar_t* );
 	void ReleaseTexture( );
 	void LoadModel( char* );
 	void ReleaseModel( );
 
 public:
 	Model( ) noexcept;
-	void Initialize( ID3D11Device*, ID3D11DeviceContext*, char*, char* );
+	void Initialize( ID3D11Device * device );
+	void Initialize( ID3D11Device*, char*, const wchar_t* );
 	void Shutdown( );
 	void Render( ID3D11DeviceContext* );
 	int GetIndexCount( );
