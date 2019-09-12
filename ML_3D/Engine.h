@@ -1,18 +1,14 @@
 #pragma once
-#include "Editor.h"
-#include "Game.h"
+#include "RenderEngine.h"
+#include "Input.h"
 
 class Engine
 {
-	std::shared_ptr<AppMode> mApp;
-	bool
-		mIsEditor,
-		mIsRunning;
+	RenderEngine* mRender;
+	Input* mInput;
 
 public:
 	Engine() noexcept;
 	void Initialize();
-	void Update();
-	void Terminate();
-	int Run();
+	void Shutdown();
 };

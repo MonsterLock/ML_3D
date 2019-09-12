@@ -46,7 +46,7 @@ void Editor::Update()
 	mMsg = static_cast<int>(msg.wParam);
 }
 
-void Editor::Terminate()
+void Editor::Shutdown()
 {
 	if( mHAccel ) mHAccel = nullptr;
 }

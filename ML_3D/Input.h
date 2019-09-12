@@ -1,21 +1,18 @@
 #pragma once
-
 #include "Mouse.h"
 #include "Keyboard.h"
 
 class Input
 {
-	std::unique_ptr<Mouse> m_mouse;
-	std::unique_ptr<Keyboard> m_keyboard;
+	Mouse* mMouse;
+	Keyboard* mKeyboard;
 
 public:
-	Input() noexcept;
-
-	void Initialize( HWND );
-	void Update( UINT uMsg, WPARAM wParam, LPARAM lParam );
+	Input( ) noexcept;
+	bool Initialize( );
+	void Update( UINT, WPARAM, LPARAM );
 	void Shutdown( );
+	bool CheckKeyboardState( UINT );
+	bool CheckMouseState( UINT );
 	POINT GetMousePos( );
-	bool CheckKeyboard( UINT );
-	bool CheckMouse( UINT );
 };
-

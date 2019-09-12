@@ -41,7 +41,7 @@ void Game::Update()
 	mMsg = static_cast< int >( msg.wParam );
 }
 
-void Game::Terminate()
+void Game::Shutdown()
 {
-	mRenderEngine->Terminate( );
+	mRenderEngine->Shutdown( );
 }

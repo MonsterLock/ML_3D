@@ -140,7 +140,7 @@ void GraphicsOpenGL::Present()
 	SwapBuffers( mHDC );
 }
 
-void GraphicsOpenGL::Terminate()
+void GraphicsOpenGL::Shutdown()
 {
 	wglMakeCurrent( nullptr, nullptr );
 	ReleaseDC( mHwnd, mHDC );

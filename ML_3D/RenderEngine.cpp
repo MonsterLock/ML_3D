@@ -30,7 +30,7 @@ void RenderEngine::Initialize( HWND targetWindow )
 	mText->Initialize( mGraphics->GetDevice( ), mGraphics->GetContext( ), targetWindow, rc.right - rc.left, rc.bottom - rc.top, baseViewMatrix );
 }
 
-void RenderEngine::Terminate( )
+void RenderEngine::Shutdown( )
 {
 	mText->Shutdown( );
 }

@@ -1,8 +1,21 @@
 #pragma once
+#include "Global.h"
 
-namespace MouseInput
+class Mouse
 {
-	enum MouseButtons
+	UINT mButtons;
+	POINT mPos;
+
+public:
+	Mouse( ) noexcept;
+	bool Initialize( );
+	void Update( USHORT state, USHORT key, UINT x, UINT y );
+	void Reset( );
+	bool CheckState( UINT button );
+	void SetMousePos( UINT x, UINT y );
+	POINT GetMousePos( );
+
+	enum Buttons
 	{
 		Left,
 		Middle,
@@ -12,19 +25,4 @@ namespace MouseInput
 		Wheel,
 		numMouseButtons
 	};
-}
-class Mouse
-{
-	UINT m_mouse;
-	POINT m_pos;
-
-public:
-	Mouse( ) noexcept;
-	void Initialize( HWND hwnd );
-	void Update( USHORT, USHORT, UINT, UINT );
-	void Shutdown( );
-	bool CheckState( UINT );
-	void SetMousePos( UINT, UINT );
-	POINT GetMousePos( );
 };
-

@@ -3,19 +3,25 @@
 
 Mouse::Mouse( ) noexcept
 	:
-	m_pos( { 0, 0 } )
+	mPos( { 0, 0 } )
 { }
 
-void Mouse::Initialize( HWND hwnd )
+bool Mouse::Initialize( )
 {
-	RAWINPUTDEVICE Rid;
+	mButtons = 0;
+	mPos.x = mPos.y = 0;
 
+	RAWINPUTDEVICE Rid;
+	ZeroMemory( &Rid, sizeof( Rid ) );
 	Rid.usUsagePage = 0x01;
 	Rid.usUsage = 0x02;
 	Rid.dwFlags = 0;
-	Rid.hwndTarget = hwnd;
+	Rid.hwndTarget = nullptr;
 
-	TESTRESULT( !RegisterRawInputDevices( &Rid, 1, sizeof( Rid ) ) );
+	if( ISERROR1( !RegisterRawInputDevices( &Rid, 1, sizeof( Rid ) ) ) )
+		return false;
+
+	return true;
 }
 
 void Mouse::Update( USHORT state, USHORT key, UINT x, UINT y )
@@ -24,52 +30,52 @@ void Mouse::Update( USHORT state, USHORT key, UINT x, UINT y )
 	{
 		case RI_MOUSE_LEFT_BUTTON_DOWN:
 		{
-			BITON( m_mouse, MouseInput::Left );
+			BitM::BitOn( mButtons, Left );
 		}
 		break;
 		case RI_MOUSE_LEFT_BUTTON_UP:
 		{
-			BITOFF( m_mouse, MouseInput::Left );
+			BitM::BitOff( mButtons, Left );
 		}
 		break;
 		case RI_MOUSE_MIDDLE_BUTTON_DOWN:
 		{
-			BITON( m_mouse, MouseInput::Middle );
+			BitM::BitOn( mButtons, Middle );
 		}
 		break;
 		case RI_MOUSE_MIDDLE_BUTTON_UP:
 		{
-			BITOFF( m_mouse, MouseInput::Middle );
+			BitM::BitOff( mButtons, Middle );
 		}
 		break;
 		case RI_MOUSE_RIGHT_BUTTON_DOWN:
 		{
-			BITON( m_mouse, MouseInput::Right );
+			BitM::BitOn( mButtons, Right );
 		}
 		break;
 		case RI_MOUSE_RIGHT_BUTTON_UP:
 		{
-			BITOFF( m_mouse, MouseInput::Right );
+			BitM::BitOff( mButtons, Right );
 		}
 		break;
 		case RI_MOUSE_BUTTON_4_DOWN:
 		{
-			BITON( m_mouse, MouseInput::Xtra1 );
+			BitM::BitOn( mButtons, Xtra1 );
 		}
 		break;
 		case RI_MOUSE_BUTTON_4_UP:
 		{
-			BITOFF( m_mouse, MouseInput::Xtra1 );
+			BitM::BitOff( mButtons, Xtra1 );
 		}
 		break;
 		case RI_MOUSE_BUTTON_5_DOWN:
 		{
-			BITON( m_mouse, MouseInput::Xtra2 );
+			BitM::BitOn( mButtons, Xtra2 );
 		}
 		break;
 		case RI_MOUSE_BUTTON_5_UP:
 		{
-			BITOFF( m_mouse, MouseInput::Xtra2 );
+			BitM::BitOff( mButtons, Xtra2 );
 		}
 		break;
 		case RI_MOUSE_WHEEL:
@@ -83,18 +89,24 @@ void Mouse::Update( USHORT state, USHORT key, UINT x, UINT y )
 	SetMousePos( x, y );
 }
 
-bool Mouse::CheckState( UINT index )
+void Mouse::Reset( )
 {
-	return BITTEST( m_mouse, index );
+	mButtons = 0;
+	mPos.x = mPos.y = 0;
+}
+
+bool Mouse::CheckState( UINT button )
+{
+	return BitM::BitIsOn( mButtons, button );
 }
 
 void Mouse::SetMousePos( UINT x, UINT y )
 {
-	m_pos.x = x;
-	m_pos.y = y;
+	mPos.x = x;
+	mPos.y = y;
 }
 
 POINT Mouse::GetMousePos( )
 {
-	return m_pos;
+	return mPos;
 }

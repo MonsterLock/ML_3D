@@ -40,7 +40,7 @@ void Camera::Render()
 	XMVECTOR
 		upVector,
 		positionVector,
-		lookAtVector;
+		lookAtVector;	
 	float
 		yaw,
 		pitch,

@@ -1,7 +1,18 @@
 #pragma once
+#include "Global.h"
 
-namespace KeyboardInput
+class Keyboard
 {
+	UINT mKeys[5];
+
+public:
+	Keyboard( ) noexcept;
+	bool Initialize( );
+	void Update( USHORT key, BOOL state );
+	void Reset( );
+	bool CheckState( UINT key );
+	UINT TranslateKey( USHORT key );
+
 	enum Keys
 	{
 		None,
@@ -145,19 +156,4 @@ namespace KeyboardInput
 		Clear,
 		NumKeys,
 	};
-}
-
-class Keyboard
-{
-	UINT m_keys[5];
-	UINT TranslateKey( USHORT );
-
-public:
-	Keyboard( ) noexcept;
-
-	void Initialize( HWND );
-	void Update( USHORT, BOOL );
-	void Shutdown( );
-	bool CheckState( UINT );
 };
-

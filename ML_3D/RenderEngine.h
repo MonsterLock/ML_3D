@@ -23,7 +23,7 @@ public:
 	RenderEngine() noexcept;
 
 	void Initialize( HWND targetWindow );
-	void Terminate();
+	void Shutdown();
 	void Frame();
 	void Render( float );
 };

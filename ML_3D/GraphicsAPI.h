@@ -24,5 +24,5 @@ public:
 	{}
 	virtual void Initialize( HWND window ) = 0;
 	virtual void Render() = 0;
-	virtual void Terminate() = 0;
+	virtual void Shutdown() = 0;
 };

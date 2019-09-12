@@ -2,49 +2,96 @@
 #include "Global.h"
 #include <bitset>
 
-#define BITON(var, offset) (var |= 1 << offset)
-#define BITOFF(var, offset) (var &= ~(1 << offset))
-#define BITTOGGLE(var, offset) (var ^= 1 << offset)
-#define BITNEGATE(var) (var = ~var)
-#define BITLSHIFT(var, offset) (var <<= offset)
-#define BITRSHIFT(var, offset) (var >>= offset)
-#define BITISEVEN(var) (var & 1)
-#define BITTEST(var, offset) (var & (1 << offset))
 #define BINTOINT(var) (0b011)
 
-template <typename T>
-static void BitSetOn( T bitSet[], UINT index )
+namespace BitM
 {
-	UINT bitSize = sizeof( T ) * 8u;
-	bitSet[index / bitSize] |= 1 << ( index % bitSize );
-}
-
-template <typename T>
-static void BitSetOff( T bitSet[], UINT index )
-{
-	UINT bitSize = sizeof( T ) * 8u;
-	bitSet[index / bitSize] &= ~( 1 << ( index % bitSize ) );
-}
-
-template <typename T>
-static bool BitCheck( T bitSet[], UINT index )
-{
-	UINT bitSize = sizeof( T ) * 8u;
-	return ( bitSet[( index / bitSize )] & ( 1 << ( index % bitSize ) ) );
-}
-
-template <typename T>
-static bool ToBit( T bitSet[], UINT size )
-{
-	std::wstring stream;
-
-	for( UINT i = 0; i < size; i++ )
+	template <typename T>
+	static UINT GetBitSetSize( )
 	{
-		std::bitset< sizeof( T ) * 8u > temp( bitSet[i] );
-		stream += temp.to_string<TCHAR>( 'x', 'X' );
-		stream += TEXT( '-' );
+		return sizeof( T ) * 8u;
 	}
-	//return ( bitSet[( index / bitSize )] & ( 1 << ( index % bitSize ) ) )
-	OutputDebugString( stream.c_str( ) );
-	return true;
+
+	template <typename T>
+	static void BitOn( T& var, const UINT offset )
+	{
+		( var |= 1 << offset );
+	}
+
+	template <typename T>
+	static void BitOff( T& var, const UINT offset )
+	{
+		( var &= ~( 1 << offset ) );
+	}
+
+	template <typename T>
+	static void BitToggle( T& var, const UINT offset )
+	{
+		( var ^= 1 << offset );
+	}
+
+	template <typename T>
+	static void BitNegate( T& var )
+	{
+		( var = ~var );
+	}
+
+	template <typename T>
+	static void BitLeftShift( T& var, const UINT offset )
+	{
+		( var <<= offset );
+	}
+
+	template <typename T>
+	static void BitRightShift( T& var, const UINT offset )
+	{
+		( var >>= offset );
+	}
+
+	template <typename T>
+	static bool BitIsEven( const T& var )
+	{
+		return ( var & 1 ) ? true : false;
+	}
+
+	static bool BitIsOn( int var, const UINT offset )
+	{
+		return ( var & ( 1 << offset ) ) ? true : false;
+	}
+
+	template <typename T>
+	static void BitSetOn( T var[], const UINT offset )
+	{
+		UINT bitSize = GetBitSetSize<T>( );
+		var[offset / bitSize] |= 1 << ( offset % bitSize );
+	}
+
+	template <typename T>
+	static void BitSetOff( T var[], const UINT offset )
+	{
+		UINT bitSize = GetBitSetSize<T>( );
+		var[offset / bitSize] &= ~( 1 << ( offset % bitSize ) );
+	}
+
+	template <typename T>
+	static bool BitSetIsOn( const T var[], const UINT offset )
+	{
+		UINT bitSize = GetBitSetSize<T>( );
+		return ( var[( offset / bitSize )] & ( 1 << ( offset % bitSize ) ) );
+	}
+
+	template <typename T>
+	static std::wstring PrintBitStream( T var[], UINT size )
+	{
+		std::wstring out;
+
+		for( UINT i = 0; i < size; i++ )
+		{
+			std::bitset< sizeof( T ) * 8u > temp( var[i] );
+			out += temp.to_string<TCHAR>( '.', '1' );
+			out += TEXT( "\n" );
+		}
+
+		return out;
+	}
 }

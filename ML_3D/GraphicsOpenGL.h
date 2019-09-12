@@ -15,6 +15,6 @@ public:
 	void Render();
 	void Clear();
 	void Present();
-	void Terminate();
+	void Shutdown();
 };
 

@@ -3,19 +3,24 @@
 
 Keyboard::Keyboard( ) noexcept
 {
-	ZeroMemory( m_keys, sizeof( m_keys ) );
+	ZeroMemory( mKeys, sizeof( mKeys ) );
 }
 
-void Keyboard::Initialize( HWND hwnd )
+bool Keyboard::Initialize( )
 {
-	RAWINPUTDEVICE Rid;
+	ZeroMemory( mKeys, sizeof( mKeys ) );
 
+	RAWINPUTDEVICE Rid;
+	ZeroMemory( &Rid, sizeof( Rid ) );
 	Rid.usUsagePage = 0x01;
 	Rid.usUsage = 0x06;
-	Rid.dwFlags = 0;   // adds HID keyboard and also ignores legacy keyboard messages
-	Rid.hwndTarget = hwnd;
+	Rid.dwFlags = 0;
+	Rid.hwndTarget = nullptr;
 
-	TESTRESULT( !RegisterRawInputDevices( &Rid, 1, sizeof( Rid ) ) );
+	if( ISERROR1( !RegisterRawInputDevices( &Rid, 1, sizeof( Rid ) ) ) )
+		return false;
+
+	return true;
 }
 
 void Keyboard::Update( USHORT key, BOOL state )
@@ -28,28 +33,29 @@ void Keyboard::Update( USHORT key, BOOL state )
 		{
 			case RI_KEY_MAKE:
 			{
-				BitSetOn( m_keys, keyIndex );
+				BitM::BitSetOn( mKeys, keyIndex );
 			}
 			break;
 			case RI_KEY_BREAK:
 			{
-				BitSetOff( m_keys, keyIndex );
+				BitM::BitSetOff( mKeys, keyIndex );
 			}
 			break;
 			default:
 				break;
 		}
+		//BitM::PrintBitStream( mKeys, GETARRAYSIZE( mKeys ) );
 	}
 }
 
-void Keyboard::Shutdown( )
+void Keyboard::Reset( )
 {
-	return;
+	ZeroMemory( mKeys, sizeof( mKeys ) );
 }
 
 bool Keyboard::CheckState( UINT key )
 {
-	return BitCheck( m_keys, key );
+	return BitM::BitSetIsOn( mKeys, key );
 }
 
 UINT Keyboard::TranslateKey( USHORT key )
