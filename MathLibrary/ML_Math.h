@@ -25,7 +25,7 @@ namespace ml3d
 		static constexpr float fTWO_PI = 6.283185f;
 
 		template <typename T>
-		static constexpr auto Avg( const T& a , const T& b )
+		static constexpr auto Average( const T& a , const T& b )
 		{
 			return T( ( a + b ) * 0.5f );
 		}

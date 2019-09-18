@@ -6,7 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest
 {
-	using namespace ml3d::MATH;
+	using namespace ml3d::MATH::Vector;
 
 	TEST_CLASS( VectorTest )
 	{
@@ -171,6 +171,139 @@ namespace UnitTest
 			vector output2( -v2 );
 			Assert::IsTrue( output2 == result2 );
 		}
+
+		TEST_METHOD( VectorAngleBetween )
+		{
+			vector v1( 5 , 2 , -3 , 0 );
+			vector v2( 8 , 8 , 1 , 0 );
+			float result1 = 0.712104f;
+
+			float output1 = vector::AngleBetween( v1 , v2 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output1 , result1 ) );
+
+			vector v3( 0 , 0 , 0 , 0 );
+			vector v4( 8 , -4 , -7 , 0 );
+			float result2 = 0.0f;
+
+			float output2 = vector::AngleBetween( v3 , v4 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output2 , result2 ) );
+
+			vector v5( -3 , -3 , -8 , 0 );
+			vector v6( 0 , 0 , 0 , 0 );
+			float result3 = 0;
+
+			float output3 = vector::AngleBetween( v5 , v6 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output3 , result3 ) );
+
+			vector v7( 0 , 0 , 0 , 0 );
+			vector v8( 0 , 0 , 0 , 0 );
+			float result4 = 0.0f;
+
+			float output4 = vector::AngleBetween( v7 , v8 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output4 , result4 ) );
+
+			vector v9( 2 , -8 , -5 , -3 );
+			vector v10( 4 , 4 , 3 , 1 );
+			float result5 = 2.2674946f;
+
+			float output5 = vector::AngleBetween( v9 , v10 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output5 , result5 ) );
+
+			vector v11( 0 , 0 , 0 , 0 );
+			vector v12( -6 , -6 , 5 , -7 );
+			float result6 = 0.0f;
+
+			float output6 = vector::AngleBetween( v11 , v12 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output6 , result6 ) );
+
+			vector v13( -8 , 4 , 7 , -2 );
+			vector v14( 0 , 0 , 0 , 0 );
+			float result7 = 0.0f;
+
+			float output7 = vector::AngleBetween( v13 , v14 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output7 , result7 ) );
+		}
+		TEST_METHOD( VectorAverage )
+		{
+			vector v1( -4 , 5 , 3 , 2 );
+			vector v2( -9 , 8 , -1 , -8 );
+			vector result1( -6.5 , 6.5 , 1 , -3 );
+
+			vector output1 = Average( v1 , v2 );
+			Assert::IsTrue( output1 == result1 );
+
+			vector v3( -1 , -1 , -6 , 0 );
+			vector v4( -6 , 6 , -8 , 0 );
+			vector result2( -3.5 , 2.5 , -7 , 0 );
+
+			vector output2 = Average( v3 , v4 );
+			Assert::IsTrue( output2 == result2 );
+
+			vector v5( -6 , 3 , 8 , 0 );
+			vector v6( 0 , 1 , -9 , 0 );
+			vector result3( -3 , 2 , -0.5 , 0 );
+
+			vector output3 = Average( v5 , v6 );
+			Assert::IsTrue( output3 == result3 );
+		}
+		TEST_METHOD( VectorBarycentric )
+		{
+			Assert::IsTrue( false );
+		}
+		TEST_METHOD( VectorClampLength )
+		{
+			Assert::IsTrue( false );
+		}
+		TEST_METHOD( VectorComponent )
+		{
+			vector v1( -5 , 8 , 6 , 0 );
+			vector v2( -3 , 2 , -6 , 0 );
+			float result1 = -0.71428537f;
+
+			float output1 = vector::Component( v1 , v2 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output1 , result1 ) );
+
+			vector v3( 6 , 4 , 4 , 0 );
+			vector v4( 0 , 0 , 0 , 0 );
+			float result2 = 0;
+
+			float output2 = vector::Component( v3 , v4 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output2 , result2 ) );
+
+			vector v5( 8 , 3 , -6 , -4 );
+			vector v6( 0 , 2 , 6 , -1 );
+			float result3 = -4.0605173f;
+
+			float output3 = vector::Component( v5 , v6 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output3 , result3 ) );
+
+			vector v7( 3 , 3 , -2 , -8 );
+			vector v8( 0 , 0 , 0 , 0 );
+			float result4 = 0;
+
+			float output4 = vector::Component( v7 , v8 );
+			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output4 , result4 ) );
+		}
+		TEST_METHOD( VectorCrossProduct )
+		{
+			vector v1( -2 , 5 , 4 , 0 );
+			vector v2( -6 , 8 , 2 , 0 );
+			vector result1( -22 , -20 , 14 , 1 );
+
+			vector output1 = Cross( v1 , v2 );
+			Assert::IsTrue( output1 == result1 );
+
+			vector v3( 6 , 6 , 8 , -9 );
+			vector v4( -2 , 7 , 6 , -3 );
+			vector result2( -20 , -52 , 54 , 1 );
+
+			vector output2 = Cross( v3 , v4 );
+			Assert::IsTrue( output2 == result2 );
+		}
+		TEST_METHOD( VectorDistanceBetween )
+		{
+			Assert::IsTrue( false );
+		}
 		TEST_METHOD( VectorDotProduct )
 		{
 			vector v1( -7 , -2 , 1 , -2 );
@@ -187,20 +320,44 @@ namespace UnitTest
 			float output2 = v3 * v4;
 			Assert::IsTrue( output2 == result2 );
 		}
-		TEST_METHOD( VectorCrossProduct )
+		TEST_METHOD( VectorHomogenize )
 		{
-			vector v1( -2 , 5 , 4 , 0 );
-			vector v2( -6 , 8 , 2 , 0 );
-			vector result1( -22 , -20 , 14 , 1 );
+			vector v1( -5, -1, 3, -3 );
+			vector result1( 1.6666667f, 0.33333334f, -1, 1 );
 
-			vector output1 = vector::Cross( v1 , v2 );
+			vector output1(Homogenize(v1));
 			Assert::IsTrue( output1 == result1 );
 
-			vector v3( 6 , 6 , 8 , -9 );
-			vector v4( -2 , 7 , 6 , -3 );
-			vector result2( -20 , -52 , 54 , 1 );
+			vector v2( 6, 7, -8, 0 );
+			vector result2( 0, 0, 0, 0 );
 
-			vector output2 = vector::Cross( v3 , v4 );
+			vector output2(Homogenize(v2));
+			Assert::IsTrue( output2 == result2 );
+
+			vector v3( -5, -1, 3, -3 );
+			v3.Homogenize( );
+			Assert::IsTrue( v3 == result1 );
+
+			vector v4( 6, 7, -8, 0 );
+			v4.Homogenize( );
+			Assert::IsTrue( v4 == v2 );
+		}
+		TEST_METHOD( VectorIsExact )
+		{
+			Assert::IsTrue( false );
+		}
+		TEST_METHOD( VectorLength )
+		{
+			vector v1( 4 , -5 , 1 , -9 );
+			float result1 = 11.090536f;
+
+			float output1 = v1.Length( );
+			Assert::IsTrue( output1 == result1 );
+
+			vector v2( -8 , -1 , -9 , -5 );
+			float result2 = 13.076696f;
+
+			float output2 = v2.Length( );
 			Assert::IsTrue( output2 == result2 );
 		}
 		TEST_METHOD( VectorLengthSquare )
@@ -217,30 +374,9 @@ namespace UnitTest
 			float output2 = v2.LengthSq( );
 			Assert::IsTrue( output2 == result2 );
 		}
-		TEST_METHOD( VectorLength )
+		TEST_METHOD( VectorLerp )
 		{
-			vector v1( 4 , -5 , 1 , -9 );
-			float result1 = 11.090536f;
-
-			float output1 = v1.Length( );
-			Assert::IsTrue( output1 == result1 );
-
-			vector v2( -8 , -1 , -9 , -5 );
-			float result2 = 13.076696f;
-
-			float output2 = v2.Length( );
-			Assert::IsTrue( output2 == result2 );
-		}
-		TEST_METHOD( VectorNormalize )
-		{
-			vector v1( -9 , 1 , 0 , 5 );
-			vector result1( -0.87006289f , 0.096673653f , 0 , 0.48336828f );
-
-			vector v2( -4 , -7 , -1 , 2 );
-			vector result2( -0.47809145f , -0.83666003f , -0.11952286f , 0.23904572f );
-
-			vector v3( 0 , 0 , 0 , 0 );
-			vector result3( 0 , 0 , 0 , 0 );
+			Assert::IsTrue( false );
 		}
 		TEST_METHOD( VectorMax )
 		{
@@ -248,14 +384,14 @@ namespace UnitTest
 			vector v2( -4 , 2 , -4 , 0 );
 			vector result1( -4 , 5 , -2 , 0 );
 
-			vector output1 = vector::Max( v1 , v2 );
+			vector output1 = Max( v1 , v2 );
 			Assert::IsTrue( output1 == result1 );
 
 			vector v3( 3 , 8 , -2 , -2 );
 			vector v4( -6 , 7 , -3 , 1 );
 			vector result2( 3 , 8 , -2 , 1 );
 
-			vector output2 = vector::Max( v3 , v4 );
+			vector output2 = Max( v3 , v4 );
 			Assert::IsTrue( output2 == result2 );
 		}
 		TEST_METHOD( VectorMin )
@@ -264,119 +400,36 @@ namespace UnitTest
 			vector v2( -7 , 8 , 0 , -5 );
 			vector result1( -7 , 7 , 0 , -6 );
 
-			vector output1 = vector::Min( v1 , v2 );
+			vector output1 = Min( v1 , v2 );
 			Assert::IsTrue( output1 == result1 );
 
 			vector v3( -9 , 1 , 5 , 5 );
 			vector v4( 4 , -2 , 0 , 3 );
 			vector result2( -9 , -2 , 0 , 3 );
 
-			vector output2 = vector::Min( v3 , v4 );
+			vector output2 = Min( v3 , v4 );
 			Assert::IsTrue( output2 == result2 );
 		}
-		TEST_METHOD( VectorAverage )
+		TEST_METHOD( VectorNormalize )
 		{
-			vector v1( -4 , 5 , 3 , 2 );
-			vector v2( -9 , 8 , -1 , -8 );
-			vector result1( -6.5 , 6.5 , 1 , -3 );
+			vector v1( -9 , 1 , 0 , 5 );
+			vector result1( -0.87006289f , 0.096673653f , 0 , 0.48336828f );
 
-			vector output1 = vector::Average( v1 , v2 );
-			Assert::IsTrue( output1 == result1 );
+			v1.Normalize( );
+			Assert::IsTrue( v1 == result1 );
 
-			vector v3( -1 , -1 , -6 , 0 );
-			vector v4( -6 , 6 , -8 , 0 );
-			vector result2( -3.5 , 2.5 , -7 , 0 );
+			vector v2( -4 , -7 , -1 , 2 );
+			vector result2( -0.47809145f , -0.83666003f , -0.11952286f , 0.23904572f );
 
-			vector output2 = vector::Average( v3 , v4 );
-			Assert::IsTrue( output2 == result2 );
-
-			vector v5( -6 , 3 , 8 , 0 );
-			vector v6( 0 , 1 , -9 , 0 );
-			vector result3( -3 , 2 , -0.5 , 0 );
-
-			vector output3 = vector::Average( v5 , v6 );
-			Assert::IsTrue( output3 == result3 );
-		}
-		TEST_METHOD( VectorAngle )
-		{
-			vector v1( 5 , 2 , -3 , 0 );
-			vector v2( 8 , 8 , 1 , 0 );
-			float result1 = 0.712104f;
-
-			float output1 = vector::AngleBetween( v1 , v2 );
-			Assert::IsTrue( IsAboutEqual( output1 , result1 ) );
+			v2.Normalize( );
+			Assert::IsTrue( v2 == result2 );
 
 			vector v3( 0 , 0 , 0 , 0 );
-			vector v4( 8 , -4 , -7 , 0 );
-			float result2 = 0.0f;
+			vector result3( 0 , 0 , 0 , 0 );
 
-			float output2 = vector::AngleBetween( v3 , v4 );
-			Assert::IsTrue( IsAboutEqual( output2 , result2 ) );
+			v3.Normalize( );
+			Assert::IsTrue( v3 == result3 );
 
-			vector v5( -3 , -3 , -8 , 0 );
-			vector v6( 0 , 0 , 0 , 0 );
-			float result3 = 0;
-
-			float output3 = vector::AngleBetween( v5 , v6 );
-			Assert::IsTrue( IsAboutEqual( output3 , result3 ) );
-
-			vector v7( 0 , 0 , 0 , 0 );
-			vector v8( 0 , 0 , 0 , 0 );
-			float result4 = 0.0f;
-
-			float output4 = vector::AngleBetween( v7 , v8 );
-			Assert::IsTrue( IsAboutEqual( output4 , result4 ) );
-
-			vector v9( 2 , -8 , -5 , -3 );
-			vector v10( 4 , 4 , 3 , 1 );
-			float result5 = 2.2674946f;
-
-			float output5 = vector::AngleBetween( v9 , v10 );
-			Assert::IsTrue( IsAboutEqual( output5 , result5 ) );
-
-			vector v11( 0 , 0 , 0 , 0 );
-			vector v12( -6 , -6 , 5 , -7 );
-			float result6 = 0.0f;
-
-			float output6 = vector::AngleBetween( v11 , v12 );
-			Assert::IsTrue( IsAboutEqual( output6 , result6 ) );
-
-			vector v13( -8 , 4 , 7 , -2 );
-			vector v14( 0 , 0 , 0 , 0 );
-			float result7 = 0.0f;
-
-			float output7 = vector::AngleBetween( v13 , v14 );
-			Assert::IsTrue( IsAboutEqual( output7 , result7 ) );
-		}
-		TEST_METHOD( VectorComponent )
-		{
-			vector v1( -5 , 8 , 6 , 0 );
-			vector v2( -3 , 2 , -6 , 0 );
-			float result1 = -0.71428537f;
-
-			float output1 = vector::Component( v1 , v2 );
-			Assert::IsTrue( IsAboutEqual( output1 , result1 ) );
-
-			vector v3( 6 , 4 , 4 , 0 );
-			vector v4( 0 , 0 , 0 , 0 );
-			float result2 = 0;
-
-			float output2 = vector::Component( v3 , v4 );
-			Assert::IsTrue( IsAboutEqual( output2 , result2 ) );
-
-			vector v5( 8 , 3 , -6 , -4 );
-			vector v6( 0 , 2 , 6 , -1 );
-			float result3 = -4.0605173f;
-
-			float output3 = vector::Component( v5 , v6 );
-			Assert::IsTrue( IsAboutEqual( output3 , result3 ) );
-
-			vector v7( 3 , 3 , -2 , -8 );
-			vector v8( 0 , 0 , 0 , 0 );
-			float result4 = 0;
-
-			float output4 = vector::Component( v7 , v8 );
-			Assert::IsTrue( IsAboutEqual( output4 , result4 ) );
 		}
 		TEST_METHOD( VectorProject )
 		{
@@ -384,28 +437,28 @@ namespace UnitTest
 			vector v2( 2 , 3 , 3 , 0 );
 			vector result1( 4.5454545f , 6.8181815f , 6.8181815f , 0 );
 
-			vector output1(vector::Projection(v1, v2));
+			vector output1(Projection(v1, v2));
 			Assert::IsTrue( output1 == result1 );
 
 			vector v3( -4 , 0 , 6 , 0 );
 			vector v4( 0 , 0 , 0 , 0 );
 			vector result2( 0 , 0 , 0 , 0 );
 
-			vector output2(vector::Projection(v3, v4));
+			vector output2(Projection(v3, v4));
 			Assert::IsTrue( output2 == result2 );
 
 			vector v5( -9 , -8 , 0 , 5 );
 			vector v6( 0 , 7 , -9 , -1 );
 			vector result3( -0 , -3.2595417f , 4.1908393f , 0.46564883f );
 
-			vector output3(vector::Projection(v5, v6));
+			vector output3(Projection(v5, v6));
 			Assert::IsTrue( output3 == result3 );
 
 			vector v7( -2 , -5 , 3 , 7 );
 			vector v8( 0 , 0 , 0 , 0 );
 			vector result4( 0 , 0 , 0 , 0 );
 
-			vector output4(vector::Projection(v7, v8));
+			vector output4(Projection(v7, v8));
 			Assert::IsTrue( output4 == result4 );
 		}
 		TEST_METHOD( VectorReflect )
@@ -414,35 +467,35 @@ namespace UnitTest
 			vector v2( 7 , -7 , -3 , 0 );
 			vector result1( -3.9626169f , -0.03738296f , -4.1588783f , -0 );
 
-			vector output1(vector::Reflection(v1, v2));
+			vector output1(Reflection(v1, v2));
 			Assert::IsTrue( output1 == result1 );
 
 			vector v3( 3 , -8 , 0 , 0 );
 			vector v4( 0 , 0 , 0 , 0 );
 			vector result2( -3, 8, -0, -0 );
 
-			vector output2(vector::Reflection(v3, v4));
+			vector output2(Reflection(v3, v4));
 			Assert::IsTrue( output2 == result2 );
 
 			vector v5( -1 , 4 , -7 , -8 );
 			vector v6( 5 , 2 , -7 , -1 );
 			vector result3( 8.5949373f , -0.96202517f , -3.6329117f , 6.4810123f );
 
-			vector output3(vector::Reflection(v5, v6));
+			vector output3(Reflection(v5, v6));
 			Assert::IsTrue( output3 == result3 );
 
 			vector v7( -4 , -4 , 7 , 6 );
 			vector v8( 0 , 0 , 0 , 0 );
 			vector result4( 4 , 4 , -7 , -6 );
 
-			vector output4(vector::Reflection(v7, v8));
+			vector output4(Reflection(v7, v8));
 			Assert::IsTrue( output4 == result4 );
 
 			vector v9( -5 , -2 , -7 , 0 );
 			vector v10( 1 , 0 , 0 , 0 );
 			vector result5( -5 , 2 , 7 , -0 );
 
-			vector output5(vector::Reflection(v9, v10));
+			vector output5(Reflection(v9, v10));
 			Assert::IsTrue( output5 == result5 );
 		}
 	};

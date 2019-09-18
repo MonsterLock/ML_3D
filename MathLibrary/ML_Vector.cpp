@@ -1,276 +1,361 @@
 #include "ML_Vector.h"
 
-namespace ml3d
+using namespace ml3d::MATH::Vector;
+
+vector::vector( ) noexcept
+	: x( 0.0f ) , y( 0.0f ) , z( 0.0f ) , w( 0.0f )
 {
-	namespace MATH
+}
+
+vector::vector( const float& x , const float& y ) noexcept
+	: x( x ) , y( y ) , z( 0.0f ) , w( 0.0f )
+{
+}
+
+vector::vector( const float& x , const float& y , const float& z ) noexcept
+	: x( x ) , y( y ) , z( z ) , w( 0.0f )
+{
+}
+
+vector::vector( const float& x , const float& y , const float& z , const float& w ) noexcept
+	: x( x ) , y( y ) , z( z ) , w( w )
+{
+}
+
+vector::vector( const vector& rhs ) noexcept
+	: x( rhs.x ) , y( rhs.y ) , z( rhs.z ) , w( rhs.w )
+{
+}
+
+// Uses 'IsAboutEqual' comparison. For exact equality check use 'IsExact'.
+bool vector::operator==( const vector& rhs )
+{
+	return
+		IsAboutEqual( this->x , rhs.x ) &&
+		IsAboutEqual( this->y , rhs.y ) &&
+		IsAboutEqual( this->z , rhs.z ) &&
+		IsAboutEqual( this->w , rhs.w );
+}
+
+// Uses 'IsAboutEqual' comparison. For exact equality check use 'IsExact'.
+bool vector::operator!=( const vector& rhs )
+{
+	return
+		!( IsAboutEqual( this->x , rhs.x ) &&
+		   IsAboutEqual( this->y , rhs.y ) &&
+		   IsAboutEqual( this->z , rhs.z ) &&
+		   IsAboutEqual( this->w , rhs.w ) );
+}
+
+float vector::operator*( const vector& rhs ) const
+{
+	return
+		this->x * rhs.x +
+		this->y * rhs.y +
+		this->z * rhs.z +
+		this->w * rhs.w;
+}
+
+float vector::operator[]( const unsigned int index )
+{
+	return e[ index ];
+}
+
+const float vector::operator[]( const unsigned int index ) const
+{
+	return e[ index ];
+}
+
+vector& vector::operator=( const vector& rhs )
+{
+	this->x = rhs.x;
+	this->y = rhs.y;
+	this->z = rhs.z;
+	this->w = rhs.w;
+	return *this;
+}
+
+vector vector::operator+( const vector& rhs ) const
+{
+	return vector(
+		this->x + rhs.x ,
+		this->y + rhs.y ,
+		this->z + rhs.z ,
+		this->w + rhs.w );
+}
+
+vector& vector::operator+=( const vector& rhs )
+{
+	this->x += rhs.x;
+	this->y += rhs.y;
+	this->z += rhs.z;
+	this->w += rhs.w;
+	return *this;
+}
+
+vector vector::operator-( ) const
+{
+	return vector(
+		-this->x ,
+		-this->y ,
+		-this->z ,
+		-this->w );
+}
+
+vector vector::operator-( const vector& rhs ) const
+{
+	return vector(
+		this->x - rhs.x ,
+		this->y - rhs.y ,
+		this->z - rhs.z ,
+		this->w - rhs.w );
+}
+
+vector& vector::operator-=( const vector& rhs )
+{
+	this->x -= rhs.x;
+	this->y -= rhs.y;
+	this->z -= rhs.z;
+	this->w -= rhs.w;
+	return *this;
+}
+
+vector vector::operator*( const float& rhs ) const
+{
+	return vector(
+		this->x * rhs ,
+		this->y * rhs ,
+		this->z * rhs ,
+		this->w * rhs );
+}
+
+vector& vector::operator*=( const float& rhs )
+{
+	this->x *= rhs;
+	this->y *= rhs;
+	this->z *= rhs;
+	this->w *= rhs;
+	return *this;
+}
+
+// Inverses value and does scalar multiplication.
+vector vector::operator/( const float& rhs ) const
+{
+	float inverse = 1.0f / rhs;
+	return vector(
+		this->x * inverse ,
+		this->y * inverse ,
+		this->z * inverse ,
+		this->w * inverse );
+}
+
+// Inverses value and does scalar multiplication.
+vector& vector::operator/=( const float& rhs )
+{
+	float inverse = 1.0f / rhs;
+	this->x *= inverse;
+	this->y *= inverse;
+	this->z *= inverse;
+	this->w *= inverse;
+	return *this;
+}
+
+float vector::Length( ) const
+{
+	return sqrt(
+		Square( this->x ) +
+		Square( this->y ) +
+		Square( this->z ) +
+		Square( this->w ) );
+}
+
+float vector::LengthSq( ) const
+{
+	return
+		Square( this->x ) +
+		Square( this->y ) +
+		Square( this->z ) +
+		Square( this->w );
+}
+
+void vector::ClampLength( const float & rhs )
+{
+	float length = LengthSq( );
+
+	if( IsAboutZero( length ) )
 	{
-		ml3d::MATH::vector::vector( ) noexcept
-			: x( 0.0f ) , y( 0.0f ) , z( 0.0f ) , w( 0.0f )
-		{
-		}
+		return;
+	}
 
-		vector::vector( const float& x , const float& y ) noexcept
-			: x( x ) , y( y ) , z( 0.0f ) , w( 0.0f )
-		{
-		}
+	float scalar = rhs / sqrt( length );
+	*this *= scalar;
+}
 
-		vector::vector( const float& x , const float& y , const float& z ) noexcept
-			: x( x ) , y( y ) , z( z ) , w( 0.0f )
-		{
-		}
+void vector::Homogenize( )
+{
+	if( IsAboutZero( this->w ) )
+	{
+		return;
+	}
 
-		vector::vector( const float& x , const float& y , const float& z , const float& w ) noexcept
-			: x( x ) , y( y ) , z( z ) , w( w )
-		{
-		}
+	Normalize( );
+	*this /= this->w;
+}
 
-		vector::vector( const vector& rhs ) noexcept
-			: x( rhs.x ) , y( rhs.y ) , z( rhs.z ) , w( rhs.w )
-		{
-		}
+void vector::Normalize( )
+{
+	float length = LengthSq( );
 
-		vector& vector::operator=( const vector& rhs )
-		{
-			this->x = rhs.x;
-			this->y = rhs.y;
-			this->z = rhs.z;
-			this->w = rhs.w;
-			return *this;
-		}
+	if( IsAboutZero( length ) )
+	{
+		return;
+	}
 
-		vector vector::operator+( const vector& rhs ) const
-		{
-			return vector(
-				this->x + rhs.x ,
-				this->y + rhs.y ,
-				this->z + rhs.z ,
-				this->w + rhs.w );
-		}
+	*this /= sqrt( length );
+}
 
-		vector& vector::operator+=( const vector& rhs )
-		{
-			this->x += rhs.x;
-			this->y += rhs.y;
-			this->z += rhs.z;
-			this->w += rhs.w;
-			return *this;
-		}
+bool vector::IsExact( const vector & lhs , const vector & rhs )
+{
+	return
+		lhs.x == rhs.x ,
+		lhs.y == rhs.y ,
+		lhs.z == rhs.z ,
+		lhs.w == rhs.w;
+}
 
-		vector vector::operator-( ) const
-		{
-			return vector(
-				-this->x ,
-				-this->y ,
-				-this->z ,
-				-this->w );
-		}
+float vector::AngleBetween( const vector & lhs , const vector & rhs )
+{
+	float lengthLHS = lhs.LengthSq( );
+	float lengthRHS = rhs.LengthSq( );
 
-		vector vector::operator-( const vector& rhs ) const
-		{
-			return vector(
-				this->x - rhs.x ,
-				this->y - rhs.y ,
-				this->z - rhs.z ,
-				this->w - rhs.w );
-		}
+	if( IsAboutZero( lengthLHS ) || IsAboutZero( lengthRHS ) )
+	{
+		return 0.0f;
+	}
 
-		vector& vector::operator-=( const vector& rhs )
-		{
-			this->x -= rhs.x;
-			this->y -= rhs.y;
-			this->z -= rhs.z;
-			this->w -= rhs.w;
-			return *this;
-		}
+	return acos( lhs * rhs / ( sqrt( lengthLHS ) * sqrt( lengthRHS ) ) );
+}
 
-		vector vector::operator*( const float& rhs ) const
-		{
-			return vector(
-				this->x * rhs ,
-				this->y * rhs ,
-				this->z * rhs ,
-				this->w * rhs );
-		}
+float vector::Component( const vector& lhs , const vector& rhs )
+{
+	return lhs * Vector::Normalize( rhs );
+}
 
-		vector& vector::operator*=( const float& rhs )
-		{
-			this->x *= rhs;
-			this->y *= rhs;
-			this->z *= rhs;
-			this->w *= rhs;
-			return *this;
-		}
+float vector::DistanceBetween( const vector & lhs , const vector & rhs )
+{
+	return vector( lhs - rhs ).Length( );
+}
 
-		vector vector::operator/( const float& rhs ) const
-		{
-			float inverse = 1.0f / rhs;
-			return vector(
-				this->x * inverse ,
-				this->y * inverse ,
-				this->z * inverse ,
-				this->w * inverse );
-		}
+vector ml3d::MATH::Vector::Average( const vector & lhs , const vector & rhs )
+{
+	return vector(
+		ml3d::MATH::Average( lhs.x , rhs.x ) ,
+		ml3d::MATH::Average( lhs.y , rhs.y ) ,
+		ml3d::MATH::Average( lhs.z , rhs.z ) ,
+		ml3d::MATH::Average( lhs.w , rhs.w ) );
+}
 
-		vector& vector::operator/=( const float& rhs )
-		{
-			float inverse = 1.0f / rhs;
-			this->x *= inverse;
-			this->y *= inverse;
-			this->z *= inverse;
-			this->w *= inverse;
-			return *this;
-		}
+vector ml3d::MATH::Vector::Barycentric( const vector & lhs , const vector & rhs )
+{
+	vector bary = Cross( lhs , rhs );
+	float inverseZ = 1.0f / bary.z;
+	return vector( 1.0f - ( bary.x + bary.y ) * inverseZ , bary.y * inverseZ , bary.x * inverseZ );
+}
 
-		float vector::operator*( const vector& rhs ) const
-		{
-			return
-				this->x * rhs.x +
-				this->y * rhs.y +
-				this->z * rhs.z +
-				this->w * rhs.w;
-		}
+vector ml3d::MATH::Vector::Clamp( const vector & rhs , const float& max )
+{
+	float length = rhs.LengthSq( );
 
-		bool vector::operator==( const vector& rhs )
-		{
-			return
-				IsAboutEqual( this->x , rhs.x ) &&
-				IsAboutEqual( this->y , rhs.y ) &&
-				IsAboutEqual( this->z , rhs.z ) &&
-				IsAboutEqual( this->w , rhs.w );
-		}
+	if( ml3d::MATH::IsAboutZero( length ) )
+	{
+		return rhs;
+	}
 
-		bool vector::operator!=( const vector& rhs )
-		{
-			return
-				!( IsAboutEqual( this->x , rhs.x ) &&
-				   IsAboutEqual( this->y , rhs.y ) &&
-				   IsAboutEqual( this->z , rhs.z ) &&
-				   IsAboutEqual( this->w , rhs.w ) );
-		}
+	float scalar = max / sqrt( length );
+	return vector( rhs * scalar );
+}
 
-		float vector::operator[]( const unsigned int index )
-		{
-			return e[ index ];
-		}
+vector ml3d::MATH::Vector::Cross( const vector& lhs , const vector& rhs )
+{
+	return vector(
+		lhs.y * rhs.z - rhs.y * lhs.z ,
+		rhs.x * lhs.z - lhs.x * rhs.z ,
+		lhs.x * rhs.y - rhs.x * lhs.y ,
+		1.0f );
+}
 
-		const float vector::operator[]( const unsigned int index ) const
-		{
-			return e[ index ];
-		}
+vector ml3d::MATH::Vector::Homogenize( const vector & rhs )
+{
+	if( ml3d::MATH::IsAboutZero( rhs.w ) )
+	{
+		return vector( );
+	}
 
-		float vector::AngleBetween( const vector & lhs , const vector & rhs )
-		{
+	vector normalized = Normalize( rhs );
+	return normalized / normalized.w;
+}
 
-			float lengthLHS = lhs.Length( );
-			float lengthRHS = rhs.Length( );
+vector ml3d::MATH::Vector::Lerp( const vector& lhs , const vector& rhs , const float t )
+{
+	return vector(
+		ml3d::MATH::Lerp( lhs.x , rhs.x , t ) ,
+		ml3d::MATH::Lerp( lhs.y , rhs.y , t ) ,
+		ml3d::MATH::Lerp( lhs.z , rhs.z , t ) ,
+		ml3d::MATH::Lerp( lhs.w , rhs.w , t ) );
+}
 
-			if( IsAboutZero( lengthLHS ) || IsAboutZero( lengthRHS ) )
-			{
-				return 0.0f;
-			}
+vector ml3d::MATH::Vector::Max( const vector& lhs , const vector& rhs )
+{
+	return vector(
+		ml3d::MATH::Greater( lhs.x , rhs.x ) ,
+		ml3d::MATH::Greater( lhs.y , rhs.y ) ,
+		ml3d::MATH::Greater( lhs.z , rhs.z ) ,
+		ml3d::MATH::Greater( lhs.w , rhs.w ) );
+}
 
-			return acos( lhs * rhs / ( lengthLHS * lengthRHS ) );
-		}
+vector ml3d::MATH::Vector::Min( const vector& lhs , const vector& rhs )
+{
+	return vector(
+		ml3d::MATH::Lesser( lhs.x , rhs.x ) ,
+		ml3d::MATH::Lesser( lhs.y , rhs.y ) ,
+		ml3d::MATH::Lesser( lhs.z , rhs.z ) ,
+		ml3d::MATH::Lesser( lhs.w , rhs.w ) );
+}
 
-		vector vector::Average( const vector& lhs , const vector& rhs )
-		{
-			return vector(
-				Avg( lhs.x , rhs.x ) ,
-				Avg( lhs.y , rhs.y ) ,
-				Avg( lhs.z , rhs.z ) ,
-				Avg( lhs.w , rhs.w ) );
-		}
+vector ml3d::MATH::Vector::Normalize( const vector& rhs )
+{
+	float length = rhs.LengthSq( );
 
-		float vector::Component( const vector& lhs , const vector& rhs )
-		{
-			return lhs * Normalize( rhs );
-		}
+	if( ml3d::MATH::IsAboutZero( length ) )
+	{
+		return rhs;
+	}
 
-		vector vector::Cross( const vector& lhs , const vector& rhs )
-		{
-			return vector(
-				lhs.y * rhs.z - rhs.y * lhs.z ,
-				rhs.x * lhs.z - lhs.x * rhs.z ,
-				lhs.x * rhs.y - rhs.x * lhs.y ,
-				1.0f );
-		}
+	return rhs / sqrt( length );
+}
 
-		float vector::LengthSq( ) const
-		{
-			return
-				Square( this->x ) +
-				Square( this->y ) +
-				Square( this->z ) +
-				Square( this->w );
-		}
+vector ml3d::MATH::Vector::Projection( const vector& lhs , const vector& rhs )
+{
+	float length = rhs.LengthSq( );
 
-		float vector::Length( ) const
-		{
-			return sqrt(
-				Square( this->x ) +
-				Square( this->y ) +
-				Square( this->z ) +
-				Square( this->w ) );
-		}
+	if( ml3d::MATH::IsAboutZero( length ) )
+	{
+		return rhs * ( lhs * rhs );
+	}
 
-		vector vector::LerpVector( const vector& lhs , const vector& rhs , const float t )
-		{
-			return vector(
-				Lerp( lhs.x , rhs.x , t ) ,
-				Lerp( lhs.y , rhs.y , t ) ,
-				Lerp( lhs.z , rhs.z , t ) ,
-				Lerp( lhs.w , rhs.w , t ) );
-		}
+	vector norm_rhs( rhs / sqrt( length ) );
+	return norm_rhs * ( lhs * norm_rhs );
+}
 
-		vector vector::Min( const vector& lhs , const vector& rhs )
-		{
-			return vector( Lesser( lhs.x , rhs.x ) , Lesser( lhs.y , rhs.y ) , Lesser( lhs.z , rhs.z ) , Lesser( lhs.w , rhs.w ) );
-		}
+vector ml3d::MATH::Vector::Reflection( const vector& lhs , const vector& rhs )
+{
+	float length = rhs.LengthSq( );
 
-		vector vector::Max( const vector& lhs , const vector& rhs )
-		{
-			return vector( Greater( lhs.x , rhs.x ) , Greater( lhs.y , rhs.y ) , Greater( lhs.z , rhs.z ) , Greater( lhs.w , rhs.w ) );
-		}
+	if( ml3d::MATH::IsAboutZero( length ) )
+	{
+		return -lhs;
+	}
 
-		void vector::Normalize( )
-		{
-			if( IsAboutZero( LengthSq( ) ) )
-			{
-				return;
-			}
-
-			float length = 1.0f / Length( );
-			*this = vector(
-				this->x * length ,
-				this->y * length ,
-				this->z * length ,
-				this->w * length );
-		}
-
-		vector vector::Normalize( const vector& rhs )
-		{
-			if( IsAboutZero( rhs.LengthSq( ) ) )
-			{
-				return rhs;
-			}
-
-			float length = 1.0f / rhs.Length( );
-			return vector(
-				rhs.x * length ,
-				rhs.y * length ,
-				rhs.z * length ,
-				rhs.w * length );
-		}
-
-		vector vector::Projection( const vector& lhs , const vector& rhs )
-		{
-			return Normalize( rhs ) * Component( lhs , rhs );
-		}
-
-		vector vector::Reflection( const vector& lhs , const vector& rhs )
-		{
-			return ( IsAboutZero( rhs.Length( ) ) ) ?
-				-lhs : ( Projection( lhs , rhs ) * 2 ) - lhs;
-		}
-	} // end namespace MATH
-} // namespace ml3d
+	vector norm_rhs( rhs / sqrt( length ) );
+	return ( norm_rhs * ( lhs * norm_rhs ) * 2 ) - lhs;
+}
