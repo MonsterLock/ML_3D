@@ -1,12 +1,12 @@
 #include "CppUnitTest.h"
 
-#include "../MathLibrary/ML_Matrix.h"
+#include "../CoreLibrary/ML_Matrix.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest
 {
-	using namespace ml3d::MATH::Matrix;
+	using namespace ML::MATH::Matrix;
 
 	TEST_CLASS( MatrixTest )
 	{
@@ -913,7 +913,7 @@ namespace UnitTest
 		}
 		TEST_METHOD( MatrixProjection )
 		{
-			float fieldOfView = ml3d::MATH::fPI * 0.4f;
+			float fieldOfView = ML::MATH::fPI * 0.4f;
 			float aspectRatio = 10.0f / 10.0f;
 			float t_near = 0.1f;
 			float t_far = 10.0f;
@@ -934,7 +934,7 @@ namespace UnitTest
 				{ 0, 0, 1.000100f, 1 } ,
 				{ 0, 0, -0.100010f, 0 } );
 
-			fieldOfView = ml3d::MATH::fPI * 0.4f;
+			fieldOfView = ML::MATH::fPI * 0.4f;
 			aspectRatio = 1920.0f / 1057.0f;
 			t_near = 0.1f;
 			t_far = 1000.0f;

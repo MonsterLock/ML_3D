@@ -1,7 +1,8 @@
 #pragma once
 #include "ML_Math.h"
+#include <iostream>
 
-namespace ml3d
+namespace ML
 {
 	namespace MATH
 	{
@@ -52,12 +53,15 @@ namespace ml3d
 				void Homogenize             ( );
 				void Normalize              ( );
 
-				static bool IsExact         ( const vector& , const vector& );
+				friend std::ostream& operator<<(std::ostream& os, const vector& rhs);
 
-				static float AngleBetween   ( const vector& , const vector& );
-				static float Component      ( const vector& , const vector& );
-				static float DistanceBetween( const vector& , const vector& );
 			}; // end struct vector
+
+			extern bool IsExact         ( const vector& , const vector& );
+
+			extern float AngleBetween   ( const vector& , const vector& );
+			extern float Component      ( const vector& , const vector& );
+			extern float DistanceBetween( const vector& , const vector& );
 
 			extern vector Average       ( const vector& , const vector& );
 			extern vector Barycentric   ( const vector& , const vector& );
@@ -80,4 +84,5 @@ namespace ml3d
 			static const vector Zero    = { 0.0f , 0.0f , 0.0f , 0.0f };
 		} // end namespace vector
 	} // end namespace MATH
-} // end namespace ml3d
+} // end namespace ML
+

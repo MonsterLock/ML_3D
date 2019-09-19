@@ -176,8 +176,8 @@
     <ClCompile Include="ML_Vector_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MathLibrary\MathLibrary.vcxproj">
-      <Project>{c37286bd-df3b-4ba0-84bf-66551cf1f2c8}</Project>
+    <ProjectReference Include="..\CoreLibrary\CoreLibrary.vcxproj">
+      <Project>{da022eba-3927-4708-a37c-cd759f4f9577}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

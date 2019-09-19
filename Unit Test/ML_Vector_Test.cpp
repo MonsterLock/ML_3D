@@ -1,12 +1,12 @@
 #include "CppUnitTest.h"
 
-#include "../MathLibrary/ML_Vector.h"
+#include "../CoreLibrary/ML_Vector.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest
 {
-	using namespace ml3d::MATH::Vector;
+	using namespace ML::MATH::Vector;
 
 	TEST_CLASS( VectorTest )
 	{
@@ -178,50 +178,50 @@ namespace UnitTest
 			vector v2( 8 , 8 , 1 , 0 );
 			float result1 = 0.712104f;
 
-			float output1 = vector::AngleBetween( v1 , v2 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output1 , result1 ) );
+			float output1 = AngleBetween( v1 , v2 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output1 , result1 ) );
 
 			vector v3( 0 , 0 , 0 , 0 );
 			vector v4( 8 , -4 , -7 , 0 );
 			float result2 = 0.0f;
 
-			float output2 = vector::AngleBetween( v3 , v4 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output2 , result2 ) );
+			float output2 = AngleBetween( v3 , v4 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output2 , result2 ) );
 
 			vector v5( -3 , -3 , -8 , 0 );
 			vector v6( 0 , 0 , 0 , 0 );
 			float result3 = 0;
 
-			float output3 = vector::AngleBetween( v5 , v6 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output3 , result3 ) );
+			float output3 = AngleBetween( v5 , v6 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output3 , result3 ) );
 
 			vector v7( 0 , 0 , 0 , 0 );
 			vector v8( 0 , 0 , 0 , 0 );
 			float result4 = 0.0f;
 
-			float output4 = vector::AngleBetween( v7 , v8 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output4 , result4 ) );
+			float output4 = AngleBetween( v7 , v8 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output4 , result4 ) );
 
 			vector v9( 2 , -8 , -5 , -3 );
 			vector v10( 4 , 4 , 3 , 1 );
 			float result5 = 2.2674946f;
 
-			float output5 = vector::AngleBetween( v9 , v10 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output5 , result5 ) );
+			float output5 = AngleBetween( v9 , v10 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output5 , result5 ) );
 
 			vector v11( 0 , 0 , 0 , 0 );
 			vector v12( -6 , -6 , 5 , -7 );
 			float result6 = 0.0f;
 
-			float output6 = vector::AngleBetween( v11 , v12 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output6 , result6 ) );
+			float output6 = AngleBetween( v11 , v12 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output6 , result6 ) );
 
 			vector v13( -8 , 4 , 7 , -2 );
 			vector v14( 0 , 0 , 0 , 0 );
 			float result7 = 0.0f;
 
-			float output7 = vector::AngleBetween( v13 , v14 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output7 , result7 ) );
+			float output7 = AngleBetween( v13 , v14 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output7 , result7 ) );
 		}
 		TEST_METHOD( VectorAverage )
 		{
@@ -246,13 +246,21 @@ namespace UnitTest
 			vector output3 = Average( v5 , v6 );
 			Assert::IsTrue( output3 == result3 );
 		}
-		TEST_METHOD( VectorBarycentric )
-		{
-			Assert::IsTrue( false );
-		}
 		TEST_METHOD( VectorClampLength )
 		{
-			Assert::IsTrue( false );
+			float clamp1 = 3.464101f;
+
+			vector v1( 8 , 9 , 3 , 0 );
+			v1.ClampLength( clamp1 );
+			float result1 = v1.Length();
+
+			Assert::IsTrue( ML::MATH::IsAboutEqual( result1 , clamp1 ) );
+
+			vector v2( -8 , -9 , -3 , 0 );
+			v2.ClampLength( clamp1 );
+			float result2 = v2.Length();
+
+			Assert::IsTrue( ML::MATH::IsAboutEqual( result2 , clamp1 ) );
 		}
 		TEST_METHOD( VectorComponent )
 		{
@@ -260,29 +268,29 @@ namespace UnitTest
 			vector v2( -3 , 2 , -6 , 0 );
 			float result1 = -0.71428537f;
 
-			float output1 = vector::Component( v1 , v2 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output1 , result1 ) );
+			float output1 = Component( v1 , v2 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output1 , result1 ) );
 
 			vector v3( 6 , 4 , 4 , 0 );
 			vector v4( 0 , 0 , 0 , 0 );
 			float result2 = 0;
 
-			float output2 = vector::Component( v3 , v4 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output2 , result2 ) );
+			float output2 = Component( v3 , v4 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output2 , result2 ) );
 
 			vector v5( 8 , 3 , -6 , -4 );
 			vector v6( 0 , 2 , 6 , -1 );
 			float result3 = -4.0605173f;
 
-			float output3 = vector::Component( v5 , v6 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output3 , result3 ) );
+			float output3 = Component( v5 , v6 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output3 , result3 ) );
 
 			vector v7( 3 , 3 , -2 , -8 );
 			vector v8( 0 , 0 , 0 , 0 );
 			float result4 = 0;
 
-			float output4 = vector::Component( v7 , v8 );
-			Assert::IsTrue( ml3d::MATH::IsAboutEqual( output4 , result4 ) );
+			float output4 = Component( v7 , v8 );
+			Assert::IsTrue( ML::MATH::IsAboutEqual( output4 , result4 ) );
 		}
 		TEST_METHOD( VectorCrossProduct )
 		{
@@ -302,7 +310,26 @@ namespace UnitTest
 		}
 		TEST_METHOD( VectorDistanceBetween )
 		{
-			Assert::IsTrue( false );
+			vector v1( -7 , -2 , 1 , 0 );
+			vector v2( -4 , 2 , 7 , 0 );
+			float result1 = 7.81025f;
+
+			float output1 = DistanceBetween( v1 , v2 );
+			Assert::IsTrue( output1 == result1 );
+
+			vector v3( -7 , -2 , 1 , 7 );
+			vector v4( -4 , 2 , 7 , 8 );
+			float result2 = 7.81025f;
+
+			float output2 = DistanceBetween( v3 , v4 );
+			Assert::IsFalse( output2 == result2 );
+
+			vector v5( 0,0,0,0 );
+			vector v6( 0,0,0,0 );
+			float result3 = 0;
+
+			float output3 = DistanceBetween( v5 , v6 );
+			Assert::IsTrue( output3 == result3 );
 		}
 		TEST_METHOD( VectorDotProduct )
 		{
@@ -344,7 +371,12 @@ namespace UnitTest
 		}
 		TEST_METHOD( VectorIsExact )
 		{
-			Assert::IsTrue( false );
+			vector v1( 0.7475667940f, 0.2210000239f, 0.6492298694f, 0.3385129473f );
+			vector v2( 0.7475667940f, 0.2210000239f, 0.6492298694f, 0.3385129473f );
+			vector v3( 0.7475f, 0.2210f, 0.6492f, 0.3385f );
+
+			Assert::IsTrue( IsExact(v1, v2 ) );
+			Assert::IsFalse( IsExact(v1, v3 ) );
 		}
 		TEST_METHOD( VectorLength )
 		{
@@ -376,7 +408,26 @@ namespace UnitTest
 		}
 		TEST_METHOD( VectorLerp )
 		{
-			Assert::IsTrue( false );
+			vector v1( 1 , 2 , -2 , 2 );
+			vector v2( 2 , 1 , 2 , -2 );
+
+			float lerp1 = 0.75f;
+			vector result1( 1.75f , 1.25f , 1 , -1 );
+
+			vector output1( Lerp( v1 , v2 , lerp1 ) );
+			Assert::IsTrue( output1 == result1 );
+
+			float lerp2 = -0.75f;
+			vector result2( 0.25f , 2.75f , -5 , 5 );
+
+			vector output2( Lerp( v1 , v2 , lerp2 ) );
+			Assert::IsTrue( output2 == result2 );
+
+			float lerp3 = 1.75f;
+			vector result3( 2.75f , 0.25f , 5 , -5 );
+
+			vector output3( Lerp( v1 , v2 , lerp3 ) );
+			Assert::IsTrue( output3 == result3 );
 		}
 		TEST_METHOD( VectorMax )
 		{

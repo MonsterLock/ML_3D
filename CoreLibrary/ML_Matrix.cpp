@@ -18,7 +18,7 @@
 #define	m32 14
 #define	m33 15
 
-using namespace ml3d::MATH::Matrix;
+using namespace ML::MATH::Matrix;
 
 matrix::matrix( ) noexcept :
 	row{ Vector::Zero, Vector::Zero, Vector::Zero, Vector::Zero }
@@ -35,7 +35,7 @@ matrix::matrix( const matrix& rhs ) noexcept :
 {
 }
 
-ml3d::MATH::Matrix::matrix::matrix( const float * rhs )
+ML::MATH::Matrix::matrix::matrix( const float * rhs )
 {
 	memcpy( m , rhs , 64 );
 }
@@ -74,12 +74,12 @@ const vector matrix::operator[]( const unsigned int index ) const
 	return row[ index ];
 }
 
-float ml3d::MATH::Matrix::matrix::operator()( const unsigned int t_row , const unsigned int t_column )
+float ML::MATH::Matrix::matrix::operator()( const unsigned int t_row , const unsigned int t_column )
 {
 	return row[ t_row ][ t_column ];
 }
 
-const float ml3d::MATH::Matrix::matrix::operator()( const unsigned int t_row , const unsigned int t_column ) const
+const float ML::MATH::Matrix::matrix::operator()( const unsigned int t_row , const unsigned int t_column ) const
 {
 	return row[ t_row ][ t_column ];
 }
@@ -201,7 +201,16 @@ matrix& matrix::operator*=( const matrix& rhs )
 	return *this;
 }
 
-float ml3d::MATH::Matrix::Determinant( const matrix & rhs )
+std::ostream & ML::MATH::Matrix::operator<<( std::ostream & os , const matrix & rhs )
+{
+	os << rhs.row[ 0 ] << ", "
+		<< rhs.row[ 1 ] << ", "
+		<< rhs.row[ 2 ] << ", "
+		<< rhs.row[ 3 ];
+	return os;
+}
+
+float ML::MATH::Matrix::Determinant( const matrix & rhs )
 {
 	return
 		rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m21 ] * rhs.m[ m30 ] - rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m21 ] * rhs.m[ m30 ] -
@@ -218,7 +227,7 @@ float ml3d::MATH::Matrix::Determinant( const matrix & rhs )
 		rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m22 ] * rhs.m[ m33 ] + rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m22 ] * rhs.m[ m33 ];
 }
 
-matrix ml3d::MATH::Matrix::Inverse( const matrix & rhs )
+matrix ML::MATH::Matrix::Inverse( const matrix & rhs )
 {
 	matrix inv( {
 		rhs.m[ m11 ] * rhs.m[ m22 ] * rhs.m[ m33 ] + rhs.m[ m12 ] * rhs.m[ m23 ] * rhs.m[ m31 ] + rhs.m[ m13 ] * rhs.m[ m21 ] * rhs.m[ m32 ] - rhs.m[ m11 ] * rhs.m[ m23 ] * rhs.m[ m32 ] - rhs.m[ m12 ] * rhs.m[ m21 ] * rhs.m[ m33 ] - rhs.m[ m13 ] * rhs.m[ m22 ] * rhs.m[ m31 ],
@@ -241,7 +250,7 @@ matrix ml3d::MATH::Matrix::Inverse( const matrix & rhs )
 		rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m31 ] + rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m32 ] + rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m32 ] - rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m30 ] - rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m31 ],
 		rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m22 ] + rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m20 ] + rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m21 ] - rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m21 ] - rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m22 ] - rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m20 ] } );
 
-	float det = vector( rhs.m[0], rhs.m[1], rhs.m[2], rhs.m[3] ) * vector( inv.m[0], inv.m[4], inv.m[8], inv.m[12] );
+	float det = vector( rhs.m[ 0 ] , rhs.m[ 1 ] , rhs.m[ 2 ] , rhs.m[ 3 ] ) * vector( inv.m[ 0 ] , inv.m[ 4 ] , inv.m[ 8 ] , inv.m[ 12 ] );
 
 	if( det == 0.0f )
 	{
@@ -251,7 +260,7 @@ matrix ml3d::MATH::Matrix::Inverse( const matrix & rhs )
 	return inv * ( 1.0f / det );
 }
 
-matrix ml3d::MATH::Matrix::Scale( const vector& rhs )
+matrix ML::MATH::Matrix::Scale( const vector& rhs )
 {
 	return matrix(
 		{ rhs.x, 0.0f, 0.0f, 0.0f } ,
@@ -260,7 +269,7 @@ matrix ml3d::MATH::Matrix::Scale( const vector& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Scale( const float& x , const float& y , const float& z )
+matrix ML::MATH::Matrix::Scale( const float& x , const float& y , const float& z )
 {
 	return matrix(
 		{ x, 0.0f, 0.0f, 0.0f } ,
@@ -269,7 +278,7 @@ matrix ml3d::MATH::Matrix::Scale( const float& x , const float& y , const float&
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::ScaleX( const float& rhs )
+matrix ML::MATH::Matrix::ScaleX( const float& rhs )
 {
 	return matrix(
 		{ rhs, 0.0f, 0.0f, 0.0f } ,
@@ -278,7 +287,7 @@ matrix ml3d::MATH::Matrix::ScaleX( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::ScaleY( const float& rhs )
+matrix ML::MATH::Matrix::ScaleY( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -287,7 +296,7 @@ matrix ml3d::MATH::Matrix::ScaleY( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::ScaleZ( const float& rhs )
+matrix ML::MATH::Matrix::ScaleZ( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -296,7 +305,7 @@ matrix ml3d::MATH::Matrix::ScaleZ( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Transpose( const matrix & rhs )
+matrix ML::MATH::Matrix::Transpose( const matrix & rhs )
 {
 	return matrix(
 		{ rhs.m[ m00 ], rhs.m[ m10 ], rhs.m[ m20 ], rhs.m[ m30 ] } ,
@@ -305,7 +314,7 @@ matrix ml3d::MATH::Matrix::Transpose( const matrix & rhs )
 		{ rhs.m[ m03 ], rhs.m[ m13 ], rhs.m[ m23 ], rhs.m[ m33 ] } );
 }
 
-vector ml3d::MATH::Matrix::MatrixVector( const matrix & lhs , const vector & rhs )
+vector ML::MATH::Matrix::MatrixVector( const matrix & lhs , const vector & rhs )
 {
 	return vector(
 		rhs * lhs[ 0 ] ,
@@ -314,7 +323,7 @@ vector ml3d::MATH::Matrix::MatrixVector( const matrix & lhs , const vector & rhs
 		rhs * lhs[ 3 ] );
 }
 
-vector ml3d::MATH::Matrix::VectorMatrix( const vector & lhs , const matrix & rhs )
+vector ML::MATH::Matrix::VectorMatrix( const vector & lhs , const matrix & rhs )
 {
 	vector temp_row[ 4 ] = {
 		{ rhs.m[ 0 ], rhs.m[ 4 ], rhs.m[ 8 ], rhs.m[ 12 ]  },
@@ -332,7 +341,7 @@ vector ml3d::MATH::Matrix::VectorMatrix( const vector & lhs , const matrix & rhs
 
 #ifdef ml3d_MATH_USE_LH
 //-------------------------------------------------------------------------------------------- LH System
-matrix ml3d::MATH::Matrix::Translate( const vector& rhs )
+matrix ML::MATH::Matrix::Translate( const vector& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -341,7 +350,7 @@ matrix ml3d::MATH::Matrix::Translate( const vector& rhs )
 		{ rhs.x, rhs.y, rhs.z, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Translate( const float& x , const float& y , const float& z )
+matrix ML::MATH::Matrix::Translate( const float& x , const float& y , const float& z )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -350,7 +359,7 @@ matrix ml3d::MATH::Matrix::Translate( const float& x , const float& y , const fl
 		{ x, y, z, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateX( const float& rhs )
+matrix ML::MATH::Matrix::TranslateX( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -359,7 +368,7 @@ matrix ml3d::MATH::Matrix::TranslateX( const float& rhs )
 		{ rhs, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateY( const float& rhs )
+matrix ML::MATH::Matrix::TranslateY( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -368,7 +377,7 @@ matrix ml3d::MATH::Matrix::TranslateY( const float& rhs )
 		{ 0.0f, rhs, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateZ( const float& rhs )
+matrix ML::MATH::Matrix::TranslateZ( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -377,7 +386,7 @@ matrix ml3d::MATH::Matrix::TranslateZ( const float& rhs )
 		{ 0.0f, 0.0f, rhs, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Rotate( const vector& rhs )
+matrix ML::MATH::Matrix::Rotate( const vector& rhs )
 {
 	float cosX = cosf( rhs.x );
 	float cosY = cosf( rhs.y );
@@ -394,7 +403,7 @@ matrix ml3d::MATH::Matrix::Rotate( const vector& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Rotate( const float& x , const float& y , const float& z )
+matrix ML::MATH::Matrix::Rotate( const float& x , const float& y , const float& z )
 {
 	float cosX = cosf( x );
 	float cosY = cosf( y );
@@ -411,7 +420,7 @@ matrix ml3d::MATH::Matrix::Rotate( const float& x , const float& y , const float
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateX( const float& rhs )
+matrix ML::MATH::Matrix::RotateX( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -423,7 +432,7 @@ matrix ml3d::MATH::Matrix::RotateX( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateY( const float& rhs )
+matrix ML::MATH::Matrix::RotateY( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -435,7 +444,7 @@ matrix ml3d::MATH::Matrix::RotateY( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateZ( const float& rhs )
+matrix ML::MATH::Matrix::RotateZ( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -447,7 +456,7 @@ matrix ml3d::MATH::Matrix::RotateZ( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Projection( const float& t_fov, const float& t_aspect_ratio , const float& t_near , const float& t_far )
+matrix ML::MATH::Matrix::Projection( const float& t_fov , const float& t_aspect_ratio , const float& t_near , const float& t_far )
 {
 	float yScale = 1.0f / tanf( 0.5f * t_fov );
 	float xScale = yScale / t_aspect_ratio;
@@ -461,7 +470,7 @@ matrix ml3d::MATH::Matrix::Projection( const float& t_fov, const float& t_aspect
 		{ 0.0f, 0.0f, -( t_near * t_far ) * deltaZ, 0.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Orthographic( const float& width , const float& height , const float& t_near , const float& t_far )
+matrix ML::MATH::Matrix::Orthographic( const float& width , const float& height , const float& t_near , const float& t_far )
 {
 	return matrix(
 		{ 2.0f / width , 0.0f, 0.0f, 0.0f } ,
@@ -472,7 +481,7 @@ matrix ml3d::MATH::Matrix::Orthographic( const float& width , const float& heigh
 
 #else
 //-------------------------------------------------------------------------------------------- RH System
-matrix ml3d::MATH::Matrix::Translate( const vector& rhs )
+matrix ML::MATH::Matrix::Translate( const vector& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, rhs.x } ,
@@ -481,7 +490,7 @@ matrix ml3d::MATH::Matrix::Translate( const vector& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Translate( const float& x , const float& y , const float& z )
+matrix ML::MATH::Matrix::Translate( const float& x , const float& y , const float& z )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, x } ,
@@ -490,7 +499,7 @@ matrix ml3d::MATH::Matrix::Translate( const float& x , const float& y , const fl
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateX( const float& rhs )
+matrix ML::MATH::Matrix::TranslateX( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, rhs } ,
@@ -499,7 +508,7 @@ matrix ml3d::MATH::Matrix::TranslateX( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateY( const float& rhs )
+matrix ML::MATH::Matrix::TranslateY( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -508,7 +517,7 @@ matrix ml3d::MATH::Matrix::TranslateY( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::TranslateZ( const float& rhs )
+matrix ML::MATH::Matrix::TranslateZ( const float& rhs )
 {
 	return matrix(
 		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
@@ -517,7 +526,7 @@ matrix ml3d::MATH::Matrix::TranslateZ( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Rotate( const vector& rhs )
+matrix ML::MATH::Matrix::Rotate( const vector& rhs )
 {
 	float cosX = cosf( rhs.x );
 	float cosY = cosf( rhs.y );
@@ -534,7 +543,7 @@ matrix ml3d::MATH::Matrix::Rotate( const vector& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Rotate( const float& x , const float& y , const float& z )
+matrix ML::MATH::Matrix::Rotate( const float& x , const float& y , const float& z )
 {
 	float cosX = cosf( x );
 	float cosY = cosf( y );
@@ -551,7 +560,7 @@ matrix ml3d::MATH::Matrix::Rotate( const float& x , const float& y , const float
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateX( const float& rhs )
+matrix ML::MATH::Matrix::RotateX( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -563,7 +572,7 @@ matrix ml3d::MATH::Matrix::RotateX( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateY( const float& rhs )
+matrix ML::MATH::Matrix::RotateY( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -575,7 +584,7 @@ matrix ml3d::MATH::Matrix::RotateY( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::RotateZ( const float& rhs )
+matrix ML::MATH::Matrix::RotateZ( const float& rhs )
 {
 	float sinRHS = sinf( rhs );
 	float cosRHS = cosf( rhs );
@@ -587,7 +596,7 @@ matrix ml3d::MATH::Matrix::RotateZ( const float& rhs )
 		{ 0.0f, 0.0f, 0.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Projection( const float& t_aspect_ratio , const float& t_fov , const float& t_near , const float& t_far )
+matrix ML::MATH::Matrix::Projection( const float& t_aspect_ratio , const float& t_fov , const float& t_near , const float& t_far )
 {
 	float fov = 1.0 / tanf( 0.5f * t_fov );
 	float deltaZ = t_far - t_near;
@@ -598,7 +607,7 @@ matrix ml3d::MATH::Matrix::Projection( const float& t_aspect_ratio , const float
 		{ 0.0f, 0.0f, -1.0f, 1.0f } );
 }
 
-matrix ml3d::MATH::Matrix::Orthographic( const float& t_near , const float& t_far )
+matrix ML::MATH::Matrix::Orthographic( const float& t_near , const float& t_far )
 {
 	float deltaZ = t_far - t_near;
 

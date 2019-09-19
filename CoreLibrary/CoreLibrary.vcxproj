@@ -18,20 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ML_Math.h" />
-    <ClInclude Include="ML_Matrix.h" />
-    <ClInclude Include="ML_Vector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ML_Matrix.cpp" />
-    <ClCompile Include="ML_Vector.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{C37286BD-DF3B-4BA0-84BF-66551CF1F2C8}</ProjectGuid>
+    <ProjectGuid>{DA022EBA-3927-4708-A37C-CD759F4F9577}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MathLibrary</RootNamespace>
+    <RootNamespace>CoreLibrary</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -99,8 +90,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,8 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,8 +124,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,8 +144,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +154,41 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="ML_Array.h" />
+    <ClInclude Include="ML_AStarSearch.h" />
+    <ClInclude Include="ML_BehaviorTree.h" />
+    <ClInclude Include="ML_BinaryHeap.h" />
+    <ClInclude Include="ML_BinarySearchTree.h" />
+    <ClInclude Include="ML_BitManip.h" />
+    <ClInclude Include="ML_BitStream.h" />
+    <ClInclude Include="ML_BreadthFirstSearch.h" />
+    <ClInclude Include="ML_DepthFirstSearch.h" />
+    <ClInclude Include="ML_DLList.h" />
+    <ClInclude Include="ML_FiniteStateMachine.h" />
+    <ClInclude Include="ML_Flock.h" />
+    <ClInclude Include="ML_Graph.h" />
+    <ClInclude Include="ML_GreedyBestFirstSearch.h" />
+    <ClInclude Include="ML_HashTable.h" />
+    <ClInclude Include="ML_IDDFSearch.h" />
+    <ClInclude Include="ML_InfluenceMap.h" />
+    <ClInclude Include="ML_Math.h" />
+    <ClInclude Include="ML_Matrix.h" />
+    <ClInclude Include="ML_Minimax.h" />
+    <ClInclude Include="ML_Pool.h" />
+    <ClInclude Include="ML_Queue.h" />
+    <ClInclude Include="ML_SearchGraph.h" />
+    <ClInclude Include="ML_SLList.h" />
+    <ClInclude Include="ML_TrialErrorSearch.h" />
+    <ClInclude Include="ML_UniformCostSearch.h" />
+    <ClInclude Include="ML_Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="ML_Matrix.cpp" />
+    <ClCompile Include="ML_Vector.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

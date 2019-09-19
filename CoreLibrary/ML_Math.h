@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 
-namespace ml3d
+namespace ML
 {
 	namespace MATH
 	{

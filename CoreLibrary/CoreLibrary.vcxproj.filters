@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{b82783ce-88a2-43bf-9f8e-329aaf7026ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{f352ffe2-c577-4dac-aa6c-a63292eff104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSA">
+      <UniqueIdentifier>{83c75778-fa4d-44f6-9bc7-32f757de6eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSA\AI">
+      <UniqueIdentifier>{23f90758-5f90-4376-bee8-3faabbf442ff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Debug.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Matrix.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Vector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Array.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_SLList.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_DLList.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BinaryHeap.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BitStream.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BinarySearchTree.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Graph.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_HashTable.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BitManip.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Pool.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Queue.h">
+      <Filter>DSA</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_AStarSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BehaviorTree.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_BreadthFirstSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_GreedyBestFirstSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_SearchGraph.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_TrialErrorSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_UniformCostSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_DepthFirstSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_IDDFSearch.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Flock.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_Minimax.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_FiniteStateMachine.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_InfluenceMap.h">
+      <Filter>DSA\AI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ML_Matrix.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ML_Vector.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

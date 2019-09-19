@@ -3,7 +3,7 @@
 
 #define ml3d_MATH_USE_LH
 
-namespace ml3d
+namespace ML
 {
 	namespace MATH
 	{
@@ -46,6 +46,8 @@ namespace ml3d
 				matrix& operator*=     ( const float& rhs );
 				matrix operator*       ( const matrix& rhs ) const;
 				matrix& operator*=     ( const matrix& rhs );
+
+				friend std::ostream& operator<<(std::ostream& os, const matrix& rhs);
 			};
 
 			extern float Determinant   ( const matrix& rhs );
@@ -88,10 +90,21 @@ namespace ml3d
 				{ 0.0f, 0.0f, 1.0f, 0.0f },
 				{ 0.0f, 0.0f, 0.0f, 1.0f }
 			);
+
+
 		} // end namespace Matrix
 
 	} // end namespace MATH
-} // end namespace ml3d
+} // end namespace ML
+
+//std::ostream& operator<< ( std::ostream& out, const ML::MATH::Matrix::matrix rhs )
+//{
+//	out << rhs.row[0] << ", "
+//		<< rhs.row[1] << ", "
+//		<< rhs.row[2] << ", "
+//		<< rhs.row[3];
+//	return out;
+//}
 
 // Additional Notes:
 //

@@ -1,6 +1,6 @@
 #include "ML_Vector.h"
 
-using namespace ml3d::MATH::Vector;
+using namespace ML::MATH::Vector;
 
 vector::vector( ) noexcept
 	: x( 0.0f ) , y( 0.0f ) , z( 0.0f ) , w( 0.0f )
@@ -214,7 +214,7 @@ void vector::Normalize( )
 	*this /= sqrt( length );
 }
 
-bool vector::IsExact( const vector & lhs , const vector & rhs )
+bool ML::MATH::Vector::IsExact( const vector & lhs , const vector & rhs )
 {
 	return
 		lhs.x == rhs.x ,
@@ -223,7 +223,7 @@ bool vector::IsExact( const vector & lhs , const vector & rhs )
 		lhs.w == rhs.w;
 }
 
-float vector::AngleBetween( const vector & lhs , const vector & rhs )
+float ML::MATH::Vector::AngleBetween( const vector & lhs , const vector & rhs )
 {
 	float lengthLHS = lhs.LengthSq( );
 	float lengthRHS = rhs.LengthSq( );
@@ -236,37 +236,47 @@ float vector::AngleBetween( const vector & lhs , const vector & rhs )
 	return acos( lhs * rhs / ( sqrt( lengthLHS ) * sqrt( lengthRHS ) ) );
 }
 
-float vector::Component( const vector& lhs , const vector& rhs )
+float ML::MATH::Vector::Component( const vector& lhs , const vector& rhs )
 {
 	return lhs * Vector::Normalize( rhs );
 }
 
-float vector::DistanceBetween( const vector & lhs , const vector & rhs )
+float ML::MATH::Vector::DistanceBetween( const vector & lhs , const vector & rhs )
 {
 	return vector( lhs - rhs ).Length( );
 }
 
-vector ml3d::MATH::Vector::Average( const vector & lhs , const vector & rhs )
+std::ostream & ML::MATH::Vector::operator<<( std::ostream & os , const vector & rhs )
 {
-	return vector(
-		ml3d::MATH::Average( lhs.x , rhs.x ) ,
-		ml3d::MATH::Average( lhs.y , rhs.y ) ,
-		ml3d::MATH::Average( lhs.z , rhs.z ) ,
-		ml3d::MATH::Average( lhs.w , rhs.w ) );
+	os << "( "
+		<< rhs.x << ", "
+		<< rhs.y << ", "
+		<< rhs.z << ", "
+		<< rhs.w << " )";
+	return os;
 }
 
-vector ml3d::MATH::Vector::Barycentric( const vector & lhs , const vector & rhs )
+vector ML::MATH::Vector::Average( const vector & lhs , const vector & rhs )
+{
+	return vector(
+		ML::MATH::Average( lhs.x , rhs.x ) ,
+		ML::MATH::Average( lhs.y , rhs.y ) ,
+		ML::MATH::Average( lhs.z , rhs.z ) ,
+		ML::MATH::Average( lhs.w , rhs.w ) );
+}
+
+vector ML::MATH::Vector::Barycentric( const vector & lhs , const vector & rhs )
 {
 	vector bary = Cross( lhs , rhs );
 	float inverseZ = 1.0f / bary.z;
 	return vector( 1.0f - ( bary.x + bary.y ) * inverseZ , bary.y * inverseZ , bary.x * inverseZ );
 }
 
-vector ml3d::MATH::Vector::Clamp( const vector & rhs , const float& max )
+vector ML::MATH::Vector::Clamp( const vector & rhs , const float& max )
 {
 	float length = rhs.LengthSq( );
 
-	if( ml3d::MATH::IsAboutZero( length ) )
+	if( ML::MATH::IsAboutZero( length ) )
 	{
 		return rhs;
 	}
@@ -275,7 +285,7 @@ vector ml3d::MATH::Vector::Clamp( const vector & rhs , const float& max )
 	return vector( rhs * scalar );
 }
 
-vector ml3d::MATH::Vector::Cross( const vector& lhs , const vector& rhs )
+vector ML::MATH::Vector::Cross( const vector& lhs , const vector& rhs )
 {
 	return vector(
 		lhs.y * rhs.z - rhs.y * lhs.z ,
@@ -284,9 +294,9 @@ vector ml3d::MATH::Vector::Cross( const vector& lhs , const vector& rhs )
 		1.0f );
 }
 
-vector ml3d::MATH::Vector::Homogenize( const vector & rhs )
+vector ML::MATH::Vector::Homogenize( const vector & rhs )
 {
-	if( ml3d::MATH::IsAboutZero( rhs.w ) )
+	if( ML::MATH::IsAboutZero( rhs.w ) )
 	{
 		return vector( );
 	}
@@ -295,38 +305,38 @@ vector ml3d::MATH::Vector::Homogenize( const vector & rhs )
 	return normalized / normalized.w;
 }
 
-vector ml3d::MATH::Vector::Lerp( const vector& lhs , const vector& rhs , const float t )
+vector ML::MATH::Vector::Lerp( const vector& lhs , const vector& rhs , const float t )
 {
 	return vector(
-		ml3d::MATH::Lerp( lhs.x , rhs.x , t ) ,
-		ml3d::MATH::Lerp( lhs.y , rhs.y , t ) ,
-		ml3d::MATH::Lerp( lhs.z , rhs.z , t ) ,
-		ml3d::MATH::Lerp( lhs.w , rhs.w , t ) );
+		ML::MATH::Lerp( lhs.x , rhs.x , t ) ,
+		ML::MATH::Lerp( lhs.y , rhs.y , t ) ,
+		ML::MATH::Lerp( lhs.z , rhs.z , t ) ,
+		ML::MATH::Lerp( lhs.w , rhs.w , t ) );
 }
 
-vector ml3d::MATH::Vector::Max( const vector& lhs , const vector& rhs )
+vector ML::MATH::Vector::Max( const vector& lhs , const vector& rhs )
 {
 	return vector(
-		ml3d::MATH::Greater( lhs.x , rhs.x ) ,
-		ml3d::MATH::Greater( lhs.y , rhs.y ) ,
-		ml3d::MATH::Greater( lhs.z , rhs.z ) ,
-		ml3d::MATH::Greater( lhs.w , rhs.w ) );
+		ML::MATH::Greater( lhs.x , rhs.x ) ,
+		ML::MATH::Greater( lhs.y , rhs.y ) ,
+		ML::MATH::Greater( lhs.z , rhs.z ) ,
+		ML::MATH::Greater( lhs.w , rhs.w ) );
 }
 
-vector ml3d::MATH::Vector::Min( const vector& lhs , const vector& rhs )
+vector ML::MATH::Vector::Min( const vector& lhs , const vector& rhs )
 {
 	return vector(
-		ml3d::MATH::Lesser( lhs.x , rhs.x ) ,
-		ml3d::MATH::Lesser( lhs.y , rhs.y ) ,
-		ml3d::MATH::Lesser( lhs.z , rhs.z ) ,
-		ml3d::MATH::Lesser( lhs.w , rhs.w ) );
+		ML::MATH::Lesser( lhs.x , rhs.x ) ,
+		ML::MATH::Lesser( lhs.y , rhs.y ) ,
+		ML::MATH::Lesser( lhs.z , rhs.z ) ,
+		ML::MATH::Lesser( lhs.w , rhs.w ) );
 }
 
-vector ml3d::MATH::Vector::Normalize( const vector& rhs )
+vector ML::MATH::Vector::Normalize( const vector& rhs )
 {
 	float length = rhs.LengthSq( );
 
-	if( ml3d::MATH::IsAboutZero( length ) )
+	if( ML::MATH::IsAboutZero( length ) )
 	{
 		return rhs;
 	}
@@ -334,11 +344,11 @@ vector ml3d::MATH::Vector::Normalize( const vector& rhs )
 	return rhs / sqrt( length );
 }
 
-vector ml3d::MATH::Vector::Projection( const vector& lhs , const vector& rhs )
+vector ML::MATH::Vector::Projection( const vector& lhs , const vector& rhs )
 {
 	float length = rhs.LengthSq( );
 
-	if( ml3d::MATH::IsAboutZero( length ) )
+	if( ML::MATH::IsAboutZero( length ) )
 	{
 		return rhs * ( lhs * rhs );
 	}
@@ -347,11 +357,11 @@ vector ml3d::MATH::Vector::Projection( const vector& lhs , const vector& rhs )
 	return norm_rhs * ( lhs * norm_rhs );
 }
 
-vector ml3d::MATH::Vector::Reflection( const vector& lhs , const vector& rhs )
+vector ML::MATH::Vector::Reflection( const vector& lhs , const vector& rhs )
 {
 	float length = rhs.LengthSq( );
 
-	if( ml3d::MATH::IsAboutZero( length ) )
+	if( ML::MATH::IsAboutZero( length ) )
 	{
 		return -lhs;
 	}
