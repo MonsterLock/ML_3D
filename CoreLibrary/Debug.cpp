@@ -56,7 +56,7 @@ void ML::DEBUG::LogError( const char *t_log_file , const std::string t_error )
 	fout.close( );
 }
 
-void ML::DEBUG::Output( int t_depth , const std::string t_output_string )
+void ML::DEBUG::Output( size_t t_depth , const std::string t_output_string )
 {
 	std::stringstream oss;
 	oss << std::setw( t_depth * 4 ) << "" << t_output_string << std::endl;

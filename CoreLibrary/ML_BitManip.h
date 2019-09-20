@@ -1,6 +1,6 @@
 /*
 R.A. Bickell [https://github.com/MonsterLock]
-ML_BitManip.h Last Updated: 2019-09-19 02::18::57 AM
+ML_BitManip.h Last Updated: 2019-09-19 03::36::45 AM
 */
 #pragma once
 
@@ -80,6 +80,6 @@ namespace ML
 		{
 			return 1 << offset;
 		}
-	}
-}
+	} // end namespace BIT
+} // end namespace ML
 

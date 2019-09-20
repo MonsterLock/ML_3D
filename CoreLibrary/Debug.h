@@ -50,6 +50,6 @@ namespace ML
 
 		extern void LogError( const char* , const std::string );
 
-		extern void Output( int , const std::string );
+		extern void Output( size_t , const std::string );
 	}
 }

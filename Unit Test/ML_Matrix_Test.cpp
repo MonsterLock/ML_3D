@@ -1,9 +1,14 @@
+/*
+R.A. Bickell [https://github.com/MonsterLock]
+ML_Mattrix_Test.cpp Last Updated: 2019-09-19 03::07::51 AM
+*/
 #include "CppUnitTest.h"
 
 #include "../CoreLibrary/ML_Matrix.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#define RUN_TESTS 2000000
 namespace UnitTest
 {
 	using namespace ML::MATH::Matrix;
@@ -11,14 +16,12 @@ namespace UnitTest
 	TEST_CLASS( MatrixTest )
 	{
 		static constexpr float zero_f[ 16 ] = { 0.0f };
-
 		static constexpr float identity_f[ 16 ] = {
 			1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		};
-
 		static constexpr float test_f[ 16 ] = {
 			-2.0f, 0.0f, -4.0f, 1.0f,
 			-2.0f, 0.0f, -4.0f, 1.0f,
@@ -871,7 +874,7 @@ namespace UnitTest
 			matrix m3Z( RotateZ( test3.z ) );
 			Assert::IsTrue( m3Z == result3Z );
 
-			matrix result3XYZ(result3X * result3Y * result3Z );
+			matrix result3XYZ( result3X * result3Y * result3Z );
 
 			matrix m3XYZ( Rotate( test3.x , test3.y , test3.z ) );
 			Assert::IsTrue( m3XYZ == result3XYZ );
@@ -892,7 +895,7 @@ namespace UnitTest
 			float t_near = 0.100000f;
 			float t_far = 10.000000f;
 
-			matrix m1a( Orthographic( width, height , t_near , t_far ) );
+			matrix m1a( Orthographic( width , height , t_near , t_far ) );
 
 			Assert::IsTrue( m1a == result1 );
 
@@ -907,7 +910,7 @@ namespace UnitTest
 			t_near = 0.100000f;
 			t_far = 1000.000000f;
 
-			matrix m2a( Orthographic( width, height , t_near , t_far ) );
+			matrix m2a( Orthographic( width , height , t_near , t_far ) );
 
 			Assert::IsTrue( m2a == result2 );
 		}
@@ -924,7 +927,7 @@ namespace UnitTest
 				{ 0, 0, 1.010101f, 1 } ,
 				{ 0, 0, -0.101010, 0 } );
 
-			matrix m1a( Projection( fieldOfView, aspectRatio , t_near , t_far ) );
+			matrix m1a( Projection( fieldOfView , aspectRatio , t_near , t_far ) );
 
 			Assert::IsTrue( m1a == result1 );
 
@@ -939,54 +942,53 @@ namespace UnitTest
 			t_near = 0.1f;
 			t_far = 1000.0f;
 
-			matrix m2a( Projection( fieldOfView, aspectRatio , t_near , t_far ) );
+			matrix m2a( Projection( fieldOfView , aspectRatio , t_near , t_far ) );
 
 			Assert::IsTrue( m2a == result2 );
-		}
-	};
-}
+		};
+	}
 
-//Matrix_Create_Rotation_X( F 131.91319 ) = M{ 1, 0, 0, 0 } ,
-//{ 0, -0.66800249, -0.74415904, 0 } ,
-//{ 0, 0.74415904, -0.66800249, 0 } ,
-//{ 0, 0, 0, 1 }
+	//Matrix_Create_Rotation_X( F 131.91319 ) = M{ 1, 0, 0, 0 } ,
+	//{ 0, -0.66800249, -0.74415904, 0 } ,
+	//{ 0, 0.74415904, -0.66800249, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Y( F 33.015999 ) = M{ 0.83851874, 0, 0.54487276, 0 } ,
-//{ 0, 1, 0, 0 } ,
-//{ -0.54487276, 0, 0.83851874, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Y( F 33.015999 ) = M{ 0.83851874, 0, 0.54487276, 0 } ,
+	//{ 0, 1, 0, 0 } ,
+	//{ -0.54487276, 0, 0.83851874, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Z( F 21.6563 ) = M{ 0.92941445, -0.36903772, 0, 0 } ,
-//{ 0.36903772, 0.92941445, 0, 0 } ,
-//{ 0, 0, 1, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Z( F 21.6563 ) = M{ 0.92941445, -0.36903772, 0, 0 } ,
+	//{ 0.36903772, 0.92941445, 0, 0 } ,
+	//{ 0, 0, 1, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_X( F 330.74631 ) = M{ 1, 0, 0, 0 } ,
-//{ 0, 0.87246221, 0.48868158, 0 } ,
-//{ 0, -0.48868158, 0.87246221, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_X( F 330.74631 ) = M{ 1, 0, 0, 0 } ,
+	//{ 0, 0.87246221, 0.48868158, 0 } ,
+	//{ 0, -0.48868158, 0.87246221, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Y( F 164.4507 ) = M{ -0.96339959, 0, 0.26806954, 0 } ,
-//{ 0, 1, 0, 0 } ,
-//{ -0.26806954, 0, -0.96339959, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Y( F 164.4507 ) = M{ -0.96339959, 0, 0.26806954, 0 } ,
+	//{ 0, 1, 0, 0 } ,
+	//{ -0.26806954, 0, -0.96339959, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Z( F 78.298203 ) = M{ 0.20281908, -0.97921622, 0, 0 } ,
-//{ 0.97921622, 0.20281908, 0, 0 } ,
-//{ 0, 0, 1, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Z( F 78.298203 ) = M{ 0.20281908, -0.97921622, 0, 0 } ,
+	//{ 0.97921622, 0.20281908, 0, 0 } ,
+	//{ 0, 0, 1, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_X( F 163.8922 ) = M{ 1, 0, 0, 0 } ,
-//{ 0, -0.96074069, -0.27744788, 0 } ,
-//{ 0, 0.27744788, -0.96074069, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_X( F 163.8922 ) = M{ 1, 0, 0, 0 } ,
+	//{ 0, -0.96074069, -0.27744788, 0 } ,
+	//{ 0, 0.27744788, -0.96074069, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Y( F 249.0506 ) = M{ -0.35754675, 0, -0.93389523, 0 } ,
-//{ 0, 1, 0, 0 } ,
-//{ 0.93389523, 0, -0.35754675, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Y( F 249.0506 ) = M{ -0.35754675, 0, -0.93389523, 0 } ,
+	//{ 0, 1, 0, 0 } ,
+	//{ 0.93389523, 0, -0.35754675, 0 } ,
+	//{ 0, 0, 0, 1 }
 
-//	Matrix_Create_Rotation_Z( F 312.897 ) = M{ 0.68067944, 0.73258144, 0, 0 } ,
-//{ -0.73258144, 0.68067944, 0, 0 } ,
-//{ 0, 0, 1, 0 } ,
-//{ 0, 0, 0, 1 }
+	//	Matrix_Create_Rotation_Z( F 312.897 ) = M{ 0.68067944, 0.73258144, 0, 0 } ,
+	//{ -0.73258144, 0.68067944, 0, 0 } ,
+	//{ 0, 0, 1, 0 } ,
+	//{ 0, 0, 0, 1 }

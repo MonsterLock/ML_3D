@@ -1,3 +1,7 @@
+/*
+R.A. Bickell [https://github.com/MonsterLock]
+ML_Vector.cpp Last Updated: 2019-09-19 03::07::51 AM
+*/
 #include "ML_Vector.h"
 
 using namespace ML::MATH::Vector;
@@ -217,9 +221,9 @@ void vector::Normalize( )
 bool ML::MATH::Vector::IsExact( const vector & lhs , const vector & rhs )
 {
 	return
-		lhs.x == rhs.x ,
-		lhs.y == rhs.y ,
-		lhs.z == rhs.z ,
+		lhs.x == rhs.x &&
+		lhs.y == rhs.y &&
+		lhs.z == rhs.z &&
 		lhs.w == rhs.w;
 }
 

@@ -1,3 +1,7 @@
+/*
+R.A. Bickell [https://github.com/MonsterLock]
+ML_Vector.h Last Updated: 2019-09-19 03::07::51 AM
+*/
 #pragma once
 #include "ML_Math.h"
 #include <iostream>

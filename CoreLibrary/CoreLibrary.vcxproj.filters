@@ -27,9 +27,6 @@
     <ClInclude Include="ML_Vector.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="ML_Array.h">
-      <Filter>DSA</Filter>
-    </ClInclude>
     <ClInclude Include="ML_SLList.h">
       <Filter>DSA</Filter>
     </ClInclude>
@@ -98,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="ML_InfluenceMap.h">
       <Filter>DSA\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ML_ArrayList.h">
+      <Filter>DSA</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

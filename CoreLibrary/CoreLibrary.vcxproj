@@ -156,7 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="ML_Array.h" />
+    <ClInclude Include="ML_ArrayList.h" />
     <ClInclude Include="ML_AStarSearch.h" />
     <ClInclude Include="ML_BehaviorTree.h" />
     <ClInclude Include="ML_BinaryHeap.h" />

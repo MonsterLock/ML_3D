@@ -1,4 +1,9 @@
+/*
+R.A. Bickell [https://github.com/MonsterLock]
+ML_Matrix.cpp Last Updated: 2019-09-19 03::07::51 AM
+*/
 #include "ML_Matrix.h"
+
 #include <cstring>
 
 #define m00 0
@@ -235,20 +240,20 @@ matrix ML::MATH::Matrix::Inverse( const matrix & rhs )
 		rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m33 ] + rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m31 ] + rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m32 ] - rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m32 ] - rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m33 ] - rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m31 ],
 		rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m22 ] + rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m23 ] + rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m21 ] - rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m23 ] - rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m21 ] - rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m22 ] } ,
 {
-		rhs.m[ m10 ] * rhs.m[ m23 ] * rhs.m[ m32 ] + rhs.m[ m12 ] * rhs.m[ m20 ] * rhs.m[ m33 ] + rhs.m[ m13 ] * rhs.m[ m22 ] * rhs.m[ m30 ] - rhs.m[ m10 ] * rhs.m[ m22 ] * rhs.m[ m33 ] - rhs.m[ m12 ] * rhs.m[ m23 ] * rhs.m[ m30 ] - rhs.m[ m13 ] * rhs.m[ m20 ] * rhs.m[ m32 ],
-		rhs.m[ m00 ] * rhs.m[ m22 ] * rhs.m[ m33 ] + rhs.m[ m02 ] * rhs.m[ m23 ] * rhs.m[ m30 ] + rhs.m[ m03 ] * rhs.m[ m20 ] * rhs.m[ m32 ] - rhs.m[ m00 ] * rhs.m[ m23 ] * rhs.m[ m32 ] - rhs.m[ m02 ] * rhs.m[ m20 ] * rhs.m[ m33 ] - rhs.m[ m03 ] * rhs.m[ m22 ] * rhs.m[ m30 ],
-		rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m32 ] + rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m33 ] + rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m33 ] - rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m30 ] - rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m32 ],
-		rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m23 ] + rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m20 ] + rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m22 ] - rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m22 ] - rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m23 ] - rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m20 ] } ,
+	rhs.m[ m10 ] * rhs.m[ m23 ] * rhs.m[ m32 ] + rhs.m[ m12 ] * rhs.m[ m20 ] * rhs.m[ m33 ] + rhs.m[ m13 ] * rhs.m[ m22 ] * rhs.m[ m30 ] - rhs.m[ m10 ] * rhs.m[ m22 ] * rhs.m[ m33 ] - rhs.m[ m12 ] * rhs.m[ m23 ] * rhs.m[ m30 ] - rhs.m[ m13 ] * rhs.m[ m20 ] * rhs.m[ m32 ],
+	rhs.m[ m00 ] * rhs.m[ m22 ] * rhs.m[ m33 ] + rhs.m[ m02 ] * rhs.m[ m23 ] * rhs.m[ m30 ] + rhs.m[ m03 ] * rhs.m[ m20 ] * rhs.m[ m32 ] - rhs.m[ m00 ] * rhs.m[ m23 ] * rhs.m[ m32 ] - rhs.m[ m02 ] * rhs.m[ m20 ] * rhs.m[ m33 ] - rhs.m[ m03 ] * rhs.m[ m22 ] * rhs.m[ m30 ],
+	rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m32 ] + rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m33 ] + rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m33 ] - rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m30 ] - rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m32 ],
+	rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m23 ] + rhs.m[ m02 ] * rhs.m[ m13 ] * rhs.m[ m20 ] + rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m22 ] - rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m22 ] - rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m23 ] - rhs.m[ m03 ] * rhs.m[ m12 ] * rhs.m[ m20 ] } ,
 {
-		rhs.m[ m10 ] * rhs.m[ m21 ] * rhs.m[ m33 ] + rhs.m[ m11 ] * rhs.m[ m23 ] * rhs.m[ m30 ] + rhs.m[ m13 ] * rhs.m[ m20 ] * rhs.m[ m31 ] - rhs.m[ m10 ] * rhs.m[ m23 ] * rhs.m[ m31 ] - rhs.m[ m11 ] * rhs.m[ m20 ] * rhs.m[ m33 ] - rhs.m[ m13 ] * rhs.m[ m21 ] * rhs.m[ m30 ],
-		rhs.m[ m00 ] * rhs.m[ m23 ] * rhs.m[ m31 ] + rhs.m[ m01 ] * rhs.m[ m20 ] * rhs.m[ m33 ] + rhs.m[ m03 ] * rhs.m[ m21 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m21 ] * rhs.m[ m33 ] - rhs.m[ m01 ] * rhs.m[ m23 ] * rhs.m[ m30 ] - rhs.m[ m03 ] * rhs.m[ m20 ] * rhs.m[ m31 ],
-		rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m33 ] + rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m30 ] + rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m31 ] - rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m31 ] - rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m33 ] - rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m30 ],
-		rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m21 ] + rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m23 ] + rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m20 ] - rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m23 ] - rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m20 ] - rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m21 ] } ,
+	rhs.m[ m10 ] * rhs.m[ m21 ] * rhs.m[ m33 ] + rhs.m[ m11 ] * rhs.m[ m23 ] * rhs.m[ m30 ] + rhs.m[ m13 ] * rhs.m[ m20 ] * rhs.m[ m31 ] - rhs.m[ m10 ] * rhs.m[ m23 ] * rhs.m[ m31 ] - rhs.m[ m11 ] * rhs.m[ m20 ] * rhs.m[ m33 ] - rhs.m[ m13 ] * rhs.m[ m21 ] * rhs.m[ m30 ],
+	rhs.m[ m00 ] * rhs.m[ m23 ] * rhs.m[ m31 ] + rhs.m[ m01 ] * rhs.m[ m20 ] * rhs.m[ m33 ] + rhs.m[ m03 ] * rhs.m[ m21 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m21 ] * rhs.m[ m33 ] - rhs.m[ m01 ] * rhs.m[ m23 ] * rhs.m[ m30 ] - rhs.m[ m03 ] * rhs.m[ m20 ] * rhs.m[ m31 ],
+	rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m33 ] + rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m30 ] + rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m31 ] - rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m31 ] - rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m33 ] - rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m30 ],
+	rhs.m[ m00 ] * rhs.m[ m13 ] * rhs.m[ m21 ] + rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m23 ] + rhs.m[ m03 ] * rhs.m[ m11 ] * rhs.m[ m20 ] - rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m23 ] - rhs.m[ m01 ] * rhs.m[ m13 ] * rhs.m[ m20 ] - rhs.m[ m03 ] * rhs.m[ m10 ] * rhs.m[ m21 ] } ,
 		{
-		rhs.m[ m10 ] * rhs.m[ m22 ] * rhs.m[ m31 ] + rhs.m[ m11 ] * rhs.m[ m20 ] * rhs.m[ m32 ] + rhs.m[ m12 ] * rhs.m[ m21 ] * rhs.m[ m30 ] - rhs.m[ m10 ] * rhs.m[ m21 ] * rhs.m[ m32 ] - rhs.m[ m11 ] * rhs.m[ m22 ] * rhs.m[ m30 ] - rhs.m[ m12 ] * rhs.m[ m20 ] * rhs.m[ m31 ],
-		rhs.m[ m00 ] * rhs.m[ m21 ] * rhs.m[ m32 ] + rhs.m[ m01 ] * rhs.m[ m22 ] * rhs.m[ m30 ] + rhs.m[ m02 ] * rhs.m[ m20 ] * rhs.m[ m31 ] - rhs.m[ m00 ] * rhs.m[ m22 ] * rhs.m[ m31 ] - rhs.m[ m01 ] * rhs.m[ m20 ] * rhs.m[ m32 ] - rhs.m[ m02 ] * rhs.m[ m21 ] * rhs.m[ m30 ],
-		rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m31 ] + rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m32 ] + rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m32 ] - rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m30 ] - rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m31 ],
-		rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m22 ] + rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m20 ] + rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m21 ] - rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m21 ] - rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m22 ] - rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m20 ] } );
+			rhs.m[ m10 ] * rhs.m[ m22 ] * rhs.m[ m31 ] + rhs.m[ m11 ] * rhs.m[ m20 ] * rhs.m[ m32 ] + rhs.m[ m12 ] * rhs.m[ m21 ] * rhs.m[ m30 ] - rhs.m[ m10 ] * rhs.m[ m21 ] * rhs.m[ m32 ] - rhs.m[ m11 ] * rhs.m[ m22 ] * rhs.m[ m30 ] - rhs.m[ m12 ] * rhs.m[ m20 ] * rhs.m[ m31 ],
+			rhs.m[ m00 ] * rhs.m[ m21 ] * rhs.m[ m32 ] + rhs.m[ m01 ] * rhs.m[ m22 ] * rhs.m[ m30 ] + rhs.m[ m02 ] * rhs.m[ m20 ] * rhs.m[ m31 ] - rhs.m[ m00 ] * rhs.m[ m22 ] * rhs.m[ m31 ] - rhs.m[ m01 ] * rhs.m[ m20 ] * rhs.m[ m32 ] - rhs.m[ m02 ] * rhs.m[ m21 ] * rhs.m[ m30 ],
+			rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m31 ] + rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m32 ] + rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m30 ] - rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m32 ] - rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m30 ] - rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m31 ],
+			rhs.m[ m00 ] * rhs.m[ m11 ] * rhs.m[ m22 ] + rhs.m[ m01 ] * rhs.m[ m12 ] * rhs.m[ m20 ] + rhs.m[ m02 ] * rhs.m[ m10 ] * rhs.m[ m21 ] - rhs.m[ m00 ] * rhs.m[ m12 ] * rhs.m[ m21 ] - rhs.m[ m01 ] * rhs.m[ m10 ] * rhs.m[ m22 ] - rhs.m[ m02 ] * rhs.m[ m11 ] * rhs.m[ m20 ] } );
 
 	float det = vector( rhs.m[ 0 ] , rhs.m[ 1 ] , rhs.m[ 2 ] , rhs.m[ 3 ] ) * vector( inv.m[ 0 ] , inv.m[ 4 ] , inv.m[ 8 ] , inv.m[ 12 ] );
 
@@ -327,9 +332,9 @@ vector ML::MATH::Matrix::VectorMatrix( const vector & lhs , const matrix & rhs )
 {
 	vector temp_row[ 4 ] = {
 		{ rhs.m[ 0 ], rhs.m[ 4 ], rhs.m[ 8 ], rhs.m[ 12 ]  },
-		{ rhs.m[ 1 ], rhs.m[ 5 ], rhs.m[ 9 ], rhs.m[ 13 ]  },
-		{ rhs.m[ 2 ], rhs.m[ 6 ], rhs.m[ 10 ], rhs.m[ 14 ]  },
-		{ rhs.m[ 3 ], rhs.m[ 7 ], rhs.m[ 11 ], rhs.m[ 15 ]  } };
+	{ rhs.m[ 1 ], rhs.m[ 5 ], rhs.m[ 9 ], rhs.m[ 13 ]  },
+	{ rhs.m[ 2 ], rhs.m[ 6 ], rhs.m[ 10 ], rhs.m[ 14 ]  },
+	{ rhs.m[ 3 ], rhs.m[ 7 ], rhs.m[ 11 ], rhs.m[ 15 ]  } };
 
 	return vector(
 		lhs * temp_row[ 0 ] ,
@@ -339,7 +344,6 @@ vector ML::MATH::Matrix::VectorMatrix( const vector & lhs , const matrix & rhs )
 	);
 }
 
-#ifdef ml3d_MATH_USE_LH
 //-------------------------------------------------------------------------------------------- LH System
 matrix ML::MATH::Matrix::Translate( const vector& rhs )
 {
@@ -478,146 +482,6 @@ matrix ML::MATH::Matrix::Orthographic( const float& width , const float& height 
 		{ 0.0f, 0.0f, 1.0f / ( t_far - t_near ), 0.0f } ,
 		{ 0, 0, t_near / ( t_near - t_far ), 1.0f } );
 }
-
-#else
-//-------------------------------------------------------------------------------------------- RH System
-matrix ML::MATH::Matrix::Translate( const vector& rhs )
-{
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, rhs.x } ,
-		{ 0.0f, 1.0f, 0.0f, rhs.y } ,
-		{ 0.0f, 0.0f, 1.0f, rhs.z } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::Translate( const float& x , const float& y , const float& z )
-{
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, x } ,
-		{ 0.0f, 1.0f, 0.0f, y } ,
-		{ 0.0f, 0.0f, 1.0f, z } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::TranslateX( const float& rhs )
-{
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, rhs } ,
-		{ 0.0f, 1.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 1.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::TranslateY( const float& rhs )
-{
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 1.0f, 0.0f, rhs } ,
-		{ 0.0f, 0.0f, 1.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::TranslateZ( const float& rhs )
-{
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 1.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 1.0f, rhs } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::Rotate( const vector& rhs )
-{
-	float cosX = cosf( rhs.x );
-	float cosY = cosf( rhs.y );
-	float cosZ = cosf( rhs.z );
-
-	float sinX = sinf( rhs.x );
-	float sinY = sinf( rhs.y );
-	float sinZ = sinf( rhs.z );
-
-	return matrix(
-		{ cosY * cosZ, -cosY * sinZ, sinY, 0.0f } ,
-		{ sinX * sinY * cosZ + cosX * sinZ, -sinX * sinY * sinZ + cosX * cosZ, -sinX * cosY, 0.0f } ,
-		{ -cosX * sinY * sinZ + sinX * sinZ,cosX * sinY * sinZ + sinX * cosZ,cosX * cosY, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::Rotate( const float& x , const float& y , const float& z )
-{
-	float cosX = cosf( x );
-	float cosY = cosf( y );
-	float cosZ = cosf( z );
-
-	float sinX = sinf( x );
-	float sinY = sinf( y );
-	float sinZ = sinf( z );
-
-	return matrix(
-		{ cosY * cosZ, -cosY * sinZ, sinY, 0.0f } ,
-		{ sinX * sinY * cosZ + cosX * sinZ, -sinX * sinY * sinZ + cosX * cosZ, -sinX * cosY, 0.0f } ,
-		{ -cosX * sinY * sinZ + sinX * sinZ,cosX * sinY * sinZ + sinX * cosZ,cosX * cosY, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::RotateX( const float& rhs )
-{
-	float sinRHS = sinf( rhs );
-	float cosRHS = cosf( rhs );
-
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
-		{ 0.0f, cosRHS, -sinRHS, 0.0f } ,
-		{ 0.0f, sinRHS, cosRHS, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::RotateY( const float& rhs )
-{
-	float sinRHS = sinf( rhs );
-	float cosRHS = cosf( rhs );
-
-	return matrix(
-		{ cosRHS, 0.0f, sinRHS, 0.0f } ,
-		{ 0.0f, 1.0f, 0.0f, 0.0f } ,
-		{ -sinRHS, 0.0f, cosRHS, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::RotateZ( const float& rhs )
-{
-	float sinRHS = sinf( rhs );
-	float cosRHS = cosf( rhs );
-
-	return matrix(
-		{ cosRHS, -sinRHS, 0.0f, 0.0f } ,
-		{ sinRHS, cosRHS, 0.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 1.0f, 0.0f } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::Projection( const float& t_aspect_ratio , const float& t_fov , const float& t_near , const float& t_far )
-{
-	float fov = 1.0 / tanf( 0.5f * t_fov );
-	float deltaZ = t_far - t_near;
-	return matrix(
-		{ fov / t_aspect_ratio, 0.0f, 0.0f, 0.0f } ,
-		{ 0.0f, fov, 0.0f, 0.0f } ,
-		{ 0.0f, 0.0f, t_far / deltaZ, -( t_far * t_near ) / deltaZ } ,
-		{ 0.0f, 0.0f, -1.0f, 1.0f } );
-}
-
-matrix ML::MATH::Matrix::Orthographic( const float& t_near , const float& t_far )
-{
-	float deltaZ = t_far - t_near;
-
-	return matrix(
-		{ 1.0f, 0.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 1.0f, 0.0f, 0.0f } ,
-		{ 0.0f, 0.0f, -2.0f / deltaZ, -( t_far + t_near ) / deltaZ } ,
-		{ 0.0f, 0.0f, 0.0f, 1.0f } );
-}
-#endif // #elseif ml3d_MATH_USE_LH
 
 #undef m00
 #undef m01

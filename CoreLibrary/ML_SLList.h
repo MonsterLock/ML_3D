@@ -1,5 +1,5 @@
 #pragma once
-namespace ml3d
+namespace ML
 {
 	namespace DSA
 	{
@@ -11,162 +11,240 @@ namespace ml3d
 		{
 			friend class sl_list_iter<Type>;
 
-			struct Node
+			struct sl_node
 			{
 				Type data;
-				Node* next;
+				sl_node* next;
 
-				Node( const Type& new_data ) : data( new_data ) , next( nullptr ) { }
-				Node( const Type& new_data, const Node* new_next ) : data( new_data ) , next( new_next ) { }
-			};
+				sl_node( const Type& new_data ) noexcept;
+				sl_node( const Type& new_data , const sl_node* new_next ) noexcept;
+			};// end struct sl_node
 
-			Node* m_head;
-			unsigned int m_size;
+			sl_node* m_head;
+			size_t m_size;
 
 		public:
-			sl_list( ) : m_head( nullptr ) , m_size( 0 ) { }
+			sl_list( ) noexcept;
+			sl_list( const sl_list<Type>& );
+			~sl_list( );
 
-			~sl_list( ) { clear( ); }
+			sl_list<Type>& operator=( const sl_list<Type>& );
 
-			sl_list<Type>& operator=( const sl_list<Type>& rhs )
-			{
-				if( this != &rhs )
-				{
-					clear( );
+			size_t size( ) const;
 
-					if( rhs.m_head )
-					{
-						m_head = new Node( rhs.m_head->data );
+			sl_list_iter<Type> begin( );
+			sl_list_iter<Type> end( );
 
-						Node* current = rhs.m_head->next;
-						Node* newNode = m_head;
-
-						while( current )
-						{
-							newNode->next = new Node( current->data );
-							newNode = newNode->next;
-							current = current->next;
-						}
-
-						m_size = rhs.m_size;
-					}
-				}
-				return *this;
-			}
-
-			sl_list( const sl_list<Type>& rhs )
-			{
-
-				m_head = nullptr;
-				*this = rhs;
-			}
-
-			void push_front( const Type& new_data )
-			{
-				Node* new_node = new Node( new_data );
-				new_node->next = m_head;
-				m_head = new_node;
-				m_size++;
-			}
-
-			void clear( )
-			{
-				while( m_head )
-				{
-					Node* delete_node = m_head;
-					m_head = m_head->next;
-					delete delete_node;
-				}
-
-				m_size = 0;
-			}
-
-			void insert( sl_list_iter<Type>& iter , const Type& new_data )
-			{
-				if( iter.m_current )
-				{
-					Node* new_node = new Node( new_data, iter.m_current );
-
-					if( iter.m_previous )
-					{
-						iter.m_previous->next = iter.m_current = new_node;
-					}
-					else
-					{
-						m_head = iter.m_current = new_node;
-					}
-
-					m_size++;
-				}
-			}
-
-			void remove( sl_list_iter<Type>& iter )
-			{
-				if( iter.m_current )
-				{
-					Node* deleteNode = iter.m_current;
-
-					if( iter.m_previous )
-					{
-						iter.m_previous->next = iter.m_current = iter.m_current->next;
-					}
-					else
-					{
-						m_head = iter.m_current = iter.m_current->next;
-					}
-
-					delete deleteNode;
-					m_size--;
-				}
-			}
-
-			inline unsigned int size( ) const
-			{
-				return m_size;
-			}
-
-		};
+			void push_front( const Type& );
+			void clear( );
+			void insert( sl_list_iter<Type>& , const Type& );
+			void remove( sl_list_iter<Type>& );
+		};// end class sl_list
 
 		template <class Type>
 		class sl_list_iter
 		{
 			friend class sl_list<Type>;
-			typename sl_list<Type>::Node* m_current;
-			typename sl_list<Type>::Node* m_previous;
+
+			typename sl_list<Type>::sl_node* m_current;
+			typename sl_list<Type>::sl_node* m_previous;
 			sl_list<Type>* m_list;
 
 		public:
-			sl_list_iter( sl_list<Type>& list )
-			{
-				m_list = &list;
-				begin( );
-			}
+			sl_list_iter( ) noexcept;
+			sl_list_iter( sl_list<Type>& list ) noexcept;
 
-			void begin( )
-			{
-				m_current = pointerList->m_head;
-				m_previous = nullptr;
-			}
+			sl_list_iter<Type>& operator++( );
+			sl_list_iter<Type>& operator++( int );
+			sl_list_iter<Type>& operator=( const sl_list_iter<Type>& );
 
-			bool end( ) const
-			{
-				return m_current ? false : true;
-			}
+			bool operator==( const sl_list_iter<Type>& );
+			bool operator!=( const sl_list_iter<Type>& );
 
-			sl_list_iter<Type>& operator++( )
+			Type& operator*( ) const;
+		}; // end class sl_list_iter
+
+		   //---------------------------------------------------- sl_node
+		template<class Type>
+		inline sl_list<Type>::sl_node::sl_node( const Type & new_data ) noexcept : data( new_data ) , next( nullptr ) { }
+
+		template<class Type>
+		inline sl_list<Type>::sl_node::sl_node( const Type & new_data , const sl_node * new_next ) noexcept
+			: data( new_data ) , next( new_next ) { }
+
+		//---------------------------------------------------- sl_list
+		template<class Type>
+		inline sl_list<Type>::sl_list( ) noexcept : m_head( nullptr ) , m_size( 0 ) { }
+
+		template<class Type>
+		inline sl_list<Type>::sl_list( const sl_list<Type>& rhs )
+			: m_head( nullptr ) { *this = rhs; }
+
+		template<class Type>
+		inline sl_list<Type>::~sl_list( ) { clear( ); }
+
+		template<class Type>
+		inline sl_list<Type>& sl_list<Type>::operator=( const sl_list<Type>& rhs )
+		{
+			if( this != &rhs )
 			{
-				if( !end( ) )
+				clear( );
+
+				if( rhs.m_head )
 				{
-					m_previous = m_current;
-					m_current = m_current->next;
+					m_head = new sl_node( rhs.m_head->data );
+
+					sl_node* current = rhs.m_head->next;
+					sl_node* newNode = m_head;
+
+					while( current )
+					{
+						newNode->next = new sl_node( current->data );
+						newNode = newNode->next;
+						current = current->next;
+					}
+
+					m_size = rhs.m_size;
 				}
-				return *this;
+			}
+			return *this;
+		}
+
+		template<class Type>
+		inline size_t sl_list<Type>::size( ) const
+		{
+			return m_size;
+		}
+
+		template<class Type>
+		inline sl_list_iter<Type> sl_list<Type>::begin( )
+		{
+			return sl_list_iter<Type>( *this );
+		}
+
+		template<class Type>
+		inline sl_list_iter<Type> sl_list<Type>::end( )
+		{
+			return sl_list_iter<Type>();
+		}
+
+		template<class Type>
+		inline void sl_list<Type>::push_front( const Type & new_data )
+		{
+			sl_node* new_node = new sl_node( new_data );
+			new_node->next = m_head;
+			m_head = new_node;
+			m_size++;
+		}
+
+		template<class Type>
+		inline void sl_list<Type>::clear( )
+		{
+			while( m_head )
+			{
+				sl_node* delete_node = m_head;
+				m_head = m_head->next;
+				delete delete_node;
 			}
 
-			Type& current( ) const
+			m_size = 0;
+		}
+
+		template<class Type>
+		inline void sl_list<Type>::insert( sl_list_iter<Type>& iter , const Type & new_data )
+		{
+			if( iter.m_current )
 			{
-				return m_current->data;
+				sl_node* new_node = new sl_node( new_data, iter.m_current );
+
+				if( iter.m_previous )
+				{
+					iter.m_previous->next = iter.m_current = new_node;
+				}
+				else
+				{
+					m_head = iter.m_current = new_node;
+				}
+
+				m_size++;
 			}
-		};
-	}
-}
+		}
+
+		template<class Type>
+		inline void sl_list<Type>::remove( sl_list_iter<Type>& iter )
+		{
+			if( iter.m_current )
+			{
+				sl_node* deleteNode = iter.m_current;
+
+				if( iter.m_previous )
+				{
+					iter.m_previous->next = iter.m_current = iter.m_current->next;
+				}
+				else
+				{
+					m_head = iter.m_current = iter.m_current->next;
+				}
+
+				delete deleteNode;
+				m_size--;
+			}
+		}
+
+		//---------------------------------------------------- sl_list_iter
+		template<class Type>
+		inline sl_list_iter<Type>::sl_list_iter( ) noexcept
+			: m_list( nullptr ) , m_current( nullptr ) , m_previous( nullptr ) { }
+
+		template<class Type>
+		inline sl_list_iter<Type>::sl_list_iter( sl_list<Type>& list ) noexcept
+			: m_list( &list ) , m_current( list.m_head ) , m_previous( nullptr ) { }
+
+		template<class Type>
+		inline sl_list_iter<Type>& sl_list_iter<Type>::operator++( )
+		{
+			m_previous = m_current;
+			m_current = m_current->next;
+			return *this;
+		}
+
+		template<class Type>
+		inline sl_list_iter<Type>& sl_list_iter<Type>::operator++( int )
+		{
+			m_previous = m_current;
+			m_current = m_current->next;
+			return *this;
+		}
+
+		template<class Type>
+		inline sl_list_iter<Type>& sl_list_iter<Type>::operator=( const sl_list_iter<Type>& rhs )
+		{
+			if( this != &rhs )
+			{
+				m_current = rhs.m_current;
+				m_previous = rhs.m_previous;
+				m_list = rhs.m_list;
+			}
+			return *this;
+		}
+
+		template<class Type>
+		inline bool sl_list_iter<Type>::operator==( const sl_list_iter<Type>& rhs )
+		{
+			return m_current == rhs.m_current ? true : false;
+		}
+
+		template<class Type>
+		inline bool sl_list_iter<Type>::operator!=( const sl_list_iter<Type>& rhs )
+		{
+			return m_current == rhs.m_current ? false : true;
+		}
+
+		template<class Type>
+		inline Type & sl_list_iter<Type>::operator*( ) const
+		{
+			return m_current->data;
+		}
+
+}// end namespace DSA
+}// end namespace ML

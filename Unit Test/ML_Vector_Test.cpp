@@ -1,3 +1,7 @@
+/*
+R.A. Bickell [https://github.com/MonsterLock]
+ML_Vector_Test.cpp Last Updated: 2019-09-19 03::07::51 AM
+*/
 #include "CppUnitTest.h"
 
 #include "../CoreLibrary/ML_Vector.h"
@@ -171,7 +175,6 @@ namespace UnitTest
 			vector output2( -v2 );
 			Assert::IsTrue( output2 == result2 );
 		}
-
 		TEST_METHOD( VectorAngleBetween )
 		{
 			vector v1( 5 , 2 , -3 , 0 );

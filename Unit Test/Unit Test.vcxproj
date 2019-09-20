@@ -172,7 +172,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ML_ArrayList_Test.cpp" />
     <ClCompile Include="ML_Matrix_Test.cpp" />
+    <ClCompile Include="ML_SLList_Test.cpp" />
     <ClCompile Include="ML_Vector_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
