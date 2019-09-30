@@ -4,22 +4,5 @@
     <Filter Include="Math Tests">
       <UniqueIdentifier>{0023cc3d-dab2-465d-97a9-a38cf014b244}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DSA">
-      <UniqueIdentifier>{3aca1b13-c1dc-40d6-a570-dda242a74a7c}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ML_Matrix_Test.cpp">
-      <Filter>Math Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="ML_Vector_Test.cpp">
-      <Filter>Math Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="ML_ArrayList_Test.cpp">
-      <Filter>DSA</Filter>
-    </ClCompile>
-    <ClCompile Include="ML_SLList_Test.cpp">
-      <Filter>DSA</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

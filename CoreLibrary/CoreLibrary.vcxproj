@@ -156,38 +156,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="ML_ArrayList.h" />
-    <ClInclude Include="ML_AStarSearch.h" />
-    <ClInclude Include="ML_BehaviorTree.h" />
-    <ClInclude Include="ML_BinaryHeap.h" />
-    <ClInclude Include="ML_BinarySearchTree.h" />
-    <ClInclude Include="ML_BitManip.h" />
-    <ClInclude Include="ML_BitStream.h" />
-    <ClInclude Include="ML_BreadthFirstSearch.h" />
-    <ClInclude Include="ML_DepthFirstSearch.h" />
-    <ClInclude Include="ML_DLList.h" />
-    <ClInclude Include="ML_FiniteStateMachine.h" />
-    <ClInclude Include="ML_Flock.h" />
-    <ClInclude Include="ML_Graph.h" />
-    <ClInclude Include="ML_GreedyBestFirstSearch.h" />
-    <ClInclude Include="ML_HashTable.h" />
-    <ClInclude Include="ML_IDDFSearch.h" />
-    <ClInclude Include="ML_InfluenceMap.h" />
-    <ClInclude Include="ML_Math.h" />
-    <ClInclude Include="ML_Matrix.h" />
-    <ClInclude Include="ML_Minimax.h" />
-    <ClInclude Include="ML_Pool.h" />
-    <ClInclude Include="ML_Queue.h" />
-    <ClInclude Include="ML_SearchGraph.h" />
-    <ClInclude Include="ML_SLList.h" />
-    <ClInclude Include="ML_TrialErrorSearch.h" />
-    <ClInclude Include="ML_UniformCostSearch.h" />
-    <ClInclude Include="ML_Vector.h" />
+    <ClInclude Include="Gateware_v6_5_A\GDirectX11Surface.h" />
+    <ClInclude Include="Gateware_v6_5_A\GInput.h" />
+    <ClInclude Include="Gateware_v6_5_A\GMathDefines.h" />
+    <ClInclude Include="Gateware_v6_5_A\GMatrix.h" />
+    <ClInclude Include="Gateware_v6_5_A\GOpenGLSurface.h" />
+    <ClInclude Include="Gateware_v6_5_A\GQuaternion.h" />
+    <ClInclude Include="Gateware_v6_5_A\GVector.h" />
+    <ClInclude Include="Gateware_v6_5_A\GWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="ML_Matrix.cpp" />
-    <ClCompile Include="ML_Vector.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GDirectX11Surface.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GInput.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GMatrix.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GOpenGLSurface.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GQuaternion.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GVector.cpp" />
+    <ClCompile Include="Gateware_v6_5_A\GWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -172,12 +172,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ML_ArrayList_Test.cpp" />
-    <ClCompile Include="ML_Matrix_Test.cpp" />
-    <ClCompile Include="ML_SLList_Test.cpp" />
-    <ClCompile Include="ML_Vector_Test.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CoreLibrary\CoreLibrary.vcxproj">
       <Project>{da022eba-3927-4708-a37c-cd759f4f9577}</Project>
     </ProjectReference>
