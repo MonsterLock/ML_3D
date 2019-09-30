@@ -156,24 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="Gateware_v6_5_A\GDirectX11Surface.h" />
-    <ClInclude Include="Gateware_v6_5_A\GInput.h" />
-    <ClInclude Include="Gateware_v6_5_A\GMathDefines.h" />
-    <ClInclude Include="Gateware_v6_5_A\GMatrix.h" />
-    <ClInclude Include="Gateware_v6_5_A\GOpenGLSurface.h" />
-    <ClInclude Include="Gateware_v6_5_A\GQuaternion.h" />
-    <ClInclude Include="Gateware_v6_5_A\GVector.h" />
-    <ClInclude Include="Gateware_v6_5_A\GWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GDirectX11Surface.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GInput.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GMatrix.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GOpenGLSurface.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GQuaternion.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GVector.cpp" />
-    <ClCompile Include="Gateware_v6_5_A\GWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

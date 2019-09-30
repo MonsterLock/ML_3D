@@ -12,55 +12,10 @@
     <ClInclude Include="Debug.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GDirectX11Surface.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GInput.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GMathDefines.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GMatrix.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GOpenGLSurface.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GQuaternion.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GVector.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
-    <ClInclude Include="Gateware_v6_5_A\GWindow.h">
-      <Filter>Gateware</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
       <Filter>Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GDirectX11Surface.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GInput.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GMatrix.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GOpenGLSurface.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GQuaternion.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GVector.cpp">
-      <Filter>Gateware</Filter>
-    </ClCompile>
-    <ClCompile Include="Gateware_v6_5_A\GWindow.cpp">
-      <Filter>Gateware</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

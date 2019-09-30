@@ -1,6 +1,0 @@
-1) Get resources
-2) Get input
-3) compute input
-4) write result to output
-5) go back to step 2 until program termination
-6) release resources
